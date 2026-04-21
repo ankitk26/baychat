@@ -230,7 +230,7 @@ const anthropicModels = {
 			isFree: false,
 		},
 		{
-			name: "Claude Sonnet 4.7",
+			name: "Claude Opus 4.7",
 			openRouterModelId: "anthropic/claude-opus-4.7",
 			modelId: "claude-opus-4-7",
 			isFree: false,
