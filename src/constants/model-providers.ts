@@ -229,6 +229,12 @@ const anthropicModels = {
 			modelId: "claude-sonnet-4-6",
 			isFree: false,
 		},
+		{
+			name: "Claude Sonnet 4.7",
+			openRouterModelId: "anthropic/claude-opus-4.7",
+			modelId: "claude-opus-4-7",
+			isFree: false,
+		},
 	] as const,
 } as const;
 
@@ -291,6 +297,12 @@ const moonshotModels = {
 			modelId: "moonshotai/kimi-k2.5",
 			isFree: false,
 		},
+		{
+			name: "Kimi K2.6",
+			openRouterModelId: "moonshotai/kimi-k2.6",
+			modelId: "moonshotai/kimi-k2.6",
+			isFree: false,
+		},
 	] as const,
 } as const;
 
@@ -314,6 +326,12 @@ const zaiModels = {
 			name: "GLM 5",
 			openRouterModelId: "z-ai/glm-5",
 			modelId: "z-ai/glm-5",
+			isFree: false,
+		},
+		{
+			name: "GLM 5.1",
+			openRouterModelId: "z-ai/glm-5.1",
+			modelId: "z-ai/glm-5.1",
 			isFree: false,
 		},
 	] as const,
