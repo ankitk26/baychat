@@ -107,7 +107,7 @@ export default function TextFileAttachmentPreview({
 					render={
 						<button
 							type="button"
-							className="flex w-full min-w-0 items-center gap-3 rounded-[inherit] text-left outline-none focus:outline-none"
+							className="flex w-full min-w-0 cursor-pointer items-center gap-3 rounded-[inherit] text-left outline-none focus:outline-none"
 						>
 							<div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-background/80">
 								<FileTextIcon className="text-muted-foreground" />
