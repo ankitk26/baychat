@@ -37,7 +37,7 @@ export default function AppSidebarChatItem({ chat }: Props) {
 				<SidebarMenuButton
 					isActive={isActive}
 					tooltip={chat.title}
-					className="w-full"
+					className="w-full cursor-pointer"
 				>
 					{chat.isBranched && <BranchedChatIndicator chat={chat} />}
 					<span className="line-clamp-1 flex-1" title={chat.title}>
