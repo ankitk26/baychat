@@ -2,12 +2,13 @@ import {
 	BrainIcon,
 	CaretDownIcon,
 	CaretRightIcon,
+	SpinnerGapIcon,
 } from "@phosphor-icons/react";
 
 type Props = {
+	isStreaming: boolean;
 	toggleReasoningDisplay: () => void;
 	showReasoning: boolean;
-	messageContent: string;
 };
 
 export default function ReasoningToggleButton(props: Props) {
@@ -25,6 +26,9 @@ export default function ReasoningToggleButton(props: Props) {
 			<div className="flex items-center gap-2 font-mono text-xs text-muted-foreground select-none">
 				<BrainIcon className="size-3" />
 				<div>Reasoning</div>
+				{props.isStreaming && (
+					<SpinnerGapIcon className="size-3 animate-spin" />
+				)}
 			</div>
 		</div>
 	);
