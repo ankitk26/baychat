@@ -1,4 +1,4 @@
-import { useStore } from "@tanstack/react-store";
+import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
 import { defaultSelectedModel } from "~/constants/model-providers";
 import type { Model } from "~/types";
@@ -16,7 +16,7 @@ const modelStore = new Store<ModelStoreState>({
 });
 
 export const useModelStore = <T>(selector: (state: ModelStoreState) => T): T =>
-	useStore(modelStore, selector);
+	useSelector(modelStore, selector);
 
 export const modelStoreActions = {
 	setSelectedModel: (model: Model) => {

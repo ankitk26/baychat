@@ -1,4 +1,4 @@
-import { useStore } from "@tanstack/react-store";
+import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
 import type { SidebarFolder } from "~/types";
 
@@ -18,7 +18,7 @@ const folderActionStore = new Store<FolderActionState>({
 
 export const useFolderActionStore = <T>(
 	selector: (state: FolderActionState) => T,
-): T => useStore(folderActionStore, selector);
+): T => useSelector(folderActionStore, selector);
 
 export const folderActionStoreActions = {
 	setSelectedFolder: (folder: SidebarFolder | null) => {

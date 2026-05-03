@@ -1,4 +1,4 @@
-import { useStore } from "@tanstack/react-store";
+import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
 
 type AppearanceStoreState = {
@@ -33,7 +33,7 @@ appearanceStore.subscribe(() => {
 
 export const useAppearanceStore = <T>(
 	selector: (state: AppearanceStoreState) => T,
-): T => useStore(appearanceStore, selector);
+): T => useSelector(appearanceStore, selector);
 
 export const appearanceStoreActions = {
 	toggleShowTokenUsage: () => {

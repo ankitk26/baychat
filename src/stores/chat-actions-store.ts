@@ -1,4 +1,4 @@
-import { useStore } from "@tanstack/react-store";
+import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
 import type { Id } from "convex/_generated/dataModel";
 
@@ -24,7 +24,7 @@ const chatActionStore = new Store<ChatActionState>({
 
 export const useChatActionStore = <T>(
 	selector: (state: ChatActionState) => T,
-): T => useStore(chatActionStore, selector);
+): T => useSelector(chatActionStore, selector);
 
 export const chatActionStoreActions = {
 	setSelectedChat: (chat: Chat | null) => {

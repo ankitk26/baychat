@@ -1,4 +1,4 @@
-import { useStore } from "@tanstack/react-store";
+import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
 import { type ApiKeys, defaultApiKeys } from "~/types";
 
@@ -41,7 +41,7 @@ apiKeysStore.subscribe(() => {
 
 export const usePersistedApiKeysStore = <T>(
 	selector: (state: ApiKeysStoreState) => T,
-): T => useStore(apiKeysStore, selector);
+): T => useSelector(apiKeysStore, selector);
 
 export const persistedApiKeysStoreActions = {
 	setPersistedApiKeys: (keys: ApiKeys) => {
