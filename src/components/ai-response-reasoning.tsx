@@ -10,7 +10,7 @@ type Props = {
 };
 
 export default function AIResponseReasoning(props: Props) {
-	const [showReasoning, setShowReasoning] = useState(true);
+	const [showReasoning, setShowReasoning] = useState(false);
 	const reasoningPart = props.parts.find((part) => part.type === "reasoning");
 
 	const toggleReasoningDisplay = () => {
@@ -21,12 +21,15 @@ export default function AIResponseReasoning(props: Props) {
 		return null;
 	}
 
+	const isStreaming =
+		"state" in reasoningPart && reasoningPart.state === "streaming";
+
 	return (
 		<div className="space-y-2">
 			<ReasoningToggleButton
+				isStreaming={isStreaming}
 				showReasoning={showReasoning}
 				toggleReasoningDisplay={toggleReasoningDisplay}
-				messageContent={props.messageContent}
 			/>
 
 			{showReasoning && (
