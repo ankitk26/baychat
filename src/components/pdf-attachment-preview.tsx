@@ -66,12 +66,11 @@ export default function PdfAttachmentPreview({
 
 	useEffect(() => {
 		return () => {
-			if (inlinePdfUrl.startsWith("blob:")) {
+			if (attachment.url.startsWith("data:") && inlinePdfUrl.startsWith("blob:")) {
 				URL.revokeObjectURL(inlinePdfUrl);
 			}
 		};
-	}, [inlinePdfUrl]);
-
+	}, [attachment.url, inlinePdfUrl]);
 	const handleOpenInNewTab = async () => {
 		const newTab = window.open("", "_blank");
 
