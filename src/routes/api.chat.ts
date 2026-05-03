@@ -277,11 +277,12 @@ export const Route = createFileRoute("/api/chat")({
 					temperature: 0.7,
 					experimental_transform: smoothStream({ chunking: "line" }),
 					abortSignal: request.signal,
-					...(isWebSearchEnabled && {
-						tools: {
-							google_search: google.tools.googleSearch({}) as any,
-						},
-					}),
+					...(isWebSearchEnabled &&
+						requestModel.openRouterModelId.startsWith("google") && {
+							tools: {
+								google_search: google.tools.googleSearch({}) as any,
+							},
+						}),
 				});
 
 				return result.toUIMessageStreamResponse({
