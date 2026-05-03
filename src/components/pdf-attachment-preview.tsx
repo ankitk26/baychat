@@ -1,6 +1,6 @@
 import { ArrowSquareOutIcon, FilePdfIcon, XIcon } from "@phosphor-icons/react";
 import type { FileUIPart } from "ai";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { getFileUrl } from "~/server-fns/get-file-url";
 import { Button } from "./ui/button";
@@ -63,6 +63,14 @@ export default function PdfAttachmentPreview({
 
 		return "about:blank";
 	}, [attachment.url]);
+
+	useEffect(() => {
+		return () => {
+			if (inlinePdfUrl.startsWith("blob:")) {
+				URL.revokeObjectURL(inlinePdfUrl);
+			}
+		};
+	}, [inlinePdfUrl]);
 
 	const handleOpenInNewTab = async () => {
 		const newTab = window.open("", "_blank");
