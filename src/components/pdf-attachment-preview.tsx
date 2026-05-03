@@ -1,5 +1,6 @@
 import { ArrowSquareOutIcon, FilePdfIcon, XIcon } from "@phosphor-icons/react";
 import type { FileUIPart } from "ai";
+import { useMemo } from "react";
 import { toast } from "sonner";
 import { getFileUrl } from "~/server-fns/get-file-url";
 import { Button } from "./ui/button";
@@ -40,9 +41,28 @@ export default function PdfAttachmentPreview({
 	label: string;
 	onRemove?: (index: number) => void;
 }) {
-	const inlinePdfUrl = isSafeBrowserUrl(attachment.url)
-		? attachment.url
-		: "about:blank";
+	const inlinePdfUrl = useMemo(() => {
+		if (isSafeBrowserUrl(attachment.url)) {
+			return attachment.url;
+		}
+
+		if (attachment.url.startsWith("data:")) {
+			try {
+				const byteString = atob(attachment.url.split(",")[1]);
+				const mimeMatch = attachment.url.match(/data:([^;]+)/);
+				const mime = mimeMatch?.[1] ?? "application/pdf";
+				const ab = new Uint8Array(byteString.length);
+				for (let i = 0; i < byteString.length; i++) {
+					ab[i] = byteString.charCodeAt(i);
+				}
+				return URL.createObjectURL(new Blob([ab], { type: mime }));
+			} catch {
+				return "about:blank";
+			}
+		}
+
+		return "about:blank";
+	}, [attachment.url]);
 
 	const handleOpenInNewTab = async () => {
 		const newTab = window.open("", "_blank");
