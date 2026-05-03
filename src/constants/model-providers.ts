@@ -305,7 +305,7 @@ const xAiModels = {
 		{
 			name: "Grok 4.3",
 			openRouterModelId: "x-ai/grok-4.3",
-			modelId: null,
+			modelId: "grok-4.3",
 			isFree: false,
 		},
 	] as const,
