@@ -1,4 +1,5 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
+import type { ChatStatus } from "ai";
 import { memo } from "react";
 import type { CustomUIMessage } from "~/types";
 import AssistantMessage from "./assistant-message";
@@ -11,6 +12,8 @@ type Props = {
 	messages: CustomUIMessage[];
 	regenerate: UseChatHelpers<CustomUIMessage>["regenerate"];
 	sendMessage: UseChatHelpers<CustomUIMessage>["sendMessage"];
+	status: ChatStatus;
+	wasStopped: boolean;
 };
 
 export default memo(function ChatMessages({
@@ -20,6 +23,8 @@ export default memo(function ChatMessages({
 	messages,
 	regenerate,
 	sendMessage,
+	status,
+	wasStopped,
 }: Props) {
 	if (messages.length === 0) {
 		return null;
@@ -43,6 +48,13 @@ export default memo(function ChatMessages({
 							isGeneratingImage={isGeneratingImage}
 							message={message}
 							regenerate={regenerate}
+							status={status}
+							// Only the last assistant message was the one being generated
+							// when stop was clicked — older ones should not show the alert.
+							wasStopped={
+								wasStopped &&
+								!messages.slice(index + 1).some((m) => m.role === "assistant")
+							}
 						/>
 					)}
 				</div>

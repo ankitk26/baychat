@@ -1,5 +1,6 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
-import { CopyIcon, CpuIcon, GlobeIcon } from "@phosphor-icons/react";
+import { CopyIcon, CpuIcon, GlobeIcon, StopIcon } from "@phosphor-icons/react";
+import type { ChatStatus } from "ai";
 import React from "react";
 import { toast } from "sonner";
 import { formatTokens } from "~/lib/format-tokens";
@@ -15,6 +16,7 @@ import BranchOffButton from "./branch-off-button";
 import ImageGenerationSkeleton from "./image-generation-skeleton";
 import RetryModelDropdown from "./retry-model-dropdown";
 import ThinkingIndicator from "./thinking-indicator";
+import { Alert, AlertDescription } from "./ui/alert";
 import { Button } from "./ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
@@ -22,10 +24,18 @@ type Props = {
 	isGeneratingImage?: boolean;
 	message: CustomUIMessage;
 	regenerate?: UseChatHelpers<CustomUIMessage>["regenerate"];
+	status: ChatStatus;
+	wasStopped: boolean;
 };
 
 export default React.memo(function AssistantMessage(props: Props) {
-	const { isGeneratingImage = false, message, regenerate } = props;
+	const {
+		isGeneratingImage = false,
+		message,
+		regenerate,
+		status,
+		wasStopped,
+	} = props;
 	const showTokenUsage = useAppearanceStore((store) => store.showTokenUsage);
 	const isImageMessage =
 		isGeneratingImage ||
@@ -36,8 +46,20 @@ export default React.memo(function AssistantMessage(props: Props) {
 	const hasRenderableParts = message.parts.some(
 		(part) => part.type !== "step-start",
 	);
+	const isChatActive = status === "streaming" || status === "submitted";
 
 	if (message.parts.length === 0 || (isImageMessage && !hasRenderableParts)) {
+		if (!isChatActive) {
+			if (wasStopped) {
+				return (
+					<Alert className="mb-8 border-border">
+						<StopIcon />
+						<AlertDescription>Generation stopped.</AlertDescription>
+					</Alert>
+				);
+			}
+			return null;
+		}
 		return (
 			<div className="px-3 lg:px-0">
 				{isImageMessage ? <ImageGenerationSkeleton /> : <ThinkingIndicator />}
@@ -53,6 +75,7 @@ export default React.memo(function AssistantMessage(props: Props) {
 				messageContent={messageContent}
 				messageId={message.id}
 				parts={message.parts}
+				status={status}
 			/>
 			<AIResponseContent
 				messageContent={messageContent}
@@ -60,6 +83,13 @@ export default React.memo(function AssistantMessage(props: Props) {
 			/>
 			<AIGeneratedImages parts={message.parts} />
 			<AIResponseSources parts={message.parts} />
+
+			{wasStopped && !isChatActive && (
+				<Alert className="border-border">
+					<StopIcon />
+					<AlertDescription>Generation stopped.</AlertDescription>
+				</Alert>
+			)}
 
 			{/* Message actions - visible on mobile, hover on desktop */}
 			<div className="flex items-center gap-6 opacity-100 transition-opacity duration-200 md:opacity-0 md:group-hover:opacity-100">

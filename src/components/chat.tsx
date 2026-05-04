@@ -5,7 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import { isImageGenerationModel } from "~/lib/is-image-generation-model";
 import { useSharedChatContext } from "~/providers/chat-provider";
 import { useModelStore } from "~/stores/model-store";
-import type { CustomUIMessage } from "~/types";
+import type {
+	ChatRegenerateFunction,
+	ChatSendMessageFunction,
+	CustomUIMessage,
+} from "~/types";
 import AiResponseAlert from "./ai-response-error";
 import AssistantMessageSkeleton from "./assistant-message-skeleton";
 import ChatMessages from "./chat-messages";
@@ -53,6 +57,26 @@ export default function Chat({
 	const viewportRef = useRef<HTMLDivElement>(null);
 	const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 	const [inputHeight, setInputHeight] = useState(120); // Default estimate
+	const [wasStopped, setWasStopped] = useState(false);
+
+	const handleStop = () => {
+		setWasStopped(true);
+		return stop();
+	};
+
+	const handleSendMessage: ChatSendMessageFunction = (
+		...args: Parameters<ChatSendMessageFunction>
+	) => {
+		setWasStopped(false);
+		return sendMessage(...args);
+	};
+
+	const handleRegenerate: ChatRegenerateFunction = (
+		...args: Parameters<ChatRegenerateFunction>
+	) => {
+		setWasStopped(false);
+		return regenerate(...args);
+	};
 
 	const checkScrollPosition = () => {
 		const viewport = viewportRef.current;
@@ -105,6 +129,7 @@ export default function Chat({
 			setMessages(dbMessages);
 		}
 	}, [setMessages, dbMessages, isMessagesPending]);
+
 	const isGeneratingImage = isImageGenerationModel(selectedModel);
 	const latestGeneratedImageUrl =
 		[...messages]
@@ -138,8 +163,10 @@ export default function Chat({
 											isGeneratingImage={isGeneratingImage}
 											latestGeneratedImageUrl={latestGeneratedImageUrl}
 											messages={messages}
-											regenerate={regenerate}
-											sendMessage={sendMessage}
+											regenerate={handleRegenerate}
+											sendMessage={handleSendMessage}
+											status={status}
+											wasStopped={wasStopped}
 										/>
 
 										{status === "submitted" &&
@@ -181,9 +208,9 @@ export default function Chat({
 				<UserPromptInput
 					chatId={chatId}
 					latestGeneratedImageUrl={latestGeneratedImageUrl}
-					sendMessage={sendMessage}
+					sendMessage={handleSendMessage}
 					status={status}
-					stop={stop}
+					stop={handleStop}
 					onHeightChange={setInputHeight}
 				/>
 			</div>

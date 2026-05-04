@@ -1,3 +1,4 @@
+import type { ChatStatus } from "ai";
 import { useState } from "react";
 import type { CustomUIMessage } from "~/types";
 import ReasoningMarkdown from "./reasoning-markdown";
@@ -7,6 +8,7 @@ type Props = {
 	parts: CustomUIMessage["parts"];
 	messageContent: string;
 	messageId: string;
+	status?: ChatStatus;
 };
 
 export default function AIResponseReasoning(props: Props) {
@@ -22,7 +24,9 @@ export default function AIResponseReasoning(props: Props) {
 	}
 
 	const isStreaming =
-		"state" in reasoningPart && reasoningPart.state === "streaming";
+		"state" in reasoningPart &&
+		reasoningPart.state === "streaming" &&
+		(props.status === "streaming" || props.status === "submitted");
 
 	return (
 		<div className="space-y-2">
