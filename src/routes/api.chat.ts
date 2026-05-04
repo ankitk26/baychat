@@ -239,6 +239,7 @@ type ChatRequestBody = {
 	apiKeys: ApiKeys;
 	useOpenRouter: boolean;
 	chatId?: string;
+	customSystemPrompt?: string;
 };
 
 export const Route = createFileRoute("/api/chat")({
@@ -258,6 +259,7 @@ export const Route = createFileRoute("/api/chat")({
 					apiKeys,
 					useOpenRouter,
 					chatId,
+					customSystemPrompt,
 				} = chatRequestBody;
 
 				const modelToUse = resolveModelForRequest(
@@ -267,9 +269,13 @@ export const Route = createFileRoute("/api/chat")({
 					isWebSearchEnabled,
 				);
 
+				const finalSystemMessage = customSystemPrompt
+					? `${systemMessage}\n\n${customSystemPrompt}`
+					: systemMessage;
+
 				const result = streamText({
 					model: modelToUse,
-					system: systemMessage,
+					system: finalSystemMessage,
 					messages: await convertToModelMessages(
 						transformMessagesForModel(messages),
 					),

@@ -12,6 +12,7 @@ import { usePromptAttachments } from "~/hooks/use-prompt-attachments";
 import { buildUserMessageParts } from "~/lib/build-user-message-parts";
 import { generateRandomUUID } from "~/lib/generate-random-uuid";
 import { getChatTitle } from "~/server-fns/get-chat-title";
+import { useCustomizationStore } from "~/stores/customization-store";
 import { useModelStore } from "~/stores/model-store";
 import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage } from "~/types";
@@ -46,6 +47,9 @@ export default function UserPromptInput(props: Props) {
 	);
 	const persistedUseOpenRouter = usePersistedApiKeysStore(
 		(store) => store.persistedUseOpenRouter,
+	);
+	const customSystemPrompt = useCustomizationStore(
+		(store) => store.customSystemPrompt,
 	);
 	const {
 		attachments,
@@ -120,6 +124,7 @@ export default function UserPromptInput(props: Props) {
 						apiKeys: persistedApiKeys,
 						useOpenRouter: persistedUseOpenRouter,
 						chatId: props.chatId,
+						customSystemPrompt,
 					},
 				},
 			);

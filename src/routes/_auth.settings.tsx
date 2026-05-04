@@ -4,6 +4,7 @@ import ApiKeysForm from "~/components/api-keys-form";
 import AppearanceSettings from "~/components/appearance-settings";
 import ChatHistoryManager from "~/components/chat-history-manager";
 import ContactSection from "~/components/contact-section";
+import CustomizationSettings from "~/components/customization-settings";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -68,6 +69,12 @@ function SettingsPage() {
 								</TabsTrigger>
 								<TabsTrigger
 									className="px-2 py-1 text-xs whitespace-nowrap lg:px-3 lg:py-1.5 lg:text-sm"
+									value="customization"
+								>
+									Customization
+								</TabsTrigger>
+								<TabsTrigger
+									className="px-2 py-1 text-xs whitespace-nowrap lg:px-3 lg:py-1.5 lg:text-sm"
 									value="about"
 								>
 									Contact
@@ -80,6 +87,7 @@ function SettingsPage() {
 							<ApiKeysForm />
 							<ChatHistoryManager />
 							<AppearanceSettings />
+							<CustomizationSettings />
 							<ContactSection />
 						</div>
 					</Tabs>
