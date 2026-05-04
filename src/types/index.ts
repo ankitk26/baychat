@@ -69,4 +69,8 @@ export type CustomUIMessage = Omit<UIMessage<MessageMetadata>, "role"> & {
 
 export type AppFont = "font-mono" | "font-sans";
 
-export type ChatSendMessage = UseChatHelpers<CustomUIMessage>["sendMessage"];
+export type ChatSendMessageFunction =
+	UseChatHelpers<CustomUIMessage>["sendMessage"];
+
+export type ChatRegenerateFunction =
+	UseChatHelpers<CustomUIMessage>["regenerate"];

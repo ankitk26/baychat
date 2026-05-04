@@ -5,7 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import { isImageGenerationModel } from "~/lib/is-image-generation-model";
 import { useSharedChatContext } from "~/providers/chat-provider";
 import { useModelStore } from "~/stores/model-store";
-import type { ChatSendMessage, CustomUIMessage } from "~/types";
+import type {
+	ChatRegenerateFunction,
+	ChatSendMessageFunction,
+	CustomUIMessage,
+} from "~/types";
 import AiResponseAlert from "./ai-response-error";
 import AssistantMessageSkeleton from "./assistant-message-skeleton";
 import ChatMessages from "./chat-messages";
@@ -60,11 +64,18 @@ export default function Chat({
 		return stop();
 	};
 
-	const handleSendMessage: ChatSendMessage = (
-		...args: Parameters<ChatSendMessage>
+	const handleSendMessage: ChatSendMessageFunction = (
+		...args: Parameters<ChatSendMessageFunction>
 	) => {
 		setWasStopped(false);
 		return sendMessage(...args);
+	};
+
+	const handleRegenerate: ChatRegenerateFunction = (
+		...args: Parameters<ChatRegenerateFunction>
+	) => {
+		setWasStopped(false);
+		return regenerate(...args);
 	};
 
 	const checkScrollPosition = () => {
@@ -152,7 +163,7 @@ export default function Chat({
 											isGeneratingImage={isGeneratingImage}
 											latestGeneratedImageUrl={latestGeneratedImageUrl}
 											messages={messages}
-											regenerate={regenerate}
+											regenerate={handleRegenerate}
 											sendMessage={handleSendMessage}
 											status={status}
 											wasStopped={wasStopped}

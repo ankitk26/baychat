@@ -49,7 +49,12 @@ export default memo(function ChatMessages({
 							message={message}
 							regenerate={regenerate}
 							status={status}
-							wasStopped={wasStopped}
+							// Only the last assistant message was the one being generated
+							// when stop was clicked — older ones should not show the alert.
+							wasStopped={
+								wasStopped &&
+								!messages.slice(index + 1).some((m) => m.role === "assistant")
+							}
 						/>
 					)}
 				</div>
