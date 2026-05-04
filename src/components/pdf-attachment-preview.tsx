@@ -66,7 +66,10 @@ export default function PdfAttachmentPreview({
 
 	useEffect(() => {
 		return () => {
-			if (attachment.url.startsWith("data:") && inlinePdfUrl.startsWith("blob:")) {
+			if (
+				attachment.url.startsWith("data:") &&
+				inlinePdfUrl.startsWith("blob:")
+			) {
 				URL.revokeObjectURL(inlinePdfUrl);
 			}
 		};
