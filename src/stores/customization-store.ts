@@ -14,7 +14,14 @@ const getInitialState = (): CustomizationStoreState => {
 	try {
 		const stored = localStorage.getItem(STORAGE_KEY);
 		if (stored) {
-			return JSON.parse(stored);
+			const parsed = JSON.parse(stored);
+			if (
+				parsed &&
+				typeof parsed === "object" &&
+				typeof parsed.customSystemPrompt === "string"
+			) {
+				return parsed as CustomizationStoreState;
+			}
 		}
 	} catch {
 		// Ignore parse errors
@@ -28,7 +35,14 @@ const customizationStore = new Store<CustomizationStoreState>(
 
 customizationStore.subscribe(() => {
 	if (typeof window !== "undefined") {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(customizationStore.state));
+		try {
+			localStorage.setItem(
+				STORAGE_KEY,
+				JSON.stringify(customizationStore.state),
+			);
+		} catch {
+			// Storage unavailable (quota exceeded, private browsing, etc.)
+		}
 	}
 });
 
