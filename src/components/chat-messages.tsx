@@ -1,4 +1,5 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
+import type { ChatStatus } from "ai";
 import { memo } from "react";
 import type { CustomUIMessage } from "~/types";
 import AssistantMessage from "./assistant-message";
@@ -11,6 +12,7 @@ type Props = {
 	messages: CustomUIMessage[];
 	regenerate: UseChatHelpers<CustomUIMessage>["regenerate"];
 	sendMessage: UseChatHelpers<CustomUIMessage>["sendMessage"];
+	status: ChatStatus;
 };
 
 export default memo(function ChatMessages({
@@ -20,6 +22,7 @@ export default memo(function ChatMessages({
 	messages,
 	regenerate,
 	sendMessage,
+	status,
 }: Props) {
 	if (messages.length === 0) {
 		return null;
@@ -43,6 +46,7 @@ export default memo(function ChatMessages({
 							isGeneratingImage={isGeneratingImage}
 							message={message}
 							regenerate={regenerate}
+							status={status}
 						/>
 					)}
 				</div>

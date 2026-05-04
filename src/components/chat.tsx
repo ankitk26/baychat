@@ -105,6 +105,7 @@ export default function Chat({
 			setMessages(dbMessages);
 		}
 	}, [setMessages, dbMessages, isMessagesPending]);
+
 	const isGeneratingImage = isImageGenerationModel(selectedModel);
 	const latestGeneratedImageUrl =
 		[...messages]
@@ -140,6 +141,7 @@ export default function Chat({
 											messages={messages}
 											regenerate={regenerate}
 											sendMessage={sendMessage}
+											status={status}
 										/>
 
 										{status === "submitted" &&

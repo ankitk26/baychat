@@ -1,5 +1,6 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { CopyIcon, CpuIcon, GlobeIcon } from "@phosphor-icons/react";
+import type { ChatStatus } from "ai";
 import React from "react";
 import { toast } from "sonner";
 import { formatTokens } from "~/lib/format-tokens";
@@ -22,10 +23,11 @@ type Props = {
 	isGeneratingImage?: boolean;
 	message: CustomUIMessage;
 	regenerate?: UseChatHelpers<CustomUIMessage>["regenerate"];
+	status: ChatStatus;
 };
 
 export default React.memo(function AssistantMessage(props: Props) {
-	const { isGeneratingImage = false, message, regenerate } = props;
+	const { isGeneratingImage = false, message, regenerate, status } = props;
 	const showTokenUsage = useAppearanceStore((store) => store.showTokenUsage);
 	const isImageMessage =
 		isGeneratingImage ||
@@ -38,6 +40,10 @@ export default React.memo(function AssistantMessage(props: Props) {
 	);
 
 	if (message.parts.length === 0 || (isImageMessage && !hasRenderableParts)) {
+		const isChatActive = status === "streaming" || status === "submitted";
+		if (!isChatActive) {
+			return null;
+		}
 		return (
 			<div className="px-3 lg:px-0">
 				{isImageMessage ? <ImageGenerationSkeleton /> : <ThinkingIndicator />}
@@ -53,6 +59,7 @@ export default React.memo(function AssistantMessage(props: Props) {
 				messageContent={messageContent}
 				messageId={message.id}
 				parts={message.parts}
+				status={status}
 			/>
 			<AIResponseContent
 				messageContent={messageContent}
