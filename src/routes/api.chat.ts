@@ -12,7 +12,6 @@ import { defaultSelectedModel } from "~/constants/model-providers";
 import { systemMessage } from "~/constants/system-message";
 import { fetchAuthMutation } from "~/lib/auth-server";
 import { generateRandomUUID } from "~/lib/generate-random-uuid";
-import { createMessageServerFn } from "~/server-fns/create-message";
 import { getAuthUser } from "~/server-fns/get-auth";
 import type { ApiKeys, CustomUIMessage, Model } from "~/types";
 
@@ -311,12 +310,13 @@ export const Route = createFileRoute("/api/chat")({
 						);
 
 						// Save message to database
-						await createMessageServerFn({
-							data: {
+						await fetchAuthMutation(api.messages.createMessage, {
+							messageBody: {
 								chatId,
-								messageId: responseMessage.id,
 								parts: JSON.stringify(partsToSave),
+								role: "assistant",
 								metadata: JSON.stringify(responseMessage.metadata),
+								sourceMessageId: responseMessage.id,
 							},
 						});
 					},
