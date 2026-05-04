@@ -1,4 +1,4 @@
-import type { UIMessage } from "@ai-sdk/react";
+import type { UIMessage, UseChatHelpers } from "@ai-sdk/react";
 import type { api } from "convex/_generated/api";
 import type { FunctionReturnType } from "convex/server";
 import { z } from "zod";
@@ -68,3 +68,5 @@ export type CustomUIMessage = Omit<UIMessage<MessageMetadata>, "role"> & {
 };
 
 export type AppFont = "font-mono" | "font-sans";
+
+export type ChatSendMessage = UseChatHelpers<CustomUIMessage>["sendMessage"];

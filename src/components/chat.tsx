@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { isImageGenerationModel } from "~/lib/is-image-generation-model";
 import { useSharedChatContext } from "~/providers/chat-provider";
 import { useModelStore } from "~/stores/model-store";
-import type { CustomUIMessage } from "~/types";
+import type { ChatSendMessage, CustomUIMessage } from "~/types";
 import AiResponseAlert from "./ai-response-error";
 import AssistantMessageSkeleton from "./assistant-message-skeleton";
 import ChatMessages from "./chat-messages";
@@ -58,6 +58,13 @@ export default function Chat({
 	const handleStop = () => {
 		setWasStopped(true);
 		return stop();
+	};
+
+	const handleSendMessage: ChatSendMessage = (
+		...args: Parameters<ChatSendMessage>
+	) => {
+		setWasStopped(false);
+		return sendMessage(...args);
 	};
 
 	const checkScrollPosition = () => {
@@ -146,7 +153,7 @@ export default function Chat({
 											latestGeneratedImageUrl={latestGeneratedImageUrl}
 											messages={messages}
 											regenerate={regenerate}
-											sendMessage={sendMessage}
+											sendMessage={handleSendMessage}
 											status={status}
 											wasStopped={wasStopped}
 										/>
@@ -190,7 +197,7 @@ export default function Chat({
 				<UserPromptInput
 					chatId={chatId}
 					latestGeneratedImageUrl={latestGeneratedImageUrl}
-					sendMessage={sendMessage}
+					sendMessage={handleSendMessage}
 					status={status}
 					stop={handleStop}
 					onHeightChange={setInputHeight}
