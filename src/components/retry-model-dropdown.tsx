@@ -6,6 +6,7 @@ import { useParams } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { getAccessibleModels } from "~/lib/get-accessible-models";
 import { getModelByOpenRouterId } from "~/lib/get-model-by-id";
+import { useCustomizationStore } from "~/stores/customization-store";
 import { modelStoreActions, useModelStore } from "~/stores/model-store";
 import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage, Model } from "~/types";
@@ -43,6 +44,9 @@ export default function RetryModelDropdown(props: Props) {
 	const persistedUseOpenRouter = usePersistedApiKeysStore(
 		(store) => store.persistedUseOpenRouter,
 	);
+	const customSystemPrompt = useCustomizationStore(
+		(store) => store.customSystemPrompt,
+	);
 
 	const accessibleModels = getAccessibleModels(
 		persistedApiKeys,
@@ -76,6 +80,7 @@ export default function RetryModelDropdown(props: Props) {
 				apiKeys: persistedApiKeys,
 				useOpenRouter: persistedUseOpenRouter,
 				chatId,
+				customSystemPrompt,
 			},
 		});
 	};

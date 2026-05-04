@@ -11,6 +11,7 @@ import { api } from "convex/_generated/api";
 import { generateRandomUUID } from "~/lib/generate-random-uuid";
 import { getAccessibleModels } from "~/lib/get-accessible-models";
 import { useSharedChatContext } from "~/providers/chat-provider";
+import { useCustomizationStore } from "~/stores/customization-store";
 import { modelStoreActions, useModelStore } from "~/stores/model-store";
 import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage, Model } from "~/types";
@@ -47,6 +48,9 @@ export default function BranchOffButton({ message, sendMessage }: Props) {
 	);
 	const persistedUseOpenRouter = usePersistedApiKeysStore(
 		(store) => store.persistedUseOpenRouter,
+	);
+	const customSystemPrompt = useCustomizationStore(
+		(store) => store.customSystemPrompt,
 	);
 	const accessibleModels = getAccessibleModels(
 		persistedApiKeys,
@@ -107,6 +111,7 @@ export default function BranchOffButton({ message, sendMessage }: Props) {
 						apiKeys: persistedApiKeys,
 						useOpenRouter: persistedUseOpenRouter,
 						chatId: branchChatUuid,
+						customSystemPrompt,
 					},
 				},
 			);

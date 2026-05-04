@@ -10,6 +10,7 @@ import { generateRandomUUID } from "~/lib/generate-random-uuid";
 import { getFilePartsFromMessage } from "~/lib/get-file-parts-from-message";
 import { getMessageContentFromParts } from "~/lib/get-message-content-from-parts";
 import { cn } from "~/lib/utils";
+import { useCustomizationStore } from "~/stores/customization-store";
 import { useModelStore } from "~/stores/model-store";
 import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage } from "~/types";
@@ -49,6 +50,9 @@ export default memo(function UserMessage({
 	);
 	const persistedUseOpenRouter = usePersistedApiKeysStore(
 		(store) => store.persistedUseOpenRouter,
+	);
+	const customSystemPrompt = useCustomizationStore(
+		(store) => store.customSystemPrompt,
 	);
 
 	const createMessageMutation = useMutation({
@@ -96,6 +100,7 @@ export default memo(function UserMessage({
 					apiKeys: persistedApiKeys,
 					useOpenRouter: persistedUseOpenRouter,
 					chatId,
+					customSystemPrompt,
 				},
 			},
 		);
