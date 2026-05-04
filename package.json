@@ -16,7 +16,7 @@
 		"@ai-sdk/react": "^3.0.176",
 		"@ai-sdk/xai": "^3.0.87",
 		"@base-ui/react": "^1.4.1",
-		"@convex-dev/better-auth": "^0.12.1",
+		"@convex-dev/better-auth": "^0.12.2",
 		"@convex-dev/react-query": "0.1.0",
 		"@fontsource-variable/geist-mono": "^5.2.7",
 		"@fontsource-variable/space-grotesk": "^5.2.10",
@@ -24,11 +24,11 @@
 		"@phosphor-icons/react": "^2.1.10",
 		"@tailwindcss/vite": "^4.2.4",
 		"@tanstack/react-hotkeys": "^0.10.0",
-		"@tanstack/react-query": "^5.100.8",
-		"@tanstack/react-query-devtools": "^5.100.8",
+		"@tanstack/react-query": "^5.100.9",
+		"@tanstack/react-query-devtools": "^5.100.9",
 		"@tanstack/react-router": "^1.169.1",
 		"@tanstack/react-router-ssr-query": "^1.166.12",
-		"@tanstack/react-start": "^1.167.61",
+		"@tanstack/react-start": "^1.167.62",
 		"@tanstack/react-store": "^0.11.0",
 		"@tanstack/store": "^0.11.0",
 		"ai": "^6.0.174",
@@ -53,7 +53,7 @@
 		"tailwindcss": "^4.2.4",
 		"uuidv7": "^1.2.1",
 		"vite": "^8.0.10",
-		"zod": "^4.4.2"
+		"zod": "^4.4.3"
 	},
 	"devDependencies": {
 		"@rolldown/plugin-babel": "^0.2.3",
