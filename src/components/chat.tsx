@@ -53,6 +53,12 @@ export default function Chat({
 	const viewportRef = useRef<HTMLDivElement>(null);
 	const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 	const [inputHeight, setInputHeight] = useState(120); // Default estimate
+	const [wasStopped, setWasStopped] = useState(false);
+
+	const handleStop = () => {
+		setWasStopped(true);
+		return stop();
+	};
 
 	const checkScrollPosition = () => {
 		const viewport = viewportRef.current;
@@ -142,6 +148,7 @@ export default function Chat({
 											regenerate={regenerate}
 											sendMessage={sendMessage}
 											status={status}
+											wasStopped={wasStopped}
 										/>
 
 										{status === "submitted" &&
@@ -185,7 +192,7 @@ export default function Chat({
 					latestGeneratedImageUrl={latestGeneratedImageUrl}
 					sendMessage={sendMessage}
 					status={status}
-					stop={stop}
+					stop={handleStop}
 					onHeightChange={setInputHeight}
 				/>
 			</div>

@@ -13,6 +13,7 @@ type Props = {
 	regenerate: UseChatHelpers<CustomUIMessage>["regenerate"];
 	sendMessage: UseChatHelpers<CustomUIMessage>["sendMessage"];
 	status: ChatStatus;
+	wasStopped: boolean;
 };
 
 export default memo(function ChatMessages({
@@ -23,6 +24,7 @@ export default memo(function ChatMessages({
 	regenerate,
 	sendMessage,
 	status,
+	wasStopped,
 }: Props) {
 	if (messages.length === 0) {
 		return null;
@@ -47,6 +49,7 @@ export default memo(function ChatMessages({
 							message={message}
 							regenerate={regenerate}
 							status={status}
+							wasStopped={wasStopped}
 						/>
 					)}
 				</div>
