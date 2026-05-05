@@ -126,11 +126,15 @@ export default function RetryModelDropdown(props: Props) {
 			<DropdownMenuContent className="w-50">
 				{/* Web Search switch */}
 				<div className="flex items-center justify-between px-2 py-2.5">
-					<div className="flex items-center gap-2">
+					<label
+						className="flex items-center gap-2"
+						htmlFor="web-search-switch"
+					>
 						<GlobeIcon className="size-4" />
 						<span className="text-xs">Web Search</span>
-					</div>
+					</label>
 					<Switch
+						id="web-search-switch"
 						checked={isWebSearchEnabled}
 						onCheckedChange={modelStoreActions.toggleIsWebSearch}
 					/>
