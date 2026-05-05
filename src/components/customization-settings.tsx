@@ -51,7 +51,9 @@ export default function CustomizationSettings() {
 					</div>
 				</div>
 
-				<Button onClick={handleSave}>Save</Button>
+				<Button className="w-full lg:w-auto lg:self-start" onClick={handleSave}>
+					Save
+				</Button>
 			</section>
 		</TabsContent>
 	);
