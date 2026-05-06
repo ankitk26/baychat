@@ -215,7 +215,13 @@ export default function Chat({
 					)}
 					style={{ bottom: `${inputHeight + 16}px` }}
 				>
-					<Button className="rounded-full" onClick={scrollToBottom} size="icon">
+					<Button
+						className="rounded-full"
+						onClick={scrollToBottom}
+						size="icon"
+						tabIndex={isScrollActive ? undefined : -1}
+						aria-hidden={!isScrollActive}
+					>
 						<CaretDownIcon />
 					</Button>
 				</div>
