@@ -41,7 +41,7 @@ export default function ReadOnlyChatMessages() {
 				<ScrollArea className="h-full w-full">
 					<div className="mx-auto h-full w-full max-w-3xl">
 						<div className="space-y-6 px-3 pb-32 lg:space-y-8 lg:px-0">
-							<h2 className="-mt-3 text-center text-3xl font-semibold">
+							<h2 className="pt-6 text-center text-3xl font-semibold">
 								{data?.parentChatTitle}
 							</h2>
 

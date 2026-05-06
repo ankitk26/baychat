@@ -35,27 +35,29 @@ export default function ReadOnlyAssistantMessage({ message }: Props) {
 			/>
 			<AIResponseSources parts={messageParts} />
 			<div className="flex items-center gap-6 opacity-100 transition-opacity duration-200 md:opacity-0 md:group-hover:opacity-100">
-				<Tooltip>
-					<TooltipTrigger
-						render={
-							<Button
-								onClick={async () => {
-									await navigator.clipboard.writeText(messageContent);
-									toast.success("Copied to clipboard");
-								}}
-								size="icon"
-								variant="ghost"
-							/>
-						}
-					>
-						<CopyIcon />
-					</TooltipTrigger>
-					<TooltipContent>Copy to clipboard</TooltipContent>
-				</Tooltip>
+				<div className="flex items-center gap-1">
+					<Tooltip>
+						<TooltipTrigger
+							render={
+								<Button
+									onClick={async () => {
+										await navigator.clipboard.writeText(messageContent);
+										toast.success("Copied to clipboard");
+									}}
+									size="icon"
+									variant="ghost"
+								/>
+							}
+						>
+							<CopyIcon />
+						</TooltipTrigger>
+						<TooltipContent>Copy to clipboard</TooltipContent>
+					</Tooltip>
 
-				<span className="text-xs text-muted-foreground">
-					{messageMetadata?.modelName}
-				</span>
+					<span className="text-xs text-muted-foreground">
+						{messageMetadata?.modelName}
+					</span>
+				</div>
 			</div>
 		</div>
 	);
