@@ -67,6 +67,13 @@ export type CustomUIMessage = Omit<UIMessage<MessageMetadata>, "role"> & {
 	role: "user" | "assistant";
 };
 
+export type ChatHistoryItem = {
+	_id: string;
+	_creationTime: number;
+	title: string;
+	isBranched: boolean;
+};
+
 export type AppFont = "font-mono" | "font-sans";
 
 export type ChatSendMessageFunction =
