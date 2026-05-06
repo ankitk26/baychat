@@ -35,6 +35,7 @@ export default defineSchema({
 			"folderId",
 			"isArchived",
 		])
+		.index("by_user_and_archived", ["userId", "isArchived"])
 		.index("by_folder_and_user", ["userId", "folderId"]),
 
 	messages: defineTable({
