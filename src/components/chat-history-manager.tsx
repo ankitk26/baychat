@@ -467,134 +467,142 @@ export default function ChatHistoryManager() {
 			)}
 
 			{/* Archived chats toggle */}
-			{archivedChats.length > 0 && (
-				<div className="mt-6 flex items-center gap-3">
-					<Switch
-						checked={showArchived}
-						onCheckedChange={setShowArchived}
-						size="sm"
-						id="show-archived"
-					/>
-					<Label
-						className="cursor-pointer text-sm text-muted-foreground"
-						htmlFor="show-archived"
+			<div className="mt-6 flex items-center gap-3">
+				<Switch
+					checked={showArchived}
+					onCheckedChange={setShowArchived}
+					size="sm"
+					id="show-archived"
+				/>
+				<Label
+					className="cursor-pointer text-sm text-muted-foreground"
+					htmlFor="show-archived"
+				>
+					Archived chats
+				</Label>
+				{showArchived && archivedChats.length > 0 && (
+					<Badge
+						className="h-4 px-1 text-[0.625rem] font-medium"
+						variant="secondary"
 					>
-						Archived chats
-					</Label>
-					{showArchived && (
-						<Badge
-							className="h-4 px-1 text-[0.625rem] font-medium"
-							variant="secondary"
-						>
-							{archivedChats.length}
-						</Badge>
-					)}
-				</div>
-			)}
+						{archivedChats.length}
+					</Badge>
+				)}
+			</div>
 
 			{/* Archived chats list */}
-			{showArchived && archivedChats.length > 0 && (
-				<div className="relative rounded-lg border">
-					<ScrollArea className="max-h-[300px]">
-						<div
-							className={`space-y-5 p-3 ${selectedArchivedChats.size > 0 ? "pb-14" : ""}`}
-						>
-							{groupedArchived.map(({ group, chats: groupChats }) => (
-								<div className="space-y-1" key={`archived-${group}`}>
-									<h4 className="sticky top-0 z-10 bg-background px-2 py-1 text-[0.65rem] font-semibold tracking-wider text-muted-foreground uppercase">
-										{group}
-									</h4>
-									<div className="space-y-0.5">
-										{groupChats.map((chat) =>
-											renderChatRow(chat, {
-												isArchived: true,
-												selectionSet: selectedArchivedChats,
-												onSelect: handleSelectArchivedChat,
-											}),
-										)}
+			{showArchived &&
+				(archivedChats.length > 0 ? (
+					<div className="relative rounded-lg border">
+						<ScrollArea className="max-h-[300px]">
+							<div
+								className={`space-y-5 p-3 ${selectedArchivedChats.size > 0 ? "pb-14" : ""}`}
+							>
+								{groupedArchived.map(({ group, chats: groupChats }) => (
+									<div className="space-y-1" key={`archived-${group}`}>
+										<h4 className="sticky top-0 z-10 bg-background px-2 py-1 text-[0.65rem] font-semibold tracking-wider text-muted-foreground uppercase">
+											{group}
+										</h4>
+										<div className="space-y-0.5">
+											{groupChats.map((chat) =>
+												renderChatRow(chat, {
+													isArchived: true,
+													selectionSet: selectedArchivedChats,
+													onSelect: handleSelectArchivedChat,
+												}),
+											)}
+										</div>
 									</div>
-								</div>
-							))}
-						</div>
-					</ScrollArea>
+								))}
+							</div>
+						</ScrollArea>
 
-					{/* Floating selection bar for archived */}
-					{selectedArchivedChats.size > 0 && (
-						<div className="absolute right-0 bottom-0 left-0 flex items-center justify-between rounded-b-lg border-t bg-background/95 px-3 py-2 backdrop-blur-sm">
-							<div className="flex items-center gap-2">
-								<Button
-									className="h-7 px-2 text-xs"
-									size="sm"
-									variant="ghost"
-									onClick={handleSelectAllArchived}
-								>
-									{selectedArchivedChats.size === archivedChats.length
-										? "Deselect all"
-										: "Select all"}
-								</Button>
-								<Button
-									className="h-7 px-2 text-xs"
-									size="sm"
-									variant="ghost"
-									onClick={() => setSelectedArchivedChats(new Set())}
-								>
-									<XIcon className="mr-1 h-3 w-3" />
-									Clear
-								</Button>
-							</div>
-							<div className="flex items-center gap-2">
-								<Button
-									className="h-7 px-2 text-xs"
-									size="sm"
-									variant="secondary"
-									onClick={handleUnarchiveSelected}
-								>
-									<ArchiveBoxIcon className="mr-1 h-3 w-3" />
-									Unarchive {selectedArchivedChats.size}
-								</Button>
-								<AlertDialog>
-									<AlertDialogTrigger
-										render={
-											<Button
-												className="h-7 px-2 text-xs"
-												size="sm"
-												variant="destructive"
-											/>
-										}
+						{/* Floating selection bar for archived */}
+						{selectedArchivedChats.size > 0 && (
+							<div className="absolute right-0 bottom-0 left-0 flex items-center justify-between rounded-b-lg border-t bg-background/95 px-3 py-2 backdrop-blur-sm">
+								<div className="flex items-center gap-2">
+									<Button
+										className="h-7 px-2 text-xs"
+										size="sm"
+										variant="ghost"
+										onClick={handleSelectAllArchived}
 									>
-										<TrashIcon className="mr-1 h-3 w-3" />
-										Delete {selectedArchivedChats.size}
-									</AlertDialogTrigger>
-									<AlertDialogContent>
-										<AlertDialogHeader>
-											<AlertDialogTitle>
-												Delete {selectedArchivedChats.size} conversation
-												{selectedArchivedChats.size > 1 ? "s" : ""}
-											</AlertDialogTitle>
-											<AlertDialogDescription>
-												Are you sure you want to delete these conversations?
-												This action cannot be undone.
-											</AlertDialogDescription>
-										</AlertDialogHeader>
-										<AlertDialogFooter>
-											<AlertDialogCancel>Cancel</AlertDialogCancel>
-											<AlertDialogAction
-												variant="destructive"
-												disabled={deleteChatMutation.isPending}
-												onClick={handleDeleteSelectedArchived}
-											>
-												{deleteChatMutation.isPending
-													? "Deleting..."
-													: "Delete"}
-											</AlertDialogAction>
-										</AlertDialogFooter>
-									</AlertDialogContent>
-								</AlertDialog>
+										{selectedArchivedChats.size === archivedChats.length
+											? "Deselect all"
+											: "Select all"}
+									</Button>
+									<Button
+										className="h-7 px-2 text-xs"
+										size="sm"
+										variant="ghost"
+										onClick={() => setSelectedArchivedChats(new Set())}
+									>
+										<XIcon className="mr-1 h-3 w-3" />
+										Clear
+									</Button>
+								</div>
+								<div className="flex items-center gap-2">
+									<Button
+										className="h-7 px-2 text-xs"
+										size="sm"
+										variant="secondary"
+										onClick={handleUnarchiveSelected}
+									>
+										<ArchiveBoxIcon className="mr-1 h-3 w-3" />
+										Unarchive {selectedArchivedChats.size}
+									</Button>
+									<AlertDialog>
+										<AlertDialogTrigger
+											render={
+												<Button
+													className="h-7 px-2 text-xs"
+													size="sm"
+													variant="destructive"
+												/>
+											}
+										>
+											<TrashIcon className="mr-1 h-3 w-3" />
+											Delete {selectedArchivedChats.size}
+										</AlertDialogTrigger>
+										<AlertDialogContent>
+											<AlertDialogHeader>
+												<AlertDialogTitle>
+													Delete {selectedArchivedChats.size} conversation
+													{selectedArchivedChats.size > 1 ? "s" : ""}
+												</AlertDialogTitle>
+												<AlertDialogDescription>
+													Are you sure you want to delete these conversations?
+													This action cannot be undone.
+												</AlertDialogDescription>
+											</AlertDialogHeader>
+											<AlertDialogFooter>
+												<AlertDialogCancel>Cancel</AlertDialogCancel>
+												<AlertDialogAction
+													variant="destructive"
+													disabled={deleteChatMutation.isPending}
+													onClick={handleDeleteSelectedArchived}
+												>
+													{deleteChatMutation.isPending
+														? "Deleting..."
+														: "Delete"}
+												</AlertDialogAction>
+											</AlertDialogFooter>
+										</AlertDialogContent>
+									</AlertDialog>
+								</div>
 							</div>
-						</div>
-					)}
-				</div>
-			)}
+						)}
+					</div>
+				) : (
+					<div className="flex flex-col items-center justify-center rounded-lg border py-10 text-center">
+						<p className="text-sm font-medium text-foreground">
+							No archived chats
+						</p>
+						<p className="mt-1 text-xs text-muted-foreground">
+							Archive a conversation to see it here
+						</p>
+					</div>
+				))}
 		</TabsContent>
 	);
 }
