@@ -3,6 +3,7 @@ import { CaretDownIcon } from "@phosphor-icons/react";
 import type { FileUIPart } from "ai";
 import { useEffect, useRef, useState } from "react";
 import { isImageGenerationModel } from "~/lib/is-image-generation-model";
+import { cn } from "~/lib/utils";
 import { useSharedChatContext } from "~/providers/chat-provider";
 import { useModelStore } from "~/stores/model-store";
 import type {
@@ -206,9 +207,12 @@ export default function Chat({
 			</div>
 
 			{/* Scroll to bottom button - centered at top of prompt */}
-			{showScrollToBottom && isScrollActive && (
+			{showScrollToBottom && (
 				<div
-					className="absolute left-1/2 z-50 -translate-x-1/2 transform"
+					className={cn(
+						"absolute left-1/2 z-50 -translate-x-1/2 transform transition-opacity duration-300 ease-in-out",
+						isScrollActive ? "opacity-100" : "pointer-events-none opacity-0",
+					)}
 					style={{ bottom: `${inputHeight + 16}px` }}
 				>
 					<Button className="rounded-full" onClick={scrollToBottom} size="icon">
