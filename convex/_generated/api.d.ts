@@ -16,6 +16,7 @@ import type * as functions from "../functions.js";
 import type * as http from "../http.js";
 import type * as imageGenerations from "../imageGenerations.js";
 import type * as messages from "../messages.js";
+import type * as migrations_setAllChatsUnarchived from "../migrations/setAllChatsUnarchived.js";
 import type * as model_chats from "../model/chats.js";
 import type * as model_users from "../model/users.js";
 
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   imageGenerations: typeof imageGenerations;
   messages: typeof messages;
+  "migrations/setAllChatsUnarchived": typeof migrations_setAllChatsUnarchived;
   "model/chats": typeof model_chats;
   "model/users": typeof model_users;
 }>;

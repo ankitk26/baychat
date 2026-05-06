@@ -1,6 +1,7 @@
 import { DotsThreeVerticalIcon } from "@phosphor-icons/react";
 import { Suspense } from "react";
 import type { SidebarChatType } from "~/types";
+import AppSidebarChatItemArchive from "./app-sidebar-chat-item-archive";
 import AppSidebarChatItemDelete from "./app-sidebar-chat-item-delete";
 import AppSidebarChatItemFolder from "./app-sidebar-chat-item-folder";
 import AppSidebarChatItemPin from "./app-sidebar-chat-item-pin";
@@ -37,6 +38,7 @@ export default function AppSidebarChatItemActions(props: Props) {
 				<AppSidebarChatItemRename chat={props.chat} />
 				<AppSidebarChatItemPin chat={props.chat} />
 				<AppSidebarChatItemDelete chat={props.chat} />
+				<AppSidebarChatItemArchive chat={props.chat} />
 				<AppSidebarChatItemShare chat={props.chat} />
 				<Suspense fallback={<Skeleton className="h-3 w-3/4" />}>
 					<AppSidebarChatItemFolder chat={props.chat} />

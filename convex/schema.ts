@@ -25,10 +25,16 @@ export default defineSchema({
 		isBranched: v.boolean(),
 		parentChatId: v.optional(v.id("chats")),
 		folderId: v.optional(v.id("folders")),
+		isArchived: v.boolean(),
 	})
 		.index("by_chat_uuid", ["uuid"])
 		.index("by_user", ["userId"])
-		.index("by_user_and_pinned_and_folder", ["userId", "isPinned", "folderId"])
+		.index("by_user_and_pinned_and_folder_and_archived", [
+			"userId",
+			"isPinned",
+			"folderId",
+			"isArchived",
+		])
 		.index("by_folder_and_user", ["userId", "folderId"]),
 
 	messages: defineTable({
