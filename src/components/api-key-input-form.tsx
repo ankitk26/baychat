@@ -29,6 +29,7 @@ export default function ApiKeyInputForm(props: Props) {
 		<div className="relative">
 			<Input
 				className="rounded-md pr-10 font-mono"
+				id={`api-key-${props.provider}`}
 				onChange={handleInputChange}
 				placeholder={props.formValues.placeholder ?? ""}
 				type={showKey ? "text" : "password"}

@@ -99,7 +99,7 @@ export default function ApiKeysForm() {
 					useOpenRouter={useOpenRouter}
 				/>
 
-				<div className="space-y-12">
+				<div className="space-y-6">
 					{keysForm.map((keyItem) => (
 						<ApiKeyInput
 							formValues={{
@@ -115,7 +115,7 @@ export default function ApiKeysForm() {
 					))}
 				</div>
 
-				<div className="flex justify-end pt-4">
+				<div className="flex justify-start pt-4">
 					<Button
 						className="flex w-full items-center gap-2 lg:w-fit"
 						disabled={!hasChanges}
