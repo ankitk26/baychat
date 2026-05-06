@@ -25,7 +25,7 @@ export default defineSchema({
 		isBranched: v.boolean(),
 		parentChatId: v.optional(v.id("chats")),
 		folderId: v.optional(v.id("folders")),
-		isArchived: v.boolean(),
+		isArchived: v.optional(v.boolean()),
 	})
 		.index("by_chat_uuid", ["uuid"])
 		.index("by_user", ["userId"])
