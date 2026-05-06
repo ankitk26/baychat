@@ -3,6 +3,7 @@ import { CaretDownIcon } from "@phosphor-icons/react";
 import type { FileUIPart } from "ai";
 import { useEffect, useRef, useState } from "react";
 import { isImageGenerationModel } from "~/lib/is-image-generation-model";
+import { cn } from "~/lib/utils";
 import { useSharedChatContext } from "~/providers/chat-provider";
 import { useModelStore } from "~/stores/model-store";
 import type {
@@ -56,6 +57,8 @@ export default function Chat({
 
 	const viewportRef = useRef<HTMLDivElement>(null);
 	const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+	const [isScrollActive, setIsScrollActive] = useState(false);
+	const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [inputHeight, setInputHeight] = useState(120); // Default estimate
 	const [wasStopped, setWasStopped] = useState(false);
 
@@ -92,6 +95,15 @@ export default function Chat({
 			scrollTop + clientHeight >= scrollHeight - bottomThreshold;
 
 		setShowScrollToBottom(isScrollable && !isNearBottom);
+		setIsScrollActive(true);
+
+		if (scrollTimeoutRef.current) {
+			clearTimeout(scrollTimeoutRef.current);
+		}
+
+		scrollTimeoutRef.current = setTimeout(() => {
+			setIsScrollActive(false);
+		}, 2000);
 	};
 
 	const scrollToBottom = () => {
@@ -119,6 +131,9 @@ export default function Chat({
 
 		return () => {
 			viewport.removeEventListener("scroll", checkScrollPosition);
+			if (scrollTimeoutRef.current) {
+				clearTimeout(scrollTimeoutRef.current);
+			}
 		};
 	}, [messages]);
 
@@ -194,10 +209,19 @@ export default function Chat({
 			{/* Scroll to bottom button - centered at top of prompt */}
 			{showScrollToBottom && (
 				<div
-					className="absolute left-1/2 z-50 -translate-x-1/2 transform"
+					className={cn(
+						"absolute left-1/2 z-50 -translate-x-1/2 transform transition-opacity duration-300 ease-in-out",
+						isScrollActive ? "opacity-100" : "pointer-events-none opacity-0",
+					)}
 					style={{ bottom: `${inputHeight + 16}px` }}
 				>
-					<Button className="rounded-full" onClick={scrollToBottom} size="icon">
+					<Button
+						className="rounded-full"
+						onClick={scrollToBottom}
+						size="icon"
+						tabIndex={isScrollActive ? undefined : -1}
+						aria-hidden={!isScrollActive}
+					>
 						<CaretDownIcon />
 					</Button>
 				</div>
