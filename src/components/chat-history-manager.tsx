@@ -52,6 +52,11 @@ export default function ChatHistoryManager() {
 		mutationFn: useConvexMutation(api.chats.toggleChatArchive),
 		onSuccess: (wasArchived) => {
 			toast.success(wasArchived ? "Chat unarchived" : "Chat archived");
+			if (wasArchived) {
+				chatHistorySelectionActions.clearArchivedChatSelection();
+			} else {
+				chatHistorySelectionActions.clearChatSelection();
+			}
 		},
 		onError: () => {
 			toast.error("Failed to archive chat", {
