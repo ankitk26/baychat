@@ -34,7 +34,7 @@ export const chatHistorySelectionActions = {
 	selectAllChats: (chatIds: string[]) => {
 		chatHistorySelectionStore.setState((prev) => ({
 			...prev,
-			selectedChatIds: chatIds,
+			selectedChatIds: [...chatIds],
 		}));
 	},
 	clearChatSelection: () => {
@@ -57,7 +57,7 @@ export const chatHistorySelectionActions = {
 	selectAllArchivedChats: (chatIds: string[]) => {
 		chatHistorySelectionStore.setState((prev) => ({
 			...prev,
-			selectedArchivedChatIds: chatIds,
+			selectedArchivedChatIds: [...chatIds],
 		}));
 	},
 	clearArchivedChatSelection: () => {
