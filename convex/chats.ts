@@ -12,7 +12,9 @@ export const getChats = query({
 
 		const chats = await ctx.db
 			.query("chats")
-			.withIndex("by_user_and_pinned_and_folder", (q) => q.eq("userId", userId))
+			.withIndex("by_user_and_archived", (q) =>
+				q.eq("userId", userId).eq("isArchived", false),
+			)
 			.order("desc")
 			.collect();
 
@@ -28,8 +30,12 @@ export const getUnpinnedChats = query({
 
 		const chats = await ctx.db
 			.query("chats")
-			.withIndex("by_user_and_pinned_and_folder", (q) =>
-				q.eq("userId", userId).eq("isPinned", false).eq("folderId", undefined),
+			.withIndex("by_user_and_pinned_and_folder_and_archived", (q) =>
+				q
+					.eq("userId", userId)
+					.eq("isPinned", false)
+					.eq("folderId", undefined)
+					.eq("isArchived", false),
 			)
 			.order("desc")
 			.collect();
@@ -62,8 +68,12 @@ export const getPinnedChats = query({
 
 		const chats = await ctx.db
 			.query("chats")
-			.withIndex("by_user_and_pinned_and_folder", (q) =>
-				q.eq("userId", userId).eq("isPinned", true).eq("folderId", undefined),
+			.withIndex("by_user_and_pinned_and_folder_and_archived", (q) =>
+				q
+					.eq("userId", userId)
+					.eq("isPinned", true)
+					.eq("folderId", undefined)
+					.eq("isArchived", false),
 			)
 			.order("desc")
 			.collect();
@@ -101,6 +111,7 @@ export const createChat = mutation({
 			title: "Generating title..",
 			isPinned: false,
 			isBranched: false,
+			isArchived: false,
 		});
 
 		return newChatId;
@@ -142,6 +153,70 @@ export const toggleChatPin = mutation({
 		}
 		await ctx.db.patch(args.chatId, { isPinned: !chat.isPinned });
 		return chat.isPinned;
+	},
+});
+
+export const getArchivedChats = query({
+	handler: async (ctx) => {
+		const userId = await getAuthUserIdOrThrow(ctx);
+
+		const chats = await ctx.db
+			.query("chats")
+			.withIndex("by_user_and_archived", (q) =>
+				q.eq("userId", userId).eq("isArchived", true),
+			)
+			.order("desc")
+			.collect();
+
+		const selectedFieldsChats = chats.map((chat) => selectChatFields(chat));
+
+		return selectedFieldsChats;
+	},
+});
+
+export const toggleChatArchive = mutation({
+	args: {
+		chatId: v.id("chats"),
+	},
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserIdOrThrow(ctx);
+		const chat = await ctx.db.get(args.chatId);
+		if (!chat) {
+			throw new Error("Invalid chat request");
+		}
+		if (chat.userId !== userId) {
+			throw new Error("Unauthorized request");
+		}
+		await ctx.db.patch(args.chatId, { isArchived: !chat.isArchived });
+		return chat.isArchived;
+	},
+});
+
+export const archiveAll = mutation({
+	args: {
+		chatIds: v.array(v.id("chats")),
+	},
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserIdOrThrow(ctx);
+		for (const chatId of args.chatIds) {
+			const chat = await ctx.db.get(chatId);
+			if (!chat || chat.userId !== userId) continue;
+			await ctx.db.patch(chatId, { isArchived: true });
+		}
+	},
+});
+
+export const unarchiveAll = mutation({
+	args: {
+		chatIds: v.array(v.id("chats")),
+	},
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserIdOrThrow(ctx);
+		for (const chatId of args.chatIds) {
+			const chat = await ctx.db.get(chatId);
+			if (!chat || chat.userId !== userId) continue;
+			await ctx.db.patch(chatId, { isArchived: false });
+		}
 	},
 });
 
@@ -318,7 +393,7 @@ export const branchOffChat = mutation({
 			userId: user,
 			uuid: args.branchedChatUuid,
 			parentChatId: parentChat._id,
-			// parentChatUuid: parentChat.uuid,
+			isArchived: false,
 		});
 
 		// get newly inserted branched chat
