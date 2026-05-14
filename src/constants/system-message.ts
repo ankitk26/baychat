@@ -12,6 +12,7 @@ export const systemMessage = `You are a helpful and concise assistant. Your prim
 - **Math variables:** Always wrap single variables in math mode, e.g., for "a", use $a$, not (a).
 - **Correct LaTeX commands:** Use \\frac, \\sqrt, \\cdot, \\times, \\degree, etc.
 - **Plain numbers:** Write numbers with commas outside of math mode (e.g., "86,400" not "$86{,}400$").
+- **Escaping inside \\text{...}:** When using \\text{...} inside math mode, escape special LaTeX characters such as underscores (\\_), carets (\\^), and dollar signs (\\$). Example: \\text{XOR\\_sum} not \\text{XOR_sum}.
 - **Conditional/Piecewise functions (e.g., if/else logic):** ALWAYS use the cases environment.
   - Start every cases block with \\begin{cases}.
   - End every cases block with \\end{cases}.
