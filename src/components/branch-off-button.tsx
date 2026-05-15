@@ -16,6 +16,7 @@ import { modelStoreActions, useModelStore } from "~/stores/model-store";
 import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage, Model } from "~/types";
 import { DropdownMenuSeparatorWithText } from "./dropdown-menu-separator-with-text";
+import ModelInputIndicators from "./model-input-indicators";
 import ModelProviderIcon from "./model-provider-icon";
 import { Button } from "./ui/button";
 import {
@@ -134,7 +135,7 @@ export default function BranchOffButton({ message, sendMessage }: Props) {
 				/>
 				<TooltipContent>Branch off</TooltipContent>
 			</Tooltip>
-			<DropdownMenuContent className="w-50">
+			<DropdownMenuContent className="w-60">
 				<DropdownMenuItem
 					className="flex items-center gap-3 py-2.5 text-xs"
 					onClick={() => handleBranchOff(selectedModel)}
@@ -154,19 +155,22 @@ export default function BranchOffButton({ message, sendMessage }: Props) {
 							{provider.provider}
 						</DropdownMenuSubTrigger>
 						<DropdownMenuPortal>
-							<DropdownMenuSubContent className="mx-2 w-50">
+							<DropdownMenuSubContent className="mx-2 w-60">
 								{provider.models.map((model) => (
 									<DropdownMenuItem
-										className="py-2.5 text-xs"
+										className="py-2.5 text-xs whitespace-nowrap"
 										disabled={!model.isAvailable}
 										key={model.modelId}
 										onClick={() => handleBranchOff(model)}
 									>
 										<ModelProviderIcon provider={provider.key} />
 										{model.name}
-										{!model.isAvailable && (
-											<KeyIcon className="ml-auto size-3" />
-										)}
+										<span className="ml-auto flex items-center gap-0.5">
+											<ModelInputIndicators
+												openRouterModelId={model.openRouterModelId}
+											/>
+											{!model.isAvailable && <KeyIcon className="size-3" />}
+										</span>
 									</DropdownMenuItem>
 								))}
 							</DropdownMenuSubContent>
