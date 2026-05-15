@@ -4,6 +4,10 @@ import type { ChangeEvent } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { getPostUrl } from "~/server-fns/get-post-url";
+import {
+	useIsModalitiesLoaded,
+	useModelModalities,
+} from "~/stores/model-modalities-store";
 
 const TEXT_FILE_EXTENSIONS = new Set([
 	"c",
@@ -128,7 +132,12 @@ const isTextAttachment = (file: File, mediaType: string) => {
 };
 
 // Keep prompt submission focused on messaging while this hook owns attachment state and uploads.
-export function usePromptAttachments() {
+export function usePromptAttachments(openRouterModelId: string) {
+	const modelModalities = useModelModalities(openRouterModelId);
+	const isModalitiesLoaded = useIsModalitiesLoaded();
+	const modelSupportsImage = modelModalities.includes("image");
+	const modelSupportsPdf = modelModalities.includes("pdf");
+
 	const [attachments, setAttachments] = useState<PendingAttachment[]>([]);
 	const [isUploading, setIsUploading] = useState(false);
 
@@ -153,6 +162,26 @@ export function usePromptAttachments() {
 			if (file.size > MAX_ATTACHMENT_SIZE_BYTES) {
 				toast.warning(`${file.name} is larger than 10 MB.`);
 				return false;
+			}
+
+			// Skip model-specific validation until modalities data has loaded
+			if (isModalitiesLoaded) {
+				const isImageFile = mediaType.startsWith("image/");
+				const isPdfFile = mediaType === "application/pdf";
+
+				if (isImageFile && !modelSupportsImage) {
+					toast.warning(
+						`${file.name} is an image, but the current model does not support image input.`,
+					);
+					return false;
+				}
+
+				if (isPdfFile && !modelSupportsPdf) {
+					toast.warning(
+						`${file.name} is a PDF, but the current model does not support PDF input.`,
+					);
+					return false;
+				}
 			}
 
 			return true;

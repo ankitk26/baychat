@@ -7,12 +7,17 @@ import { api } from "convex/_generated/api";
 import type { Id } from "convex/_generated/dataModel";
 import type { ClipboardEvent } from "react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { useIsDesktop } from "~/hooks/use-desktop";
 import { usePromptAttachments } from "~/hooks/use-prompt-attachments";
 import { buildUserMessageParts } from "~/lib/build-user-message-parts";
 import { generateRandomUUID } from "~/lib/generate-random-uuid";
 import { getChatTitle } from "~/server-fns/get-chat-title";
 import { useCustomizationStore } from "~/stores/customization-store";
+import {
+	useIsModalitiesLoaded,
+	useModelModalities,
+} from "~/stores/model-modalities-store";
 import { useModelStore } from "~/stores/model-store";
 import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage } from "~/types";
@@ -51,6 +56,8 @@ export default function UserPromptInput(props: Props) {
 	const customSystemPrompt = useCustomizationStore(
 		(store) => store.customSystemPrompt,
 	);
+	const modelModalities = useModelModalities(selectedModel.openRouterModelId);
+	const isModalitiesLoaded = useIsModalitiesLoaded();
 	const {
 		attachments,
 		clearAttachments,
@@ -59,7 +66,7 @@ export default function UserPromptInput(props: Props) {
 		isUploading,
 		removeAttachment,
 		uploadAttachments,
-	} = usePromptAttachments();
+	} = usePromptAttachments(selectedModel.openRouterModelId);
 
 	const updateChatTitleMutation = useMutation({
 		mutationFn: useConvexMutation(api.chats.updateChatTitle),
@@ -88,6 +95,28 @@ export default function UserPromptInput(props: Props) {
 			(input.trim().length === 0 && attachments.length === 0)
 		) {
 			return;
+		}
+
+		// Validate all attachments are compatible with the current model
+		if (isModalitiesLoaded) {
+			for (const attachment of attachments) {
+				const isImageFile = attachment.mediaType.startsWith("image/");
+				const isPdfFile = attachment.mediaType === "application/pdf";
+
+				if (isImageFile && !modelModalities.includes("image")) {
+					toast.warning(
+						`${attachment.filename} is an image, but the current model does not support image input. Please switch to a model that supports images or remove the attachment.`,
+					);
+					return;
+				}
+
+				if (isPdfFile && !modelModalities.includes("pdf")) {
+					toast.warning(
+						`${attachment.filename} is a PDF, but the current model does not support PDF input. Please switch to a model that supports PDFs or remove the attachment.`,
+					);
+					return;
+				}
+			}
 		}
 
 		setIsSubmittingPrompt(true);
