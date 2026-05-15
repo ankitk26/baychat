@@ -78,8 +78,8 @@ export async function getModelModalities(): Promise<
 			return map;
 		} catch (error) {
 			console.error("Failed to fetch model modalities from models.dev:", error);
-			cachedModalities = new Map();
-			return cachedModalities;
+			// Do NOT cache on failure — let the next call retry the fetch
+			return new Map();
 		} finally {
 			fetchPromise = null;
 		}
