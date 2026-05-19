@@ -32,7 +32,7 @@ export function getRouter() {
 		context: { queryClient, convexQueryClient },
 		defaultPreload: "intent",
 		defaultNotFoundComponent: NotFound,
-		defaultErrorComponent: () => <TanstackErrorComponent />,
+		defaultErrorComponent: TanstackErrorComponent,
 	});
 
 	setupRouterSsrQueryIntegration({
