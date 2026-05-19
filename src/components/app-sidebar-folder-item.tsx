@@ -1,3 +1,4 @@
+import { useParams } from "@tanstack/react-router";
 import { useState } from "react";
 import type { SidebarFolder } from "~/types";
 import AppSidebarChatItem from "./app-sidebar-chat-item";
@@ -15,12 +16,31 @@ type Props = {
 };
 
 export default function AppSidebarFolderItem(props: Props) {
-	const [showChats, setShowChats] = useState(false);
+	const { chatId } = useParams({ strict: false });
+	const [manualExpand, setManualExpand] = useState(false);
+	const [collapsedAtChatId, setCollapsedAtChatId] = useState<string | null>(
+		null,
+	);
 	const { isMobile } = useSidebar();
+
+	const isActiveChatInFolder =
+		chatId != null && props.folder.chats.some((chat) => chat.uuid === chatId);
+
+	// User collapsed while viewing this chat — but if chatId changed since,
+	// ignore the collapse so the new folder auto-expands.
+	const userCollapsed = collapsedAtChatId === chatId;
+	const showChats = isActiveChatInFolder ? !userCollapsed : manualExpand;
 
 	const handleClick = (e: React.MouseEvent) => {
 		e.preventDefault();
-		setShowChats((prev) => !prev);
+		if (showChats && isActiveChatInFolder) {
+			setCollapsedAtChatId(chatId ?? null);
+		} else if (showChats) {
+			setManualExpand(false);
+		} else {
+			setManualExpand(true);
+			setCollapsedAtChatId(null);
+		}
 	};
 
 	return (
