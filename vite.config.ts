@@ -22,6 +22,7 @@ export default defineConfig({
 		tsconfigPaths: true,
 	},
 	ssr: {
-		noExternal: ["@convex-dev/better-auth", "react-shiki"],
+		external: ["react-shiki", "shiki"],
+		noExternal: ["@convex-dev/better-auth"],
 	},
 });
