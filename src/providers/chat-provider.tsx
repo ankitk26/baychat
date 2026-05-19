@@ -37,8 +37,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 	);
 }
 
+export function useOptionalSharedChatContext() {
+	return useContext(ChatContext);
+}
+
 export function useSharedChatContext() {
-	const context = useContext(ChatContext);
+	const context = useOptionalSharedChatContext();
 	if (!context) {
 		throw new Error("useSharedChatContext must be used within a ChatProvider");
 	}

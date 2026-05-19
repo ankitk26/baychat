@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { useSharedChatContext } from "~/providers/chat-provider";
+import { useOptionalSharedChatContext } from "~/providers/chat-provider";
 import { Button } from "./ui/button";
 
 export default function TanstackErrorComponent() {
-	const { clearChat } = useSharedChatContext();
+	const chatContext = useOptionalSharedChatContext();
 
 	return (
 		<div className="flex min-h-dvh items-center justify-center p-6">
@@ -18,7 +18,7 @@ export default function TanstackErrorComponent() {
 				<div className="mt-4 flex justify-center">
 					<Link
 						aria-label="Go to the home page"
-						onClick={() => clearChat()}
+						onClick={() => chatContext?.clearChat()}
 						to="/"
 					>
 						<Button>Go to Home</Button>

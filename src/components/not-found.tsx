@@ -1,13 +1,13 @@
 import { HouseIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
-import { useSharedChatContext } from "~/providers/chat-provider";
+import { useOptionalSharedChatContext } from "~/providers/chat-provider";
 import { ThemeToggler } from "./theme-toggle";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Separator } from "./ui/separator";
 
 export default function NotFound() {
-	const { clearChat } = useSharedChatContext();
+	const chatContext = useOptionalSharedChatContext();
 
 	return (
 		<div className="flex min-h-screen flex-col items-center justify-center gap-10 p-6">
@@ -33,7 +33,7 @@ export default function NotFound() {
 							render={
 								<Link
 									className="flex items-center"
-									onClick={() => clearChat()}
+									onClick={() => chatContext?.clearChat()}
 									to="/"
 								/>
 							}
