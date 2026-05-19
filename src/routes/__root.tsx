@@ -9,7 +9,7 @@ import {
 	useRouteContext,
 } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { ThemeProvider } from "better-themes";
 import type { ReactNode } from "react";
 import { Toaster } from "~/components/ui/sonner";
 import { TooltipProvider } from "~/components/ui/tooltip";
@@ -153,23 +153,23 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 			<head>
 				<HeadContent />
 			</head>
-			<body className={cn("overflow-hidden", appFont)}>
-				<NextThemesProvider
-					attribute="class"
-					defaultTheme="system"
-					disableTransitionOnChange
-					enableSystem
-				>
-					<TooltipProvider delay={0}>
-						<ChatProvider>
+			<ChatProvider>
+				<body className={cn("overflow-hidden", appFont)}>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						disableTransitionOnChange
+						enableSystem
+					>
+						<TooltipProvider delay={0}>
 							<div>{children}</div>
 							<Toaster style={{ fontFamily: "inherit" }} />
 							{/*<ReactQueryDevtools />*/}
 							<Scripts />
-						</ChatProvider>
-					</TooltipProvider>
-				</NextThemesProvider>
-			</body>
+						</TooltipProvider>
+					</ThemeProvider>
+				</body>
+			</ChatProvider>
 		</html>
 	);
 }

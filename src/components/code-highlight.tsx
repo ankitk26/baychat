@@ -1,5 +1,5 @@
 import { CopyIcon, TextAlignLeftIcon } from "@phosphor-icons/react";
-import { useTheme } from "next-themes";
+import { useTheme } from "better-themes";
 import { useState, type ReactNode } from "react";
 import ShikiHighlighter, { type Element, isInlineCode } from "react-shiki";
 import { toast } from "sonner";
