@@ -1,10 +1,7 @@
 import { CopyIcon, TextAlignLeftIcon } from "@phosphor-icons/react";
 import { useTheme } from "next-themes";
 import { useState, type ReactNode } from "react";
-import ShikiHighlighter, {
-	type Element as ShikiElement,
-	isInlineCode,
-} from "react-shiki";
+import ShikiHighlighter, { type Element, isInlineCode } from "react-shiki";
 import { toast } from "sonner";
 import { cn } from "~/lib/utils";
 import { Button } from "./ui/button";
@@ -14,7 +11,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 type CodeHighlightProps = {
 	className?: string | undefined;
 	children?: ReactNode | undefined;
-	node?: unknown;
+	node?: Element | undefined;
 };
 
 export default function CodeHighlight({
@@ -28,9 +25,7 @@ export default function CodeHighlight({
 	const match = className?.match(/language-(\w+)/);
 	const language = match ? match[1] : undefined;
 
-	const isInline: boolean | undefined = node
-		? isInlineCode(node as ShikiElement)
-		: undefined;
+	const isInline: boolean | undefined = node ? isInlineCode(node) : undefined;
 	const codeContent = String(children);
 
 	if (isInline) {
