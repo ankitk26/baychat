@@ -31,6 +31,16 @@ export default function AppSidebarFolderItem(props: Props) {
 	const userCollapsed = collapsedAtChatId === chatId;
 	const showChats = isActiveChatInFolder ? !userCollapsed : manualExpand;
 
+	console.log("[folder-item]", {
+		folder: props.folder.title,
+		chatId,
+		chatUuids: props.folder.chats.map((c) => c.uuid),
+		isActiveChatInFolder,
+		userCollapsed,
+		manualExpand,
+		showChats,
+	});
+
 	const handleClick = (e: React.MouseEvent) => {
 		e.preventDefault();
 		if (showChats && isActiveChatInFolder) {
