@@ -3,19 +3,18 @@ import { memo, useMemo } from "react";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { extractTableOfContents } from "~/lib/extract-table-of-contents";
 import { cn } from "~/lib/utils";
+import {
+	tableOfContentsStoreActions,
+	useTableOfContentsStore,
+} from "~/stores/table-of-contents-store";
 import type { CustomUIMessage } from "~/types";
 
 type Props = {
 	messages: CustomUIMessage[];
-	isOpen: boolean;
-	onToggle: () => void;
 };
 
-export default memo(function ChatTableOfContentsSidebar({
-	messages,
-	isOpen,
-	onToggle,
-}: Props) {
+export default memo(function ChatTableOfContentsSidebar({ messages }: Props) {
+	const isOpen = useTableOfContentsStore((state) => state.isOpen);
 	const sections = useMemo(() => extractTableOfContents(messages), [messages]);
 
 	const handleNavigate = (id: string) => {
@@ -37,7 +36,7 @@ export default memo(function ChatTableOfContentsSidebar({
 			<div className="flex h-14 shrink-0 items-center justify-between border-b px-4">
 				<h2 className="text-sm font-semibold">Contents</h2>
 				<button
-					onClick={onToggle}
+					onClick={tableOfContentsStoreActions.close}
 					className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
 					type="button"
 				>

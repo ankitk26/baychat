@@ -63,7 +63,6 @@ export default function Chat({
 	const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [inputHeight, setInputHeight] = useState(120); // Default estimate
 	const [wasStopped, setWasStopped] = useState(false);
-	const [tableOfContentsOpen, setTableOfContentsOpen] = useState(false);
 
 	const handleStop = () => {
 		setWasStopped(true);
@@ -249,21 +248,12 @@ export default function Chat({
 						/>
 					</div>
 
-					{!isMessagesPending &&
-						messages.length > 0 &&
-						!tableOfContentsOpen && (
-							<ChatTableOfContentsToggle
-								isOpen={tableOfContentsOpen}
-								onToggle={() => setTableOfContentsOpen(true)}
-							/>
-						)}
+					{!isMessagesPending && messages.length > 0 && (
+						<ChatTableOfContentsToggle />
+					)}
 				</div>
 
-				<ChatTableOfContentsSidebar
-					messages={messages}
-					isOpen={tableOfContentsOpen}
-					onToggle={() => setTableOfContentsOpen((prev) => !prev)}
-				/>
+				<ChatTableOfContentsSidebar messages={messages} />
 			</div>
 		</div>
 	);
