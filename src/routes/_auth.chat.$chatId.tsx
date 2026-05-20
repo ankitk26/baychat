@@ -47,7 +47,9 @@ function RouteComponent() {
 		return (
 			<div className="flex flex-1 flex-col items-center justify-center">
 				<div className="space-y-2 text-center">
-					<h1 className="text-xl font-semibold">Chat does not exist or was deleted</h1>
+					<h1 className="text-xl font-semibold">
+						Chat does not exist or was deleted
+					</h1>
 				</div>
 			</div>
 		);
