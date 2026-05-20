@@ -20,7 +20,7 @@ export default memo(function ChatTableOfContentsSidebar({ messages }: Props) {
 	const handleNavigate = (id: string) => {
 		const element = document.getElementById(id);
 		if (element) {
-			element.scrollIntoView({ behavior: "smooth", block: "start" });
+			element.scrollIntoView({ behavior: "instant", block: "start" });
 		}
 	};
 
