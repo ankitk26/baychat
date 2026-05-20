@@ -174,6 +174,24 @@ export const getArchivedChats = query({
 	},
 });
 
+export const getChat = query({
+	args: { chatId: v.string() },
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserIdOrThrow(ctx);
+
+		const chat = await ctx.db
+			.query("chats")
+			.withIndex("by_chat_uuid", (q) => q.eq("uuid", args.chatId))
+			.first();
+
+		if (!chat || chat.userId !== userId) {
+			return null;
+		}
+
+		return selectChatFields(chat);
+	},
+});
+
 export const toggleChatArchive = mutation({
 	args: {
 		chatId: v.id("chats"),

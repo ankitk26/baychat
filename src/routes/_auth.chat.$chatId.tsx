@@ -13,7 +13,11 @@ export const Route = createFileRoute("/_auth/chat/$chatId")({
 function RouteComponent() {
 	const { chatId } = Route.useParams();
 
-	const { data: messages, isPending } = useQuery(
+	const { data: chat, isPending: isChatPending } = useQuery(
+		convexQuery(api.chats.getChat, { chatId }),
+	);
+
+	const { data: messages, isPending: isMessagesPending } = useQuery(
 		convexQuery(api.messages.getMessages, {
 			chatId,
 		}),
@@ -39,11 +43,21 @@ function RouteComponent() {
 		}) as CustomUIMessage[];
 	}, [messages]);
 
+	if (!isChatPending && chat === null) {
+		return (
+			<div className="flex flex-1 flex-col items-center justify-center">
+				<div className="space-y-2 text-center">
+					<h1 className="text-xl font-semibold">Chat does not exist or was deleted</h1>
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<Chat
 			chatId={chatId}
 			dbMessages={transformedMessages}
-			isMessagesPending={isPending}
+			isMessagesPending={isMessagesPending}
 		/>
 	);
 }
