@@ -153,23 +153,23 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 			<head>
 				<HeadContent />
 			</head>
-			<ChatProvider>
-				<body className={cn("overflow-hidden", appFont)}>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="system"
-						disableTransitionOnChange
-						enableSystem
-					>
-						<TooltipProvider delay={0}>
+			<body className={cn("overflow-hidden", appFont)}>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					disableTransitionOnChange
+					enableSystem
+				>
+					<TooltipProvider delay={0}>
+						<ChatProvider>
 							<div>{children}</div>
 							<Toaster style={{ fontFamily: "inherit" }} />
 							{/*<ReactQueryDevtools />*/}
 							<Scripts />
-						</TooltipProvider>
-					</ThemeProvider>
-				</body>
-			</ChatProvider>
+						</ChatProvider>
+					</TooltipProvider>
+				</ThemeProvider>
+			</body>
 		</html>
 	);
 }
