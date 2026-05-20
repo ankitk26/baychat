@@ -31,7 +31,7 @@ function parseMarkdownIntoBlocks(markdown: string, messageId: string): Block[] {
 
 function makeHeadingWithId(tag: string, id: string) {
 	return function HeadingWithId({
-		_node,
+		node: _node,
 		className,
 		...props
 	}: Record<string, unknown>) {

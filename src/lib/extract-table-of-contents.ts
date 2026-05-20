@@ -5,7 +5,7 @@ function getTextFromMessage(message: CustomUIMessage): string {
 	return message.parts
 		.filter((p) => p.type === "text")
 		.map((p) => ("text" in p ? p.text : ""))
-		.join(" ")
+		.join("")
 		.trim();
 }
 
