@@ -1,4 +1,6 @@
 import { CaretDownIcon, KeyIcon } from "@phosphor-icons/react";
+import { useHotkey } from "@tanstack/react-hotkeys";
+import { useCallback, useState } from "react";
 import { getAccessibleModels } from "~/lib/get-accessible-models";
 import { modelStoreActions, useModelStore } from "~/stores/model-store";
 import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
@@ -17,6 +19,7 @@ import {
 } from "./ui/dropdown-menu";
 
 export default function ModelSelector() {
+	const [open, setOpen] = useState(false);
 	const selectedModel = useModelStore((store) => store.selectedModel);
 
 	const persistedApiKeys = usePersistedApiKeysStore(
@@ -30,8 +33,11 @@ export default function ModelSelector() {
 		persistedUseOpenRouter,
 	);
 
+	const handleHotkey = useCallback(() => setOpen(true), []);
+	useHotkey("Mod+/", handleHotkey);
+
 	return (
-		<DropdownMenu>
+		<DropdownMenu open={open} onOpenChange={setOpen}>
 			<DropdownMenuTrigger render={<Button variant="outline" />}>
 				{selectedModel.name}
 				<CaretDownIcon />
