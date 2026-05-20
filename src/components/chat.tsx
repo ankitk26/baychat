@@ -2,6 +2,8 @@ import { useChat } from "@ai-sdk/react";
 import { CaretDownIcon } from "@phosphor-icons/react";
 import type { FileUIPart } from "ai";
 import { useEffect, useRef, useState } from "react";
+import ChatTableOfContentsSidebar from "~/components/chat-table-of-contents-sidebar";
+import ChatTableOfContentsToggle from "~/components/chat-table-of-contents-toggle";
 import { isImageGenerationModel } from "~/lib/is-image-generation-model";
 import { cn } from "~/lib/utils";
 import { useSharedChatContext } from "~/providers/chat-provider";
@@ -61,6 +63,7 @@ export default function Chat({
 	const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [inputHeight, setInputHeight] = useState(120); // Default estimate
 	const [wasStopped, setWasStopped] = useState(false);
+	const [tableOfContentsOpen, setTableOfContentsOpen] = useState(false);
 
 	const handleStop = () => {
 		setWasStopped(true);
@@ -155,87 +158,111 @@ export default function Chat({
 
 	return (
 		<div className="relative mx-auto flex h-full min-h-0 w-full flex-col">
-			{/* Full height scroll area that extends behind the prompt */}
-			<div className="absolute inset-0">
-				{!isMessagesPending && messages.length === 0 && <EmptyChatContent />}
+			<div className="flex h-full min-h-0">
+				{/* Main chat area */}
+				<div className="relative flex-1 overflow-hidden">
+					{/* Full height scroll area that extends behind the prompt */}
+					<div className="absolute inset-0">
+						{!isMessagesPending && messages.length === 0 && (
+							<EmptyChatContent />
+						)}
 
-				{chatId && (
-					<ScrollArea className="h-full w-full" viewportRef={viewportRef}>
-						<div className="mx-auto min-h-full w-full max-w-full px-3 lg:max-w-3xl lg:px-4">
-							<div
-								className="pb-safe my-4 space-y-6 lg:my-8 lg:space-y-8"
-								style={{ paddingBottom: `${inputHeight + 40}px` }}
-							>
-								{isMessagesPending && messages.length === 0 ? (
-									<>
-										<UserMessageSkeleton />
-										<AssistantMessageSkeleton />
-									</>
-								) : (
-									<>
-										<ChatMessages
-											chatId={chatId}
-											isGeneratingImage={isGeneratingImage}
-											latestGeneratedImageUrl={latestGeneratedImageUrl}
-											messages={messages}
-											regenerate={handleRegenerate}
-											sendMessage={handleSendMessage}
-											status={status}
-											wasStopped={wasStopped}
-										/>
+						{chatId && (
+							<ScrollArea className="h-full w-full" viewportRef={viewportRef}>
+								<div className="mx-auto min-h-full w-full max-w-full px-3 lg:max-w-3xl lg:px-4">
+									<div
+										className="pb-safe my-4 space-y-6 lg:my-8 lg:space-y-8"
+										style={{ paddingBottom: `${inputHeight + 40}px` }}
+									>
+										{isMessagesPending && messages.length === 0 ? (
+											<>
+												<UserMessageSkeleton />
+												<AssistantMessageSkeleton />
+											</>
+										) : (
+											<>
+												<ChatMessages
+													chatId={chatId}
+													isGeneratingImage={isGeneratingImage}
+													latestGeneratedImageUrl={latestGeneratedImageUrl}
+													messages={messages}
+													regenerate={handleRegenerate}
+													sendMessage={handleSendMessage}
+													status={status}
+													wasStopped={wasStopped}
+												/>
 
-										{status === "submitted" &&
-											messages.length > 0 &&
-											messages.at(-1)?.role === "user" &&
-											!error && (
-												<div className="px-3 lg:px-0">
-													{isGeneratingImage ? (
-														<ImageGenerationSkeleton />
-													) : (
-														<ThinkingIndicator />
+												{status === "submitted" &&
+													messages.length > 0 &&
+													messages.at(-1)?.role === "user" &&
+													!error && (
+														<div className="px-3 lg:px-0">
+															{isGeneratingImage ? (
+																<ImageGenerationSkeleton />
+															) : (
+																<ThinkingIndicator />
+															)}
+														</div>
 													)}
-												</div>
-											)}
 
-										{error && <AiResponseAlert error={error} />}
-									</>
-								)}
-							</div>
+												{error && <AiResponseAlert error={error} />}
+											</>
+										)}
+									</div>
+								</div>
+							</ScrollArea>
+						)}
+					</div>
+
+					{/* Scroll to bottom button - centered at top of prompt */}
+					{showScrollToBottom && (
+						<div
+							className={cn(
+								"absolute left-1/2 z-50 -translate-x-1/2 transform transition-opacity duration-300 ease-in-out",
+								isScrollActive
+									? "opacity-100"
+									: "pointer-events-none opacity-0",
+							)}
+							style={{ bottom: `${inputHeight + 16}px` }}
+						>
+							<Button
+								className="rounded-full"
+								onClick={scrollToBottom}
+								size="icon"
+								tabIndex={isScrollActive ? undefined : -1}
+								aria-hidden={!isScrollActive}
+							>
+								<CaretDownIcon />
+							</Button>
 						</div>
-					</ScrollArea>
-				)}
-			</div>
-
-			{/* Scroll to bottom button - centered at top of prompt */}
-			{showScrollToBottom && (
-				<div
-					className={cn(
-						"absolute left-1/2 z-50 -translate-x-1/2 transform transition-opacity duration-300 ease-in-out",
-						isScrollActive ? "opacity-100" : "pointer-events-none opacity-0",
 					)}
-					style={{ bottom: `${inputHeight + 16}px` }}
-				>
-					<Button
-						className="rounded-full"
-						onClick={scrollToBottom}
-						size="icon"
-						tabIndex={isScrollActive ? undefined : -1}
-						aria-hidden={!isScrollActive}
-					>
-						<CaretDownIcon />
-					</Button>
-				</div>
-			)}
 
-			{/* Fixed prompt input with backdrop blur */}
-			<div className="absolute right-0 bottom-0 left-0 z-10">
-				<UserPromptInput
-					chatId={chatId}
-					latestGeneratedImageUrl={latestGeneratedImageUrl}
-					sendMessage={handleSendMessage}
-					status={status}
-					stop={handleStop}
-					onHeightChange={setInputHeight}
+					{/* Fixed prompt input with backdrop blur */}
+					<div className="absolute right-0 bottom-0 left-0 z-10">
+						<UserPromptInput
+							chatId={chatId}
+							latestGeneratedImageUrl={latestGeneratedImageUrl}
+							sendMessage={handleSendMessage}
+							status={status}
+							stop={handleStop}
+							onHeightChange={setInputHeight}
+						/>
+					</div>
+
+					{!isMessagesPending &&
+						messages.length > 0 &&
+						!tableOfContentsOpen && (
+							<ChatTableOfContentsToggle
+								isOpen={tableOfContentsOpen}
+								onToggle={() => setTableOfContentsOpen(true)}
+							/>
+						)}
+				</div>
+
+				<ChatTableOfContentsSidebar
+					messages={messages}
+					isOpen={tableOfContentsOpen}
+					onToggle={() => setTableOfContentsOpen((prev) => !prev)}
 				/>
 			</div>
 		</div>
