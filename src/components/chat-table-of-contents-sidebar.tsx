@@ -44,8 +44,8 @@ export default memo(function ChatTableOfContentsSidebar({ messages }: Props) {
 				</button>
 			</div>
 
-			<ScrollArea className="flex-1">
-				<div className="py-2">
+			<ScrollArea className="min-h-0 flex-1">
+				<div className="py-2 pb-8">
 					{sections.length === 0 && (
 						<p className="px-4 py-2 text-xs text-muted-foreground">
 							No contents yet
