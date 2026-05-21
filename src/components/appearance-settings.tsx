@@ -60,7 +60,9 @@ export default function AppearanceSettings() {
 				</header>
 
 				<div className="rounded-lg border bg-card">
-					<div className="flex items-center justify-between border-b p-4">
+					<div
+						className={`flex items-center justify-between p-4 ${showTokenUsage ? "border-b" : ""}`}
+					>
 						<div className="flex flex-col gap-1">
 							<Label className="font-medium" htmlFor="show-token-usage">
 								Show token usage
