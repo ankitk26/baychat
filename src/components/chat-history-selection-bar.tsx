@@ -48,8 +48,8 @@ export default function ChatHistorySelectionBar({
 	const archiveLabel = isArchived ? "Unarchive" : "Archive";
 
 	return (
-		<div className="absolute right-0 bottom-0 left-0 z-20 flex items-center justify-between rounded-b-lg border-t bg-background/95 px-3 py-2 backdrop-blur-sm">
-			<div className="flex items-center gap-2">
+		<div className="absolute right-0 bottom-0 left-0 z-20 flex flex-col gap-1 rounded-b-lg border-t bg-background/95 px-3 py-2 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+			<div className="flex w-full items-center gap-2 sm:w-auto">
 				<Button
 					className="h-7 px-2 text-xs"
 					size="sm"
@@ -68,7 +68,7 @@ export default function ChatHistorySelectionBar({
 					Clear
 				</Button>
 			</div>
-			<div className="flex items-center gap-2">
+			<div className="flex w-full items-center gap-2 sm:w-auto">
 				<Button
 					className="h-7 gap-1 px-2 text-xs"
 					size="sm"
