@@ -283,6 +283,7 @@ export const Route = createFileRoute("/api/chat")({
 					experimental_transform: smoothStream({ chunking: "line" }),
 					abortSignal: request.signal,
 					...(isWebSearchEnabled &&
+						!useOpenRouter &&
 						requestModel.openRouterModelId.startsWith("google") && {
 							tools: {
 								google_search: google.tools.googleSearch({}) as any,
