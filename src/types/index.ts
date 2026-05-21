@@ -81,3 +81,16 @@ export type ChatSendMessageFunction =
 
 export type ChatRegenerateFunction =
 	UseChatHelpers<CustomUIMessage>["regenerate"];
+
+export type TableOfContentsHeading = {
+	text: string;
+	depth: number;
+	headingId: string;
+};
+
+export type TableOfContentsSection = {
+	turnId: string;
+	userPreview: string;
+	assistantId?: string;
+	headings: TableOfContentsHeading[];
+};
