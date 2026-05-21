@@ -1,5 +1,5 @@
 import { marked } from "marked";
-import { memo, useMemo } from "react";
+import { type HTMLAttributes, memo, useMemo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
@@ -10,6 +10,10 @@ type Block = {
 	raw: string;
 	headingId?: string;
 	headingDepth?: number;
+};
+
+type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
+	node?: unknown;
 };
 
 function parseMarkdownIntoBlocks(markdown: string, messageId: string): Block[] {
@@ -34,10 +38,25 @@ function makeHeadingWithId(tag: string, id: string) {
 		node: _node,
 		className,
 		...props
-	}: Record<string, unknown>) {
-		const Tag = tag as keyof JSX.IntrinsicElements;
-		const mergedClass = `scroll-mt-6 ${(className as string) || ""}`.trim();
-		return <Tag id={id} className={mergedClass} {...props} />;
+	}: HeadingProps) {
+		const mergedClass = `scroll-mt-6 ${className || ""}`.trim();
+
+		switch (tag) {
+			case "h1":
+				return <h1 id={id} className={mergedClass} {...props} />;
+			case "h2":
+				return <h2 id={id} className={mergedClass} {...props} />;
+			case "h3":
+				return <h3 id={id} className={mergedClass} {...props} />;
+			case "h4":
+				return <h4 id={id} className={mergedClass} {...props} />;
+			case "h5":
+				return <h5 id={id} className={mergedClass} {...props} />;
+			case "h6":
+				return <h6 id={id} className={mergedClass} {...props} />;
+			default:
+				return null;
+		}
 	};
 }
 
@@ -57,10 +76,28 @@ const MemoizedMarkdownBlock = memo(
 
 		if (headingId && headingDepth) {
 			const tag = `h${headingDepth}`;
-			components[tag as keyof Components] = makeHeadingWithId(
-				tag,
-				headingId,
-			) as Components[keyof Components];
+			const HeadingComponent = makeHeadingWithId(tag, headingId);
+
+			switch (tag) {
+				case "h1":
+					components.h1 = HeadingComponent;
+					break;
+				case "h2":
+					components.h2 = HeadingComponent;
+					break;
+				case "h3":
+					components.h3 = HeadingComponent;
+					break;
+				case "h4":
+					components.h4 = HeadingComponent;
+					break;
+				case "h5":
+					components.h5 = HeadingComponent;
+					break;
+				case "h6":
+					components.h6 = HeadingComponent;
+					break;
+			}
 		}
 
 		return (
