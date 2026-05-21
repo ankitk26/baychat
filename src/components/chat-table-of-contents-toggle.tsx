@@ -27,7 +27,7 @@ export default function ChatTableOfContentsToggle() {
 			<TooltipTrigger
 				render={
 					<Button
-						className="flex h-10 w-10 shrink-0 rounded-md shadow-sm transition-opacity duration-200 md:ml-auto md:h-8 md:w-8"
+						className="flex h-10 w-10 shrink-0 rounded-md transition-opacity duration-200 md:ml-auto md:h-8 md:w-8"
 						onClick={tableOfContentsStoreActions.open}
 						size="icon"
 						variant={isMobile ? "ghost" : "secondary"}

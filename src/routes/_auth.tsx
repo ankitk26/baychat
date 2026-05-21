@@ -27,7 +27,7 @@ function FloatingSidebarTrigger() {
 	const isAppSidebarOpen = isMobile ? openMobile : open;
 
 	return (
-		<div className="relative z-20 flex h-14 w-full shrink-0 items-center justify-between px-3 md:absolute md:top-2 md:right-2 md:left-2 md:h-auto md:w-auto md:p-0">
+		<div className="relative z-20 flex h-14 w-full shrink-0 items-center justify-between px-4 md:absolute md:top-3 md:right-4 md:left-4 md:h-auto md:w-auto md:px-3 md:py-1.5">
 			{!isAppSidebarOpen && (
 				<SidebarTrigger className="h-10 w-10 md:h-8 md:w-8" />
 			)}
