@@ -26,6 +26,9 @@ export default memo(function ChatTableOfContentsSidebar({ messages }: Props) {
 		if (element) {
 			element.scrollIntoView({ behavior: "instant", block: "start" });
 		}
+		if (isMobile) {
+			tableOfContentsStoreActions.close();
+		}
 	};
 
 	const tocContent = (
