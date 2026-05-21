@@ -33,7 +33,11 @@ export default memo(function ChatMessages({
 	return (
 		<div className="space-y-6 px-3 lg:space-y-8 lg:px-0">
 			{messages.map((message, index) => (
-				<div className="flex flex-col" key={message.id}>
+				<div
+					className="flex scroll-mt-6 flex-col"
+					key={message.id}
+					id={message.id}
+				>
 					{message.role === "user" ? (
 						<UserMessage
 							chatId={chatId}
