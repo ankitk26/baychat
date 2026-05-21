@@ -1,5 +1,6 @@
 import { XIcon } from "@phosphor-icons/react";
 import { memo, useMemo } from "react";
+import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { extractTableOfContents } from "~/lib/extract-table-of-contents";
 import { cn } from "~/lib/utils";
@@ -35,13 +36,13 @@ export default memo(function ChatTableOfContentsSidebar({ messages }: Props) {
 		>
 			<div className="flex h-14 shrink-0 items-center justify-between border-b px-4">
 				<h2 className="text-sm font-semibold">Contents</h2>
-				<button
+				<Button
 					onClick={tableOfContentsStoreActions.close}
-					className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
-					type="button"
+					size="icon"
+					variant="ghost"
 				>
 					<XIcon className="size-4" />
-				</button>
+				</Button>
 			</div>
 
 			<ScrollArea className="min-h-0 flex-1">
