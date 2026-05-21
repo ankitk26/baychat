@@ -1,9 +1,13 @@
 import { CopyIcon, TextAlignLeftIcon } from "@phosphor-icons/react";
 import { useTheme } from "better-themes";
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import ShikiHighlighter, { type Element, isInlineCode } from "react-shiki";
 import { toast } from "sonner";
 import { cn } from "~/lib/utils";
+import {
+	appearanceStoreActions,
+	useAppearanceStore,
+} from "~/stores/appearance-store";
 import { Button } from "./ui/button";
 import { Toggle } from "./ui/toggle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
@@ -20,7 +24,7 @@ export default function CodeHighlight({
 	node,
 }: CodeHighlightProps) {
 	const { theme } = useTheme();
-	const [isWrap, setIsWrap] = useState(false);
+	const isWrap = useAppearanceStore((s) => s.wrapCodeBlocks);
 
 	const match = className?.match(/language-(\w+)/);
 	const language = match ? match[1] : undefined;
@@ -46,7 +50,7 @@ export default function CodeHighlight({
 							render={
 								<Toggle
 									pressed={isWrap}
-									onPressedChange={setIsWrap}
+									onPressedChange={appearanceStoreActions.toggleWrapCodeBlocks}
 									size="sm"
 								/>
 							}
