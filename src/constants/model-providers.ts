@@ -36,8 +36,14 @@ const geminiModels = {
 		},
 		{
 			name: "Gemini 3.1 Flash Lite",
-			openRouterModelId: "google/gemini-3.1-flash-lite-preview",
+			openRouterModelId: "google/gemini-3.1-flash-lite",
 			modelId: "gemini-3.1-flash-lite-preview",
+			isFree: false,
+		},
+		{
+			name: "Gemini 3.5 Flash",
+			openRouterModelId: "google/gemini-3.5-flash",
+			modelId: "gemini-3.5-flash",
 			isFree: false,
 		},
 		{
