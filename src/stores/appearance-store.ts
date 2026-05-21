@@ -3,13 +3,14 @@ import { Store } from "@tanstack/store";
 
 type AppearanceStoreState = {
 	showTokenUsage: boolean;
+	wrapCodeBlocks: boolean;
 };
 
 const STORAGE_KEY = "baychat-appearance-settings";
 
 const getInitialState = (): AppearanceStoreState => {
 	if (typeof window === "undefined") {
-		return { showTokenUsage: false };
+		return { showTokenUsage: false, wrapCodeBlocks: false };
 	}
 	try {
 		const stored = localStorage.getItem(STORAGE_KEY);
@@ -19,7 +20,7 @@ const getInitialState = (): AppearanceStoreState => {
 	} catch {
 		// Ignore parse errors
 	}
-	return { showTokenUsage: false };
+	return { showTokenUsage: false, wrapCodeBlocks: false };
 };
 
 const appearanceStore = new Store<AppearanceStoreState>(getInitialState());
@@ -40,6 +41,12 @@ export const appearanceStoreActions = {
 		appearanceStore.setState((prev) => ({
 			...prev,
 			showTokenUsage: !prev.showTokenUsage,
+		}));
+	},
+	toggleWrapCodeBlocks: () => {
+		appearanceStore.setState((prev) => ({
+			...prev,
+			wrapCodeBlocks: !prev.wrapCodeBlocks,
 		}));
 	},
 };
