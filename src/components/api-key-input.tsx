@@ -17,7 +17,7 @@ type Props = {
 
 export default function ApiKeyInput(props: Props) {
 	return (
-		<div className="flex items-start gap-4">
+		<div className="flex flex-col gap-2 md:flex-row md:items-start md:gap-4">
 			<Label
 				className="flex w-48 shrink-0 items-center gap-2 leading-normal text-muted-foreground"
 				htmlFor={`api-key-${props.provider}`}
