@@ -2,6 +2,8 @@ import { XIcon } from "@phosphor-icons/react";
 import { memo, useMemo } from "react";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { Sheet, SheetContent } from "~/components/ui/sheet";
+import { useIsMobile } from "~/hooks/use-mobile";
 import { extractTableOfContents } from "~/lib/extract-table-of-contents";
 import { cn } from "~/lib/utils";
 import {
@@ -16,6 +18,7 @@ type Props = {
 
 export default memo(function ChatTableOfContentsSidebar({ messages }: Props) {
 	const isOpen = useTableOfContentsStore((state) => state.isOpen);
+	const isMobile = useIsMobile();
 	const sections = useMemo(() => extractTableOfContents(messages), [messages]);
 
 	const handleNavigate = (id: string) => {
@@ -25,15 +28,8 @@ export default memo(function ChatTableOfContentsSidebar({ messages }: Props) {
 		}
 	};
 
-	return (
-		<div
-			className={cn(
-				"hidden h-full shrink-0 flex-col border-l bg-background transition-all duration-300 ease-in-out md:flex",
-				isOpen
-					? "w-64 opacity-100"
-					: "w-0 overflow-hidden border-transparent opacity-0",
-			)}
-		>
+	const tocContent = (
+		<>
 			<div className="flex h-14 shrink-0 items-center justify-between border-b px-4">
 				<h2 className="text-sm font-semibold">Contents</h2>
 				<Button
@@ -44,7 +40,6 @@ export default memo(function ChatTableOfContentsSidebar({ messages }: Props) {
 					<XIcon className="size-4" />
 				</Button>
 			</div>
-
 			<ScrollArea className="min-h-0 flex-1">
 				<div className="py-2 pb-8">
 					{sections.length === 0 && (
@@ -84,6 +79,41 @@ export default memo(function ChatTableOfContentsSidebar({ messages }: Props) {
 					))}
 				</div>
 			</ScrollArea>
-		</div>
+		</>
+	);
+
+	return (
+		<>
+			{isMobile && (
+				<Sheet
+					open={isOpen}
+					onOpenChange={(open) => {
+						if (!open) {
+							tableOfContentsStoreActions.close();
+						}
+					}}
+				>
+					<SheetContent
+						side="right"
+						className="w-80 p-0"
+						showCloseButton={false}
+					>
+						<div className="flex h-full flex-col bg-background">
+							{tocContent}
+						</div>
+					</SheetContent>
+				</Sheet>
+			)}
+			<div
+				className={cn(
+					"hidden h-full shrink-0 flex-col border-l bg-background transition-all duration-300 ease-in-out md:flex",
+					isOpen
+						? "w-64 opacity-100"
+						: "w-0 overflow-hidden border-transparent opacity-0",
+				)}
+			>
+				{tocContent}
+			</div>
+		</>
 	);
 });

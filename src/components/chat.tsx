@@ -3,7 +3,6 @@ import { CaretDownIcon } from "@phosphor-icons/react";
 import type { FileUIPart } from "ai";
 import { useEffect, useRef, useState } from "react";
 import ChatTableOfContentsSidebar from "~/components/chat-table-of-contents-sidebar";
-import ChatTableOfContentsToggle from "~/components/chat-table-of-contents-toggle";
 import { isImageGenerationModel } from "~/lib/is-image-generation-model";
 import { cn } from "~/lib/utils";
 import { useSharedChatContext } from "~/providers/chat-provider";
@@ -247,10 +246,6 @@ export default function Chat({
 							onHeightChange={setInputHeight}
 						/>
 					</div>
-
-					{!isMessagesPending && messages.length > 0 && (
-						<ChatTableOfContentsToggle />
-					)}
 				</div>
 
 				<ChatTableOfContentsSidebar messages={messages} />

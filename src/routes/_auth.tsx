@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppSidebar } from "~/components/app-sidebar";
+import ChatTableOfContentsToggle from "~/components/chat-table-of-contents-toggle";
 import {
 	SidebarInset,
 	SidebarProvider,
@@ -23,15 +24,14 @@ function FloatingSidebarTrigger() {
 	const { isMobile, open, openMobile } = useSidebar();
 
 	// On mobile, check openMobile state; on desktop, check open state
-	const isOpen = isMobile ? openMobile : open;
-
-	if (isOpen) {
-		return null;
-	}
+	const isAppSidebarOpen = isMobile ? openMobile : open;
 
 	return (
-		<div className="relative z-20 flex h-14 w-full shrink-0 items-center px-3 md:absolute md:top-2 md:left-2 md:h-auto md:w-auto md:p-0">
-			<SidebarTrigger className="h-10 w-10 md:h-8 md:w-8" />
+		<div className="relative z-20 flex h-14 w-full shrink-0 items-center justify-between px-3 md:absolute md:top-2 md:left-2 md:h-auto md:w-auto md:gap-1 md:p-0">
+			{!isAppSidebarOpen && (
+				<SidebarTrigger className="h-10 w-10 md:h-8 md:w-8" />
+			)}
+			<ChatTableOfContentsToggle />
 		</div>
 	);
 }
