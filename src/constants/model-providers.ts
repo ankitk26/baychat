@@ -273,18 +273,6 @@ const xAiModels = {
 	key: "xai",
 	models: [
 		{
-			name: "Grok 3",
-			openRouterModelId: "x-ai/grok-3-beta",
-			modelId: "grok-3-latest",
-			isFree: false,
-		},
-		{
-			name: "Grok 3 Mini",
-			openRouterModelId: "x-ai/grok-3-mini-beta",
-			modelId: "grok-3-mini-latest",
-			isFree: false,
-		},
-		{
 			name: "Grok 4",
 			openRouterModelId: "x-ai/grok-4",
 			modelId: "grok-4",
