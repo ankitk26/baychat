@@ -1,6 +1,7 @@
 import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
 import { defaultSelectedModel } from "~/constants/model-providers";
+import { getModelByOpenRouterId } from "~/lib/get-model-by-id";
 import type { Model } from "~/types";
 
 type ModelStoreState = {
@@ -9,10 +10,37 @@ type ModelStoreState = {
 	retryModel: string | null;
 };
 
+const STORAGE_KEY = "baychat-selected-model-id";
+
+function getInitialSelectedModel(): Model {
+	if (typeof window === "undefined") {
+		return defaultSelectedModel;
+	}
+	try {
+		const stored = localStorage.getItem(STORAGE_KEY);
+		if (stored) {
+			const model = getModelByOpenRouterId(JSON.parse(stored));
+			if (model) return model;
+		}
+	} catch {
+		// ignore parse errors
+	}
+	return defaultSelectedModel;
+}
+
 const modelStore = new Store<ModelStoreState>({
-	selectedModel: defaultSelectedModel,
+	selectedModel: getInitialSelectedModel(),
 	isWebSearchEnabled: false,
 	retryModel: null,
+});
+
+modelStore.subscribe(() => {
+	if (typeof window !== "undefined") {
+		localStorage.setItem(
+			STORAGE_KEY,
+			JSON.stringify(modelStore.state.selectedModel.openRouterModelId),
+		);
+	}
 });
 
 export const useModelStore = <T>(selector: (state: ModelStoreState) => T): T =>
