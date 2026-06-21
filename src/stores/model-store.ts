@@ -2,6 +2,7 @@ import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
 import { defaultSelectedModel } from "~/constants/model-providers";
 import { getModelByOpenRouterId } from "~/lib/get-model-by-id";
+import { STORAGE_KEYS } from "~/lib/storage-keys";
 import type { Model } from "~/types";
 
 type ModelStoreState = {
@@ -10,7 +11,7 @@ type ModelStoreState = {
 	retryModel: string | null;
 };
 
-const STORAGE_KEY = "baychat-selected-model-id";
+const STORAGE_KEY = STORAGE_KEYS.selectedModelId;
 
 function getInitialSelectedModel(): Model {
 	if (typeof window === "undefined") {

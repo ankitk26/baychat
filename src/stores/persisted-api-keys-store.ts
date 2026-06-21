@@ -1,5 +1,6 @@
 import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
+import { STORAGE_KEYS } from "~/lib/storage-keys";
 import { type ApiKeys, defaultApiKeys } from "~/types";
 
 type ApiKeysStoreState = {
@@ -7,7 +8,7 @@ type ApiKeysStoreState = {
 	persistedUseOpenRouter: boolean;
 };
 
-const STORAGE_KEY = "baychat-api-keys";
+const STORAGE_KEY = STORAGE_KEYS.apiKeys;
 
 const getInitialState = (): ApiKeysStoreState => {
 	if (typeof window === "undefined") {

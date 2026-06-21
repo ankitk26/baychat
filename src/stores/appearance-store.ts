@@ -1,12 +1,13 @@
 import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
+import { STORAGE_KEYS } from "~/lib/storage-keys";
 
 type AppearanceStoreState = {
 	showTokenUsage: boolean;
 	wrapCodeBlocks: boolean;
 };
 
-const STORAGE_KEY = "baychat-appearance-settings";
+const STORAGE_KEY = STORAGE_KEYS.appearance;
 
 const getInitialState = (): AppearanceStoreState => {
 	if (typeof window === "undefined") {
