@@ -54,14 +54,14 @@ const geminiModels = {
 		},
 		{
 			name: "Nano Banana Pro",
-			openRouterModelId: "google/gemini-3-pro-image-preview",
-			modelId: "nano-banana-pro-preview",
+			openRouterModelId: "google/gemini-3-pro-image",
+			modelId: "gemini-3-pro-image",
 			isFree: false,
 		},
 		{
 			name: "Nano Banana 2",
-			openRouterModelId: "google/gemini-3.1-flash-image-preview",
-			modelId: "gemini-3-pro-image-preview",
+			openRouterModelId: "google/gemini-3.1-flash-image",
+			modelId: "gemini-3.1-flash-image",
 			isFree: false,
 		},
 	] as const,
@@ -265,6 +265,18 @@ const anthropicModels = {
 			modelId: "claude-opus-4-7",
 			isFree: false,
 		},
+		{
+			name: "Claude Opus 4.8",
+			openRouterModelId: "anthropic/claude-opus-4.8",
+			modelId: "claude-opus-4-8",
+			isFree: false,
+		},
+		{
+			name: "Claude Fable 5",
+			openRouterModelId: "anthropic/claude-fable-5",
+			modelId: "claude-fable-5",
+			isFree: false,
+		},
 	] as const,
 } as const;
 
@@ -333,6 +345,12 @@ const moonshotModels = {
 			modelId: "moonshotai/kimi-k2.6",
 			isFree: false,
 		},
+		{
+			name: "Kimi K2.7 Code",
+			openRouterModelId: "moonshotai/kimi-k2.7-code",
+			modelId: "moonshotai/kimi-k2.7-code",
+			isFree: false,
+		},
 	] as const,
 } as const;
 
@@ -364,6 +382,12 @@ const zaiModels = {
 			modelId: "z-ai/glm-5.1",
 			isFree: false,
 		},
+		{
+			name: "GLM 5.2",
+			openRouterModelId: "z-ai/glm-5.2",
+			modelId: "z-ai/glm-5.2",
+			isFree: false,
+		},
 	] as const,
 } as const;
 
@@ -387,6 +411,12 @@ const minimaxModels = {
 			name: "MiniMax M2.7",
 			openRouterModelId: "minimax/minimax-m2.7",
 			modelId: "minimax/minimax-m2.7",
+			isFree: false,
+		},
+		{
+			name: "MiniMax M3",
+			openRouterModelId: "minimax/minimax-m3",
+			modelId: "minimax/minimax-m3",
 			isFree: false,
 		},
 	] as const,
