@@ -1,6 +1,6 @@
 @import "katex/dist/katex.min.css";
 @import "@fontsource-variable/geist-mono";
-@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/geist";
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -101,7 +101,7 @@
 	--sidebar-accent-foreground: oklch(0.12 0 0);
 	--sidebar-border: oklch(0.94 0 0);
 	--sidebar-ring: oklch(0.12 0 0);
-	--font-sans: "Space Grotesk Variable", sans-serif;
+	--font-sans: "Geist Variable", sans-serif;
 	--font-serif: Georgia, serif;
 	--font-mono: "Geist Mono Variable", monospace;
 	--radius: 0.625rem;
