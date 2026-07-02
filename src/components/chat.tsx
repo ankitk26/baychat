@@ -155,7 +155,7 @@ export default function Chat({
 			.find(isImageFilePart)?.url ?? null;
 
 	return (
-		<div className="relative mx-auto flex h-full min-h-0 w-full flex-col">
+		<div className="relative mx-auto flex h-full min-h-0 w-full flex-col overflow-hidden">
 			<div className="flex h-full min-h-0">
 				{/* Main chat area */}
 				<div className="relative flex-1 overflow-hidden">
@@ -167,7 +167,7 @@ export default function Chat({
 
 						{chatId && (
 							<ScrollArea className="h-full w-full" viewportRef={viewportRef}>
-								<div className="mx-auto min-h-full w-full max-w-full px-3 lg:max-w-3xl lg:px-4">
+								<div className="mx-auto min-h-full w-full max-w-full px-4 lg:max-w-5xl lg:px-10">
 									<div
 										className="pb-safe my-4 space-y-6 lg:my-8 lg:space-y-8"
 										style={{ paddingBottom: `${inputHeight + 40}px` }}
@@ -236,7 +236,7 @@ export default function Chat({
 					)}
 
 					{/* Fixed prompt input with backdrop blur */}
-					<div className="absolute right-0 bottom-0 left-0 z-10">
+					<div className="absolute right-0 bottom-0 left-0 z-10 bg-gradient-to-t from-background via-background/95 to-transparent pt-20">
 						<UserPromptInput
 							chatId={chatId}
 							latestGeneratedImageUrl={latestGeneratedImageUrl}

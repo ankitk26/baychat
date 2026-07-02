@@ -39,8 +39,9 @@ function FloatingSidebarTrigger() {
 function RouteComponent() {
 	return (
 		<SidebarProvider>
-			<AppSidebar variant="inset" />
-			<SidebarInset className="h-svh overflow-hidden">
+			<div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_-20%,color-mix(in_oklch,var(--foreground)_6%,transparent),transparent_44rem)]" />
+			<AppSidebar variant="sidebar" />
+			<SidebarInset className="h-svh overflow-hidden rounded-none bg-background/92 shadow-none">
 				<FloatingSidebarTrigger />
 				<Outlet />
 			</SidebarInset>
