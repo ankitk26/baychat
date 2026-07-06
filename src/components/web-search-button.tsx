@@ -37,7 +37,6 @@ export default function WebSearchButton() {
 					>
 						<GlobeIcon />
 						<span className="hidden sm:inline">Search</span>
-						<span className="sm:hidden">Web</span>
 					</Button>
 				}
 			/>
