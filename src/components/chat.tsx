@@ -167,7 +167,7 @@ export default function Chat({
 
 						{chatId && (
 							<ScrollArea className="h-full w-full" viewportRef={viewportRef}>
-								<div className="mx-auto min-h-full w-full max-w-full px-4 lg:max-w-5xl lg:px-10">
+								<div className="mx-auto min-h-full w-full max-w-full px-4 lg:max-w-3xl lg:px-10">
 									<div
 										className="pb-safe my-4 space-y-6 lg:my-8 lg:space-y-8"
 										style={{ paddingBottom: `${inputHeight + 40}px` }}
