@@ -70,7 +70,7 @@ export default React.memo(function AssistantMessage(props: Props) {
 	const messageContent = getMessageContentFromParts(message.parts);
 
 	return (
-		<div className="group space-y-6">
+		<div className="group/message space-y-6">
 			<AIResponseReasoning
 				messageContent={messageContent}
 				messageId={message.id}
@@ -92,7 +92,7 @@ export default React.memo(function AssistantMessage(props: Props) {
 			)}
 
 			{/* Message actions - visible on mobile, hover on desktop */}
-			<div className="flex items-center gap-6 opacity-100 transition-opacity duration-200 md:opacity-0 md:group-hover:opacity-100">
+			<div className="flex items-center gap-6 opacity-100 transition-opacity duration-200 md:opacity-0 md:group-hover/message:opacity-100">
 				<div className="flex items-center gap-1">
 					<Tooltip>
 						<TooltipTrigger
