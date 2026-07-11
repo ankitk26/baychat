@@ -1,8 +1,8 @@
 import { DownloadIcon, ShareNetworkIcon } from "@phosphor-icons/react";
 import { Id } from "convex/_generated/dataModel";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import DeleteImageGenerationButton from "./delete-image-generation-button";
 import { Button } from "./ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 type Props = {
 	handleDownload: () => void;

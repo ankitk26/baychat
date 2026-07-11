@@ -10,6 +10,7 @@ import { useCustomizationStore } from "~/stores/customization-store";
 import { modelStoreActions, useModelStore } from "~/stores/model-store";
 import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage, Model } from "~/types";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import { DropdownMenuSeparatorWithText } from "./dropdown-menu-separator-with-text";
 import ModelInputIndicators from "./model-input-indicators";
 import ModelProviderIcon from "./model-provider-icon";
@@ -25,7 +26,6 @@ import {
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Switch } from "./ui/switch";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 type Props = {
 	message: CustomUIMessage;

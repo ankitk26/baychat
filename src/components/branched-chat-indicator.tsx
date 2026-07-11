@@ -2,7 +2,7 @@ import { GitBranchIcon } from "@phosphor-icons/react";
 import { useNavigate } from "@tanstack/react-router";
 import { useSharedChatContext } from "~/providers/chat-provider";
 import type { SidebarChatType } from "~/types";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 
 type Props = {
 	chat: SidebarChatType;

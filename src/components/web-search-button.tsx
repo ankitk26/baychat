@@ -3,8 +3,8 @@ import { useHotkey } from "@tanstack/react-hotkeys";
 import { cn } from "~/lib/utils";
 import { modelStoreActions, useModelStore } from "~/stores/model-store";
 import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import { Button } from "./ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export default function WebSearchButton() {
 	useHotkey("Mod+Shift+S", modelStoreActions.toggleIsWebSearch);

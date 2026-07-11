@@ -1,7 +1,7 @@
 import { XIcon } from "@phosphor-icons/react";
 import { memo, useMemo } from "react";
+import { ScrollArea } from "~/components/app-scroll-area";
 import { Button } from "~/components/ui/button";
-import { ScrollArea } from "~/components/ui/scroll-area";
 import { Sheet, SheetContent } from "~/components/ui/sheet";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { extractTableOfContents } from "~/lib/extract-table-of-contents";

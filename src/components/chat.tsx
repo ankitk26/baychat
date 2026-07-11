@@ -13,13 +13,13 @@ import type {
 	CustomUIMessage,
 } from "~/types";
 import AiResponseAlert from "./ai-response-error";
+import { ScrollArea } from "./app-scroll-area";
 import AssistantMessageSkeleton from "./assistant-message-skeleton";
 import ChatMessages from "./chat-messages";
 import EmptyChatContent from "./empty-chat-content";
 import ImageGenerationSkeleton from "./image-generation-skeleton";
 import ThinkingIndicator from "./thinking-indicator";
 import { Button } from "./ui/button";
-import { ScrollArea } from "./ui/scroll-area";
 import UserMessageSkeleton from "./user-message-skeleton";
 import UserPromptInput from "./user-prompt-input";
 

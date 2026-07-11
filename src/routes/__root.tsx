@@ -11,8 +11,8 @@ import {
 import { createServerFn } from "@tanstack/react-start";
 import { ThemeProvider } from "better-themes";
 import type { ReactNode } from "react";
+import { TooltipProvider } from "~/components/app-tooltip";
 import { Toaster } from "~/components/ui/sonner";
-import { TooltipProvider } from "~/components/ui/tooltip";
 import { authClient } from "~/lib/auth-client";
 import { getToken } from "~/lib/auth-server";
 import { cn } from "~/lib/utils";

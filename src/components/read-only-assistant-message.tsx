@@ -6,8 +6,8 @@ import type { CustomUIMessage } from "~/types";
 import AIResponseContent from "./ai-response-content";
 import AIResponseReasoning from "./ai-response-reasoning";
 import AIResponseSources from "./ai-response-sources";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import { Button } from "./ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 type Props = {
 	message: Omit<Doc<"messages">, "userId">;

@@ -3,10 +3,10 @@ import { LinkBreakIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
+import { ScrollArea } from "./app-scroll-area";
 import AssistantMessageSkeleton from "./assistant-message-skeleton";
 import ReadOnlyAssistantMessage from "./read-only-assistant-message";
 import ReadOnlyUserMessage from "./read-only-user-message";
-import { ScrollArea } from "./ui/scroll-area";
 import UserMessageSkeleton from "./user-message-skeleton";
 
 export default function ReadOnlyChatMessages() {

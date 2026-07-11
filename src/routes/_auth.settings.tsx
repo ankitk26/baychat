@@ -1,12 +1,12 @@
 import { SignOutIcon } from "@phosphor-icons/react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import ApiKeysForm from "~/components/api-keys-form";
+import { ScrollArea } from "~/components/app-scroll-area";
 import AppearanceSettings from "~/components/appearance-settings";
 import ChatHistoryManager from "~/components/chat-history-manager";
 import ContactSection from "~/components/contact-section";
 import CustomizationSettings from "~/components/customization-settings";
 import { Button } from "~/components/ui/button";
-import { ScrollArea } from "~/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { authClient } from "~/lib/auth-client";

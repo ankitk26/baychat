@@ -3,8 +3,8 @@ import { ImagesIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
+import { ScrollArea } from "~/components/app-scroll-area";
 import GeneratedImageViewer from "~/components/generated-image-viewer";
-import { ScrollArea } from "~/components/ui/scroll-area";
 import { Skeleton } from "~/components/ui/skeleton";
 
 export const Route = createFileRoute("/_auth/gallery")({

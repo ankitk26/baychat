@@ -2,6 +2,7 @@ import { PlusIcon } from "@phosphor-icons/react";
 import { useHotkey } from "@tanstack/react-hotkeys";
 import { useNavigate } from "@tanstack/react-router";
 import { useSharedChatContext } from "~/providers/chat-provider";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import {
 	SidebarGroup,
 	SidebarGroupContent,
@@ -10,7 +11,6 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "./ui/sidebar";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export default function AppSidebarNewChatButton() {
 	const { clearChat } = useSharedChatContext();

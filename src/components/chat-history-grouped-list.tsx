@@ -1,8 +1,8 @@
 import { cn } from "~/lib/utils";
 import { useChatHistorySelectionStore } from "~/stores/chat-history-selection-store";
 import type { ChatHistoryItem } from "~/types";
+import { ScrollArea } from "./app-scroll-area";
 import ChatHistoryItemComponent from "./chat-history-item";
-import { ScrollArea } from "./ui/scroll-area";
 
 type Props = {
 	groups: { group: string; chats: ChatHistoryItem[] }[];

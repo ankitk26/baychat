@@ -4,9 +4,9 @@ import { toast } from "sonner";
 import { getFilePartsFromMessage } from "~/lib/get-file-parts-from-message";
 import { getMessageContentFromParts } from "~/lib/get-message-content-from-parts";
 import type { CustomUIMessage } from "~/types";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import FileAttachmentsPreview from "./file-attachments-preview";
 import { Button } from "./ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 type Props = {
 	message: Omit<Doc<"messages">, "userId">;

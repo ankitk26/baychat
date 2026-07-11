@@ -8,9 +8,9 @@ import {
 	appearanceStoreActions,
 	useAppearanceStore,
 } from "~/stores/appearance-store";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import { Button } from "./ui/button";
 import { Toggle } from "./ui/toggle";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 type CodeHighlightProps = {
 	className?: string | undefined;

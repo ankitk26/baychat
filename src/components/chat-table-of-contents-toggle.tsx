@@ -1,11 +1,11 @@
 import { ListIcon } from "@phosphor-icons/react";
 import { useLocation } from "@tanstack/react-router";
-import { Button } from "~/components/ui/button";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
-} from "~/components/ui/tooltip";
+} from "~/components/app-tooltip";
+import { Button } from "~/components/ui/button";
 import { useIsMobile } from "~/hooks/use-mobile";
 import {
 	tableOfContentsStoreActions,

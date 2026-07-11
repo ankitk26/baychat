@@ -1,9 +1,9 @@
 import { TrashIcon } from "@phosphor-icons/react";
 import { Id } from "convex/_generated/dataModel";
 import { useState } from "react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import DeleteImageDialog from "./delete-image-dialog";
 import { Button } from "./ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 type Props = {
 	storageId: Id<"_storage">;

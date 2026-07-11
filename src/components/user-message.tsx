@@ -14,11 +14,11 @@ import { useCustomizationStore } from "~/stores/customization-store";
 import { useModelStore } from "~/stores/model-store";
 import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage } from "~/types";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import BranchOffButton from "./branch-off-button";
 import FileAttachmentsPreview from "./file-attachments-preview";
 import RetryModelDropdown from "./retry-model-dropdown";
 import { Button } from "./ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import UserMessageEditor from "./user-message-editor";
 
 type Props = {

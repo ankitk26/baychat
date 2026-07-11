@@ -8,7 +8,7 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "~/components/ui/sidebar";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 
 export default function AppSidebarGalleryButton() {
 	const { isMobile, setOpenMobile } = useSidebar();

@@ -12,13 +12,13 @@ import AIGeneratedImages from "./ai-generated-images";
 import AIResponseContent from "./ai-response-content";
 import AIResponseReasoning from "./ai-response-reasoning";
 import AIResponseSources from "./ai-response-sources";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import BranchOffButton from "./branch-off-button";
 import ImageGenerationSkeleton from "./image-generation-skeleton";
 import RetryModelDropdown from "./retry-model-dropdown";
 import ThinkingIndicator from "./thinking-indicator";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Button } from "./ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 type Props = {
 	isGeneratingImage?: boolean;
