@@ -185,13 +185,32 @@
 	}
 
 	[data-slot="button"],
-	[data-slot="sidebar-trigger"],
+	[data-slot="alert-action"],
+	[data-slot="alert-dialog-action"],
+	[data-slot="alert-dialog-cancel"],
+	[data-slot="alert-dialog-trigger"],
+	[data-slot="card-action"],
+	[data-slot="dialog-close"],
+	[data-slot="dialog-trigger"],
 	[data-slot="dropdown-menu-trigger"],
 	[data-slot="dropdown-menu-item"],
-	[data-slot="dropdown-menu-sub-trigger"],
 	[data-slot="dropdown-menu-checkbox-item"],
 	[data-slot="dropdown-menu-radio-item"],
-	[data-slot="tabs-trigger"] {
+	[data-slot="dropdown-menu-sub-trigger"],
+	[data-slot="select-item"],
+	[data-slot="select-scroll-up-button"],
+	[data-slot="select-scroll-down-button"],
+	[data-slot="select-trigger"],
+	[data-slot="sheet-close"],
+	[data-slot="sheet-trigger"],
+	[data-slot="sidebar-menu-item"],
+	[data-slot="sidebar-menu-sub-item"],
+	[data-slot="sidebar-rail"],
+	[data-slot="sidebar-trigger"],
+	[data-slot="switch"],
+	[data-slot="tabs-trigger"],
+	[data-slot="toggle"],
+	[data-slot="tooltip-trigger"] {
 		cursor: pointer;
 	}
 
