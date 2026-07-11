@@ -210,6 +210,18 @@ const openAiModels = {
 			modelId: "gpt-5.5-pro",
 			isFree: false,
 		},
+		{
+			name: "GPT 5.6 Luna",
+			openRouterModelId: "openai/gpt-5.6-luna",
+			modelId: "gpt-5.6-luna",
+			isFree: false,
+		},
+		{
+			name: "GPT 5.6 Terra",
+			openRouterModelId: "openai/gpt-5.6-terra",
+			modelId: "gpt-5.6-terra",
+			isFree: false,
+		},
 	] as const,
 } as const;
 
@@ -277,6 +289,12 @@ const anthropicModels = {
 			modelId: "claude-fable-5",
 			isFree: false,
 		},
+		{
+			name: "Claude Sonnet 5",
+			openRouterModelId: "anthropic/claude-sonnet-5",
+			modelId: "claude-sonnet-5-0",
+			isFree: false,
+		},
 	] as const,
 } as const;
 
@@ -312,6 +330,12 @@ const xAiModels = {
 			name: "Grok 4.3",
 			openRouterModelId: "x-ai/grok-4.3",
 			modelId: "grok-4.3",
+			isFree: false,
+		},
+		{
+			name: "Grok 4.5",
+			openRouterModelId: "x-ai/grok-4.5",
+			modelId: "grok-4.5",
 			isFree: false,
 		},
 	] as const,
