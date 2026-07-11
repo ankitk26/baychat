@@ -5,6 +5,7 @@ import {
 	SidebarInset,
 	SidebarProvider,
 	SidebarTrigger,
+	useSidebar,
 } from "~/components/ui/sidebar";
 import { authQueryOptions } from "~/queries/auth-query";
 
@@ -20,9 +21,14 @@ export const Route = createFileRoute("/_auth")({
 });
 
 function FloatingSidebarTrigger() {
+	const { isMobile, open, openMobile } = useSidebar();
+	const isAppSidebarOpen = isMobile ? openMobile : open;
+
 	return (
-		<div className="pointer-events-none fixed inset-x-0 top-3 z-50 flex items-center justify-between px-4 md:px-6">
-			<SidebarTrigger className="pointer-events-auto h-10 w-10 md:h-8 md:w-8" />
+		<div className="pointer-events-none fixed inset-x-0 top-5 z-50 flex items-start justify-between px-4">
+			{!isAppSidebarOpen && (
+				<SidebarTrigger className="pointer-events-auto h-8 w-8" />
+			)}
 			<ChatTableOfContentsToggle />
 		</div>
 	);
