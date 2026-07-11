@@ -2,14 +2,13 @@ import {
 	CheckIcon,
 	FloppyDiskIcon,
 	ArrowCounterClockwiseIcon,
-	TextboxIcon,
 } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
-import { Label } from "~/components/ui/label";
 import { TabsContent } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
+import { cn } from "~/lib/utils";
 import {
 	customizationStoreActions,
 	useCustomizationStore,
@@ -32,7 +31,7 @@ export default function CustomizationSettings() {
 		setDraft(persistedPrompt);
 	};
 
-	const charCount = draft.length;
+	const MAX_LENGTH = 1000;
 
 	return (
 		<TabsContent className="space-y-4" value="customization">
@@ -40,7 +39,7 @@ export default function CustomizationSettings() {
 			<div>
 				<div className="flex items-center gap-2">
 					<h3 className="text-base font-semibold text-foreground">
-						System Prompt
+						Custom Prompt
 					</h3>
 					{!hasChanges && draft && (
 						<div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -56,47 +55,37 @@ export default function CustomizationSettings() {
 			</div>
 
 			{/* Prompt Input */}
-			<div className="rounded-lg border">
-				<div className="flex items-center justify-between border-b px-3 py-2">
-					<div className="flex items-center gap-2">
-						<TextboxIcon className="h-3.5 w-3.5 text-muted-foreground" />
-						<Label
-							className="text-xs font-medium text-muted-foreground"
-							htmlFor="custom-system-prompt"
-						>
-							Custom prompt
-						</Label>
-					</div>
-					<span
-						className={`text-xs tabular-nums ${
-							charCount > 2000 ? "text-destructive" : "text-muted-foreground"
-						}`}
-					>
-						{charCount}
-					</span>
-				</div>
-				<div className="p-3">
-					<Textarea
-						className="min-h-32 resize-y text-sm"
-						id="custom-system-prompt"
-						onChange={(e) => setDraft(e.target.value)}
-						placeholder="e.g. Always respond in Spanish, or use a formal tone..."
-						value={draft}
-					/>
-				</div>
-				<div className="border-t px-3 py-2">
-					<p className="text-xs text-muted-foreground">
-						This prompt will be added after the default system instructions.
-						Leave empty to use only the defaults.
-					</p>
+			<div className="relative">
+				<Textarea
+					className="min-h-32 resize-y pb-8 text-sm"
+					id="custom-system-prompt"
+					maxLength={MAX_LENGTH}
+					onChange={(e) => setDraft(e.target.value)}
+					placeholder="e.g. Always respond in Spanish, or use a formal tone..."
+					value={draft}
+				/>
+				<div
+					className={cn(
+						"pointer-events-none absolute right-3 bottom-2 text-xs tabular-nums",
+						draft.length > MAX_LENGTH
+							? "text-destructive"
+							: "text-muted-foreground",
+					)}
+				>
+					{draft.length}/{MAX_LENGTH}
 				</div>
 			</div>
+
+			<p className="text-xs text-muted-foreground">
+				This prompt will be added after the default system instructions. Leave
+				empty to use only the defaults.
+			</p>
 
 			{/* Actions */}
 			<div className="flex items-center gap-2">
 				<Button
 					className="w-full lg:w-auto"
-					disabled={!hasChanges}
+					disabled={!hasChanges || draft.length > MAX_LENGTH}
 					onClick={handleSave}
 				>
 					<FloppyDiskIcon className="mr-1 h-3.5 w-3.5" />
