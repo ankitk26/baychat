@@ -31,13 +31,12 @@ export default function InputUploadButton({
 			{isUploading ? (
 				<>
 					<SpinnerIcon className="size-4 animate-spin" />
-					<span>Uploading...</span>
+					<span className="hidden sm:inline">Uploading...</span>
 				</>
 			) : (
 				<>
 					<PaperclipIcon />
 					<span className="hidden sm:inline">Upload</span>
-					<span className="sm:hidden">File</span>
 				</>
 			)}
 			{!isUploading && hasAttachments && (
