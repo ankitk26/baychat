@@ -41,8 +41,8 @@ export default function CodeHighlight({
 	}
 
 	return (
-		<div className="w-full max-w-full overflow-hidden rounded border border-border bg-background dark:border-border/70 dark:bg-code-dark">
-			<div className="flex items-center justify-between border-b border-border bg-card-foreground/10 px-4 text-sm text-secondary-foreground dark:border-border/70 dark:bg-secondary">
+		<div className="w-full max-w-full">
+			<div className="flex items-center justify-between rounded-tl-lg rounded-tr-lg bg-card-foreground/10 px-4 text-sm text-secondary-foreground dark:bg-secondary">
 				<span className="font-mono font-light">{language ?? "txt"}</span>
 				<div className="my-0.5 flex items-center gap-2">
 					<Tooltip>
@@ -84,7 +84,7 @@ export default function CodeHighlight({
 
 			<div
 				className={cn(
-					"w-full max-w-full bg-background text-xs sm:text-sm dark:bg-code-dark",
+					"w-full max-w-full rounded-br-lg rounded-bl-lg border-r border-b border-l bg-background text-xs sm:text-sm dark:border-0 dark:bg-code-dark",
 					isWrap ? "break-all whitespace-pre-wrap" : "overflow-x-auto",
 				)}
 			>

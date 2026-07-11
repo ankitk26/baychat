@@ -12,11 +12,7 @@ import AppSidebarNewChatButton from "./app-sidebar-new-chat-button";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
-		<Sidebar
-			className="border-r border-sidebar-border/70 bg-sidebar"
-			collapsible="offcanvas"
-			{...props}
-		>
+		<Sidebar collapsible="offcanvas" {...props}>
 			<SidebarHeader>
 				<AppSidebarHeader />
 				<AppSidebarNewChatButton />

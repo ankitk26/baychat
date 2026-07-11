@@ -227,9 +227,9 @@ export default function UserPromptInput(props: Props) {
 	}, [props.chatId, isDesktop, paramsChatId]);
 
 	return (
-		<div ref={containerRef} className="px-4 pb-4 md:px-10 md:pb-8">
+		<div ref={containerRef} className="bg-background/80 backdrop-blur">
 			<form
-				className="mx-auto flex w-full max-w-full flex-col border border-border bg-popover/95 p-3 shadow-[0_18px_80px_rgb(0_0_0/0.22)] backdrop-blur-xl transition-colors duration-200 focus-within:border-ring/70 lg:max-w-3xl lg:p-4"
+				className="mx-auto flex w-full max-w-full flex-col rounded-tl-lg rounded-tr-lg border border-border bg-popover/90 p-3 lg:max-w-3xl lg:p-4"
 				onSubmit={(e) => {
 					e.preventDefault();
 					handlePromptSubmit();
@@ -244,7 +244,7 @@ export default function UserPromptInput(props: Props) {
 
 				<div className="flex-1">
 					<textarea
-						className="max-h-80 min-h-8 w-full resize-none bg-transparent text-sm leading-6 placeholder:text-muted-foreground/70 focus:outline-none"
+						className="max-h-80 min-h-8 w-full resize-none text-sm focus:outline-none"
 						disabled={
 							isSubmittingPrompt ||
 							isUploading ||
@@ -263,7 +263,7 @@ export default function UserPromptInput(props: Props) {
 						onPaste={(e) => {
 							handlePaste(e);
 						}}
-						placeholder="Message baychat..."
+						placeholder="Start the conversation..."
 						ref={textareaRef}
 						rows={1}
 						value={input}
