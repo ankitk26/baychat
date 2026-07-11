@@ -25,6 +25,7 @@ export default function AppSidebarChatItemArchive(props: Props) {
 
 	return (
 		<DropdownMenuItem
+			className="py-2 text-xs"
 			onClick={(e) => {
 				e.stopPropagation();
 				toggleChatArchiveMutation.mutate({

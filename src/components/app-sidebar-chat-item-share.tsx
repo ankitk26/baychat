@@ -10,6 +10,7 @@ type Props = {
 export default function AppSidebarChatItemShare(props: Props) {
 	return (
 		<DropdownMenuItem
+			className="py-2 text-xs"
 			onClick={(e) => {
 				e.stopPropagation();
 				chatActionStoreActions.setSelectedChat(props.chat);

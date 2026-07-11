@@ -44,7 +44,7 @@ export default function AppSidebarChatItemFolder(props: Props) {
 
 	return (
 		<DropdownMenuSub>
-			<DropdownMenuSubTrigger className="shadcn-dropdown-item">
+			<DropdownMenuSubTrigger className="py-2 text-xs">
 				<FolderOpenIcon />
 				Move to folder
 			</DropdownMenuSubTrigger>

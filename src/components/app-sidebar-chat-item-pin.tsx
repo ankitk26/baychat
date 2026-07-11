@@ -25,6 +25,7 @@ export default function AppSidebarChatItemPin(props: Props) {
 
 	return (
 		<DropdownMenuItem
+			className="py-2 text-xs"
 			onClick={(e) => {
 				e.stopPropagation();
 				toggleChatPinMutation.mutate({

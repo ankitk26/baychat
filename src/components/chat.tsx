@@ -225,6 +225,7 @@ export default function Chat({
 						>
 							<Button
 								className="rounded-full"
+								variant="secondary"
 								onClick={scrollToBottom}
 								size="icon"
 								tabIndex={isScrollActive ? undefined : -1}
