@@ -9,7 +9,7 @@ export default function ApiKeyLink(props: Props) {
 		<small className="text-xs text-muted-foreground">
 			Get your{" "}
 			<CustomExternalLink
-				className="text-primary hover:underline"
+				className="text-muted-foreground underline underline-offset-2 hover:text-foreground"
 				href={props.keyLink}
 			>
 				API key
