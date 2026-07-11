@@ -34,6 +34,7 @@ export default function AppSidebarFolderItemActions({ folder }: Props) {
 			/>
 			<DropdownMenuContent side="right" align="start">
 				<DropdownMenuItem
+					className="py-2 text-xs"
 					onClick={(e) => {
 						e.stopPropagation();
 						folderActionStoreActions.setSelectedFolder(folder);
@@ -45,6 +46,7 @@ export default function AppSidebarFolderItemActions({ folder }: Props) {
 				</DropdownMenuItem>
 
 				<DropdownMenuItem
+					className="py-2 text-xs"
 					onClick={(e: React.MouseEvent) => {
 						e.stopPropagation();
 						folderActionStoreActions.setSelectedFolder(folder);

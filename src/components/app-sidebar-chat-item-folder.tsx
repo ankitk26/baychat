@@ -54,6 +54,7 @@ export default function AppSidebarChatItemFolder(props: Props) {
 					{/* dropdown item to move it to no folder */}
 					{props.chat.folderId && (
 						<DropdownMenuItem
+							className="py-2 text-xs"
 							key={`null_folder_${props.chat._id}`}
 							onClick={() => handleFolderChange(undefined)}
 						>
@@ -64,6 +65,7 @@ export default function AppSidebarChatItemFolder(props: Props) {
 						.filter((folder) => folder._id !== props.chat.folderId)
 						.map((folder) => (
 							<DropdownMenuItem
+								className="py-2 text-xs"
 								key={folder._id}
 								onClick={() => handleFolderChange(folder._id)}
 							>
