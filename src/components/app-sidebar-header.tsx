@@ -1,12 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useSharedChatContext } from "~/providers/chat-provider";
 import { ThemeToggler } from "./theme-toggle";
-import {
-	SidebarMenu,
-	SidebarMenuItem,
-	SidebarTrigger,
-	useSidebar,
-} from "./ui/sidebar";
+import { SidebarMenu, SidebarMenuItem, useSidebar } from "./ui/sidebar";
 
 export default function AppSidebarHeader() {
 	const { clearChat } = useSharedChatContext();
@@ -22,7 +17,7 @@ export default function AppSidebarHeader() {
 	return (
 		<SidebarMenu className="py-1">
 			<SidebarMenuItem className="flex items-center gap-1">
-				<SidebarTrigger className="h-8 w-8" />
+				<div className="h-8 w-8 shrink-0" />
 				<Link
 					onClick={handleClick}
 					to="/"
