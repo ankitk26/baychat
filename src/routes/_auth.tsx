@@ -25,7 +25,7 @@ function FloatingSidebarTrigger() {
 	const isAppSidebarOpen = isMobile ? openMobile : open;
 
 	return (
-		<div className="pointer-events-none fixed inset-x-0 top-5 z-50 flex items-start justify-between px-4">
+		<div className="pointer-events-none fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between bg-background/50 px-4 backdrop-blur-xl md:bg-transparent md:backdrop-blur-none">
 			{!isAppSidebarOpen && (
 				<SidebarTrigger className="pointer-events-auto h-8 w-8" />
 			)}
