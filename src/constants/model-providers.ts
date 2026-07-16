@@ -375,6 +375,12 @@ const moonshotModels = {
 			modelId: "moonshotai/kimi-k2.7-code",
 			isFree: false,
 		},
+		{
+			name: "Kimi K3",
+			openRouterModelId: "moonshotai/kimi-k3",
+			modelId: "moonshotai/kimi-k3",
+			isFree: false,
+		},
 	] as const,
 } as const;
 
