@@ -211,6 +211,12 @@ const openAiModels = {
 			isFree: false,
 		},
 		{
+			name: "GPT 5.6 Sol",
+			openRouterModelId: "openai/gpt-5.6-sol",
+			modelId: "gpt-5.6-sol",
+			isFree: false,
+		},
+		{
 			name: "GPT 5.6 Luna",
 			openRouterModelId: "openai/gpt-5.6-luna",
 			modelId: "gpt-5.6-luna",
