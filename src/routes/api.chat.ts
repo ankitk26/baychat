@@ -5,7 +5,14 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { createXai } from "@ai-sdk/xai";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { createFileRoute } from "@tanstack/react-router";
-import { convertToModelMessages, smoothStream, streamText } from "ai";
+import {
+	consumeStream,
+	convertToModelMessages,
+	createUIMessageStreamResponse,
+	smoothStream,
+	streamText,
+	toUIMessageStream,
+} from "ai";
 import type { FileUIPart, UIMessagePart, UIDataTypes, UITools } from "ai";
 import { api } from "convex/_generated/api";
 import { defaultSelectedModel } from "~/constants/model-providers";
@@ -273,6 +280,15 @@ export const Route = createFileRoute("/api/chat")({
 					? `${systemMessage}\n\n${customSystemPrompt}`
 					: systemMessage;
 
+				const tools =
+					isWebSearchEnabled &&
+					!useOpenRouter &&
+					requestModel.openRouterModelId.startsWith("google")
+						? {
+								google_search: google.tools.googleSearch({}) as any,
+							}
+						: undefined;
+
 				const result = streamText({
 					model: modelToUse,
 					system: finalSystemMessage,
@@ -282,55 +298,55 @@ export const Route = createFileRoute("/api/chat")({
 					temperature: 0.7,
 					experimental_transform: smoothStream({ chunking: "line" }),
 					abortSignal: request.signal,
-					...(isWebSearchEnabled &&
-						!useOpenRouter &&
-						requestModel.openRouterModelId.startsWith("google") && {
-							tools: {
-								google_search: google.tools.googleSearch({}) as any,
-							},
-						}),
+					...(tools && { tools }),
 				});
 
-				return result.toUIMessageStreamResponse({
-					originalMessages: messages,
-					sendReasoning: true,
-					generateMessageId: generateRandomUUID,
-					messageMetadata: ({ part }) => {
-						if (part.type === "start") {
-							return {
-								modelId: requestModel.openRouterModelId,
-								modelName: requestModel.name,
-								createdAt: Date.now(),
-							};
-						}
-						if (part.type === "finish") {
-							return { totalTokens: part.totalUsage.totalTokens };
-						}
-					},
-					sendSources: isWebSearchEnabled,
-					onFinish: async ({ responseMessage }) => {
-						if (!chatId || responseMessage.parts.length === 0) return;
+				return createUIMessageStreamResponse({
+					stream: toUIMessageStream({
+						stream: result.stream,
+						tools,
+						originalMessages: messages,
+						sendReasoning: true,
+						generateMessageId: generateRandomUUID,
+						messageMetadata: ({ part }) => {
+							if (part.type === "start") {
+								return {
+									modelId: requestModel.openRouterModelId,
+									modelName: requestModel.name,
+									createdAt: Date.now(),
+								};
+							}
+							if (part.type === "finish") {
+								return { totalTokens: part.totalUsage.totalTokens };
+							}
+						},
+						sendSources: isWebSearchEnabled,
+						onFinish: async ({ responseMessage, isAborted }) => {
+							if (isAborted || request.signal.aborted) return;
+							if (!chatId || responseMessage.parts.length === 0) return;
 
-						// Process all parts (filter types, truncate reasoning, upload images)
-						const { partsToSave } = await processMessageParts(
-							responseMessage.parts,
-						);
+							// Process all parts (filter types, truncate reasoning, upload images)
+							const { partsToSave } = await processMessageParts(
+								responseMessage.parts,
+							);
 
-						// Save message to database
-						await fetchAuthMutation(api.messages.createMessage, {
-							messageBody: {
-								chatId,
-								parts: JSON.stringify(partsToSave),
-								role: "assistant",
-								metadata: JSON.stringify(responseMessage.metadata),
-								sourceMessageId: responseMessage.id,
-							},
-						});
-					},
-					onError: (error) => {
-						console.error("toUIMessageStreamResponse error:", error);
-						return (error as any).message;
-					},
+							// Save message to database
+							await fetchAuthMutation(api.messages.createMessage, {
+								messageBody: {
+									chatId,
+									parts: JSON.stringify(partsToSave),
+									role: "assistant",
+									metadata: JSON.stringify(responseMessage.metadata),
+									sourceMessageId: responseMessage.id,
+								},
+							});
+						},
+						onError: (error) => {
+							console.error("toUIMessageStream error:", error);
+							return (error as any).message;
+						},
+					}),
+					consumeSseStream: consumeStream,
 				});
 			},
 		},

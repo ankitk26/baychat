@@ -66,11 +66,19 @@ export default function RetryModelDropdown(props: Props) {
 		// Set the model selector to the model being used for retry
 		modelStoreActions.setSelectedModel(model);
 
-		// delete all messages after current message in current chat
+		const deletionAnchorMessage =
+			message.role === "user" && props.nextMessage?.role === "assistant"
+				? props.nextMessage
+				: message;
+
+		// Delete the previous assistant response and anything after it before retrying.
+		// For user-message retries, anchoring on the next assistant message is more
+		// reliable because user messages can be optimistic/local while the assistant
+		// response is the persisted message we need to replace.
 		deleteMessagesMutation.mutate({
-			currentMessageSourceId: message.id,
+			currentMessageSourceId: deletionAnchorMessage.id,
 			chatId,
-			deleteCurrentMessage: message.role === "assistant",
+			deleteCurrentMessage: deletionAnchorMessage.role === "assistant",
 		});
 
 		await regenerate({
