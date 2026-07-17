@@ -5,4 +5,5 @@ export const STORAGE_KEYS = {
 	appearance: `${STORAGE_PREFIX}-appearance-settings`,
 	customization: `${STORAGE_PREFIX}-customization-settings`,
 	selectedModelId: `${STORAGE_PREFIX}-selected-model-id`,
+	layout: `${STORAGE_PREFIX}-layout-settings`,
 } as const;

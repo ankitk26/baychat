@@ -12,8 +12,10 @@ import { useIsDesktop } from "~/hooks/use-desktop";
 import { usePromptAttachments } from "~/hooks/use-prompt-attachments";
 import { buildUserMessageParts } from "~/lib/build-user-message-parts";
 import { generateRandomUUID } from "~/lib/generate-random-uuid";
+import { cn } from "~/lib/utils";
 import { getChatTitle } from "~/server-fns/get-chat-title";
 import { useCustomizationStore } from "~/stores/customization-store";
+import { useLayoutStore } from "~/stores/layout-store";
 import {
 	useIsModalitiesLoaded,
 	useModelModalities,
@@ -56,6 +58,7 @@ export default function UserPromptInput(props: Props) {
 	const customSystemPrompt = useCustomizationStore(
 		(store) => store.customSystemPrompt,
 	);
+	const isExpanded = useLayoutStore((store) => store.isExpanded);
 	const modelModalities = useModelModalities(selectedModel.openRouterModelId);
 	const isModalitiesLoaded = useIsModalitiesLoaded();
 	const {
@@ -229,7 +232,10 @@ export default function UserPromptInput(props: Props) {
 	return (
 		<div ref={containerRef} className="bg-background/80 backdrop-blur">
 			<form
-				className="mx-auto flex w-full max-w-full flex-col rounded-tl-lg rounded-tr-lg border border-border bg-popover/90 p-3 lg:max-w-3xl lg:p-4"
+				className={cn(
+					"mx-auto flex w-full max-w-full flex-col rounded-tl-lg rounded-tr-lg border border-border bg-popover/90 p-3 transition-[max-width] duration-300 ease-in-out lg:p-4",
+					isExpanded ? "xl:max-w-6xl" : "lg:max-w-3xl",
+				)}
 				onSubmit={(e) => {
 					e.preventDefault();
 					handlePromptSubmit();

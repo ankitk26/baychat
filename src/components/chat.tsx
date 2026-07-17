@@ -6,6 +6,7 @@ import ChatTableOfContentsSidebar from "~/components/chat-table-of-contents-side
 import { isImageGenerationModel } from "~/lib/is-image-generation-model";
 import { cn } from "~/lib/utils";
 import { useSharedChatContext } from "~/providers/chat-provider";
+import { useLayoutStore } from "~/stores/layout-store";
 import { useModelStore } from "~/stores/model-store";
 import type {
 	ChatRegenerateFunction,
@@ -44,6 +45,7 @@ export default function Chat({
 	isMessagesPending = false,
 }: Props) {
 	const { chat } = useSharedChatContext();
+	const isExpanded = useLayoutStore((store) => store.isExpanded);
 	const selectedModel = useModelStore((store) => store.selectedModel);
 
 	const {
@@ -167,7 +169,13 @@ export default function Chat({
 
 						{chatId && (
 							<ScrollArea className="h-full w-full" viewportRef={viewportRef}>
-								<div className="mx-auto min-h-full w-full max-w-full px-3 pt-14 md:pt-0 lg:max-w-3xl lg:px-4">
+								<div
+									className={cn(
+										"mx-auto min-h-full w-full max-w-full px-3 pt-14 transition-[max-width] duration-300 ease-in-out md:pt-0",
+										isExpanded ? "xl:max-w-6xl" : "lg:max-w-3xl",
+										"lg:px-4",
+									)}
+								>
 									<div
 										className="pb-safe my-4 space-y-6 lg:my-8 lg:space-y-8"
 										style={{ paddingBottom: `${inputHeight + 40}px` }}
