@@ -59,7 +59,7 @@ function RouteComponent() {
 					<Button
 						className="group w-full gap-2 bg-primary font-medium text-primary-foreground transition-all duration-200 hover:brightness-105 active:scale-[0.99]"
 						size="lg"
-						disabled={loadingProvider === "github"}
+						disabled={loadingProvider !== null}
 						onClick={() => handleLogin("github")}
 					>
 						{loadingProvider === "github" ? (
@@ -75,7 +75,7 @@ function RouteComponent() {
 						className="group w-full gap-2 border-border/60 font-medium text-foreground transition-all duration-200 hover:bg-accent/50 active:scale-[0.99]"
 						size="lg"
 						variant="outline"
-						disabled={loadingProvider === "google"}
+						disabled={loadingProvider !== null}
 						onClick={() => handleLogin("google")}
 					>
 						{loadingProvider === "google" ? (
