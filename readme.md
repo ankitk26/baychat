@@ -72,7 +72,7 @@ It supports multiple AI providers, real-time messaging, and chat organization.
 ### Prerequisites
 
 - Node.js 18+
-- Any package manager (bun used here)
+- pnpm 9+ (used here)
 - Git
 
 ### Setup
@@ -87,7 +87,7 @@ It supports multiple AI providers, real-time messaging, and chat organization.
 2. Install dependencies:
 
    ```bash
-   bun install
+   pnpm install
    ```
 
 3. Set up Convex:
@@ -128,7 +128,7 @@ It supports multiple AI providers, real-time messaging, and chat organization.
 5. Run the development server:
 
    ```bash
-   bun run dev
+   pnpm run dev
    ```
 
 6. Open your browser and navigate to `http://localhost:3000`

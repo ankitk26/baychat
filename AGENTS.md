@@ -1,4 +1,4 @@
-- use bun for all script runs
+- use pnpm for all script runs
 - never run build
 - use the Shadcn components without modifying them too much
 - do not run fmt or lint script after every single change
