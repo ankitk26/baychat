@@ -47,6 +47,18 @@ const geminiModels = {
 			isFree: false,
 		},
 		{
+			name: "Gemini 3.5 Flash Lite",
+			openRouterModelId: "google/gemini-3.5-flash-lite",
+			modelId: "gemini-3.5-flash-lite",
+			isFree: false,
+		},
+		{
+			name: "Gemini 3.6 Flash",
+			openRouterModelId: "google/gemini-3.6-flash",
+			modelId: "gemini-3.6-flash",
+			isFree: false,
+		},
+		{
 			name: "Nano Banana",
 			openRouterModelId: "google/gemini-2.5-flash-image",
 			modelId: "gemini-2.5-flash-image",
@@ -211,6 +223,12 @@ const openAiModels = {
 			isFree: false,
 		},
 		{
+			name: "GPT 5.6",
+			openRouterModelId: "openai/gpt-5.6",
+			modelId: "gpt-5.6",
+			isFree: false,
+		},
+		{
 			name: "GPT 5.6 Sol",
 			openRouterModelId: "openai/gpt-5.6-sol",
 			modelId: "gpt-5.6-sol",
@@ -287,6 +305,12 @@ const anthropicModels = {
 			name: "Claude Opus 4.8",
 			openRouterModelId: "anthropic/claude-opus-4.8",
 			modelId: "claude-opus-4-8",
+			isFree: false,
+		},
+		{
+			name: "Claude Opus 5",
+			openRouterModelId: "anthropic/claude-opus-5",
+			modelId: "claude-opus-5",
 			isFree: false,
 		},
 		{
