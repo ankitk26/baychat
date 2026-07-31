@@ -233,7 +233,7 @@ export default function UserPromptInput(props: Props) {
 		<div ref={containerRef} className="bg-background/80 backdrop-blur">
 			<form
 				className={cn(
-					"mx-auto flex w-full max-w-full flex-col rounded-tl-lg rounded-tr-lg border border-border bg-popover/90 p-3 transition-[max-width] duration-300 ease-in-out lg:p-4",
+					"mx-auto flex w-full max-w-full flex-col rounded-tl-lg rounded-tr-lg border border-border bg-popover/90 p-3 transition-[max-width] duration-300 ease-in-out max-lg:rounded-none lg:p-4",
 					isExpanded ? "xl:max-w-6xl" : "lg:max-w-3xl",
 				)}
 				onSubmit={(e) => {
