@@ -1,5 +1,5 @@
 import { GlobeIcon } from "@phosphor-icons/react";
-import { useHotkey } from "@tanstack/react-hotkeys";
+import { formatForDisplay, useHotkey } from "@tanstack/react-hotkeys";
 import { cn } from "~/lib/utils";
 import { modelStoreActions, useModelStore } from "~/stores/model-store";
 import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
@@ -40,7 +40,7 @@ export default function WebSearchButton() {
 					</Button>
 				}
 			/>
-			<TooltipContent>Ctrl+Shift+S</TooltipContent>
+			<TooltipContent>{formatForDisplay("Mod+Shift+S")}</TooltipContent>
 		</Tooltip>
 	);
 }
