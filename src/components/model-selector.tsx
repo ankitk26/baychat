@@ -1,5 +1,8 @@
+import { convexQuery } from "@convex-dev/react-query";
 import { CaretDownIcon, KeyIcon } from "@phosphor-icons/react";
 import { useHotkey } from "@tanstack/react-hotkeys";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "convex/_generated/api";
 import { useCallback, useState } from "react";
 import { getAccessibleModels } from "~/lib/get-accessible-models";
 import { modelStoreActions, useModelStore } from "~/stores/model-store";
@@ -32,7 +35,18 @@ export default function ModelSelector() {
 		persistedApiKeys,
 		persistedUseOpenRouter,
 	);
-
+	const hasOwnKey = persistedUseOpenRouter
+		? persistedApiKeys.openrouter.trim() !== ""
+		: [
+				persistedApiKeys.gemini,
+				persistedApiKeys.openai,
+				persistedApiKeys.anthropic,
+				persistedApiKeys.xai,
+			].some((key) => key.trim() !== "");
+	const { data: trialUsage } = useQuery({
+		...convexQuery(api.trial.getUsage, {}),
+		enabled: !hasOwnKey,
+	});
 	const handleHotkey = useCallback(() => setOpen(true), []);
 	useHotkey("Mod+/", handleHotkey);
 
@@ -40,6 +54,11 @@ export default function ModelSelector() {
 		<DropdownMenu open={open} onOpenChange={setOpen}>
 			<DropdownMenuTrigger render={<Button variant="outline" />}>
 				{selectedModel.name}
+				{!hasOwnKey && trialUsage && (
+					<span className="ml-1 text-[11px] text-muted-foreground">
+						{trialUsage.remaining} free left
+					</span>
+				)}
 				<CaretDownIcon />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-60">

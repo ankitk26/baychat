@@ -67,6 +67,17 @@ export default defineSchema({
 		tokens: v.float64(),
 	}).index("by_user_and_model", ["userId", "model"]),
 
+	trialUsage: defineTable({
+		userId: v.id("users"),
+		// Kept for compatibility with the original monthly trial records.
+		month: v.string(),
+		messages: v.number(),
+		periodStartedAt: v.optional(v.number()),
+		resetAt: v.optional(v.number()),
+	})
+		.index("by_user_and_month", ["userId", "month"])
+		.index("by_user", ["userId"]),
+
 	imageGenerations: defineTable({
 		userId: v.id("users"),
 		storageId: v.id("_storage"),

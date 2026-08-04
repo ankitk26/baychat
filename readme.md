@@ -121,8 +121,8 @@ It supports multiple AI providers, real-time messaging, and chat organization.
    GOOGLE_CLIENT_SECRET=your_google_client_secret
 
    # Optional: API keys for AI providers
-   GOOGLE_GENERATIVE_AI_API_KEY=your_google_api_key
    ANTHROPIC_API_KEY=your_anthropic_api_key
+   OPENROUTER_TRIAL_API_KEY=your_openrouter_api_key
    ```
 
 5. Run the development server:
@@ -136,7 +136,7 @@ It supports multiple AI providers, real-time messaging, and chat organization.
 ## Usage
 
 1. Sign in with your GitHub or Google account
-2. Configure API keys in settings (optional - you can use OpenRouter for all models)
+2. Configure API keys in settings (optional - new users receive 5 trial messages per month)
 3. Start chatting with any available AI model
 4. Organize chats by creating folders and pinning important conversations
 
