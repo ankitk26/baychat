@@ -15,23 +15,52 @@ import {
 } from "ai";
 import type { FileUIPart, UIMessagePart, UIDataTypes, UITools } from "ai";
 import { api } from "convex/_generated/api";
-import { defaultSelectedModel } from "~/constants/model-providers";
 import { systemMessage } from "~/constants/system-message";
 import { fetchAuthMutation } from "~/lib/auth-server";
 import { generateRandomUUID } from "~/lib/generate-random-uuid";
 import { getAuthUser } from "~/server-fns/get-auth";
 import type { ApiKeys, CustomUIMessage, Model } from "~/types";
 
+const hasOwnKeyForRequest = (
+	apiKeys: ApiKeys,
+	model: Model,
+	useOpenRouter: boolean,
+) => {
+	if (useOpenRouter) return apiKeys.openrouter.trim() !== "";
+	if (model.openRouterModelId.startsWith("google")) {
+		return apiKeys.gemini.trim() !== "";
+	}
+	if (model.openRouterModelId.startsWith("openai")) {
+		return apiKeys.openai.trim() !== "";
+	}
+	if (model.openRouterModelId.startsWith("anthropic")) {
+		return apiKeys.anthropic.trim() !== "";
+	}
+	if (model.openRouterModelId.startsWith("x-ai")) {
+		return apiKeys.xai.trim() !== "";
+	}
+	return false;
+};
+
 const resolveModelForRequest = (
 	requestModel: Model,
 	apiKeys: ApiKeys,
 	useOpenRouter: boolean,
 	isWebSearchEnabled: boolean,
+	isTrial: boolean,
 ) => {
-	const geminiProvider = createGoogleGenerativeAI({
-		apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
-	});
-	const defaultModel = geminiProvider(defaultSelectedModel.modelId);
+	if (isTrial) {
+		const trialKey = process.env.OPENROUTER_TRIAL_API_KEY;
+		if (!trialKey) {
+			throw new Error("Trial messaging is not configured.");
+		}
+		const openRouter = createOpenRouter({ apiKey: trialKey });
+		return openRouter.chat(
+			isWebSearchEnabled
+				? `${requestModel.openRouterModelId}:online`
+				: requestModel.openRouterModelId,
+		);
+	}
 
 	if (useOpenRouter && apiKeys.openrouter.trim() !== "") {
 		const openRouter = createOpenRouter({ apiKey: apiKeys.openrouter });
@@ -44,7 +73,7 @@ const resolveModelForRequest = (
 	if (!useOpenRouter) {
 		if (requestModel.openRouterModelId.startsWith("google")) {
 			if (apiKeys.gemini.trim() === "") {
-				return defaultModel;
+				throw new Error("API Key for Google is not provided.");
 			}
 			return createGoogleGenerativeAI({ apiKey: apiKeys.gemini })(
 				requestModel.modelId,
@@ -75,7 +104,7 @@ const resolveModelForRequest = (
 		}
 	}
 
-	return defaultModel;
+	throw new Error("No API key is configured for this model provider.");
 };
 
 const FAILED_UPLOAD_PLACEHOLDER =
@@ -268,13 +297,75 @@ export const Route = createFileRoute("/api/chat")({
 					chatId,
 					customSystemPrompt,
 				} = chatRequestBody;
-
-				const modelToUse = resolveModelForRequest(
-					requestModel,
+				const hasOwnKey = hasOwnKeyForRequest(
 					apiKeys,
+					requestModel,
 					useOpenRouter,
-					isWebSearchEnabled,
 				);
+				const isTrial = !hasOwnKey;
+
+				if (isTrial && !process.env.OPENROUTER_TRIAL_API_KEY) {
+					throw new Error("Trial messaging is not configured.");
+				}
+
+				let trialMessageReleased = false;
+				let trialPeriodStartedAt: number | undefined;
+				const releaseTrialMessage = () => {
+					if (
+						!isTrial ||
+						trialMessageReleased ||
+						trialPeriodStartedAt === undefined
+					)
+						return;
+					trialMessageReleased = true;
+					void fetchAuthMutation(api.trial.releaseMessage, {
+						periodStartedAt: trialPeriodStartedAt,
+					});
+				};
+
+				if (isTrial) {
+					try {
+						const reservation = await fetchAuthMutation(
+							api.trial.reserveMessage,
+							{ modelId: requestModel.openRouterModelId },
+						);
+						trialPeriodStartedAt = reservation.periodStartedAt;
+					} catch (error) {
+						const errorMessage = error instanceof Error ? error.message : "";
+						const resetDate = errorMessage.match(
+							/Your trial resets on (\d{4}-\d{2}-\d{2})\./,
+						)?.[1];
+						const formattedResetDate = resetDate
+							? new Intl.DateTimeFormat("en-US", {
+									month: "long",
+									day: "numeric",
+									year: "numeric",
+									timeZone: "UTC",
+								}).format(new Date(`${resetDate}T00:00:00Z`))
+							: null;
+						const message = errorMessage.includes("free messages")
+							? `You've used all 5 free messages. Your trial resets on ${formattedResetDate ?? "your next reset date"}. Add your own API key to keep chatting.`
+							: errorMessage || "Your free trial messages are unavailable.";
+						return new Response(message, {
+							status: 429,
+							headers: { "Content-Type": "text/plain; charset=utf-8" },
+						});
+					}
+				}
+
+				let modelToUse;
+				try {
+					modelToUse = resolveModelForRequest(
+						requestModel,
+						apiKeys,
+						useOpenRouter,
+						isWebSearchEnabled,
+						isTrial,
+					);
+				} catch (error) {
+					releaseTrialMessage();
+					throw error;
+				}
 
 				const finalSystemMessage = customSystemPrompt
 					? `${systemMessage}\n\n${customSystemPrompt}`
@@ -342,6 +433,7 @@ export const Route = createFileRoute("/api/chat")({
 							});
 						},
 						onError: (error) => {
+							releaseTrialMessage();
 							console.error("toUIMessageStream error:", error);
 							return (error as any).message;
 						},

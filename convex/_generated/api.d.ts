@@ -19,6 +19,7 @@ import type * as messages from "../messages.js";
 import type * as migrations from "../migrations.js";
 import type * as model_chats from "../model/chats.js";
 import type * as model_users from "../model/users.js";
+import type * as trial from "../trial.js";
 
 import type {
   ApiFromModules,
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   migrations: typeof migrations;
   "model/chats": typeof model_chats;
   "model/users": typeof model_users;
+  trial: typeof trial;
 }>;
 
 /**
