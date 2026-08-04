@@ -63,7 +63,7 @@ export default defineSchema({
 	userTokenUsage: defineTable({
 		userId: v.id("users"),
 		model: v.string(),
-		provider: v.optional(v.string()),
+		provider: v.string(),
 		tokens: v.float64(),
 	}).index("by_user_and_model", ["userId", "model"]),
 
