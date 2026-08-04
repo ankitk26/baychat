@@ -17,6 +17,7 @@ import type { FileUIPart, UIMessagePart, UIDataTypes, UITools } from "ai";
 import { api } from "convex/_generated/api";
 import { systemMessage } from "~/constants/system-message";
 import { fetchAuthMutation } from "~/lib/auth-server";
+import { chatErrorResponse, normalizeChatError } from "~/lib/chat-errors";
 import { generateRandomUUID } from "~/lib/generate-random-uuid";
 import { getAuthUser } from "~/server-fns/get-auth";
 import type { ApiKeys, CustomUIMessage, Model } from "~/types";
@@ -331,25 +332,7 @@ export const Route = createFileRoute("/api/chat")({
 						);
 						trialPeriodStartedAt = reservation.periodStartedAt;
 					} catch (error) {
-						const errorMessage = error instanceof Error ? error.message : "";
-						const resetDate = errorMessage.match(
-							/Your trial resets on (\d{4}-\d{2}-\d{2})\./,
-						)?.[1];
-						const formattedResetDate = resetDate
-							? new Intl.DateTimeFormat("en-US", {
-									month: "long",
-									day: "numeric",
-									year: "numeric",
-									timeZone: "UTC",
-								}).format(new Date(`${resetDate}T00:00:00Z`))
-							: null;
-						const message = errorMessage.includes("free messages")
-							? `You've used all 5 free messages. Your trial resets on ${formattedResetDate ?? "your next reset date"}. Add your own API key to keep chatting.`
-							: errorMessage || "Your free trial messages are unavailable.";
-						return new Response(message, {
-							status: 429,
-							headers: { "Content-Type": "text/plain; charset=utf-8" },
-						});
+						return chatErrorResponse(error);
 					}
 				}
 
@@ -364,7 +347,7 @@ export const Route = createFileRoute("/api/chat")({
 					);
 				} catch (error) {
 					releaseTrialMessage();
-					throw error;
+					return chatErrorResponse(error);
 				}
 
 				const finalSystemMessage = customSystemPrompt
@@ -434,8 +417,9 @@ export const Route = createFileRoute("/api/chat")({
 						},
 						onError: (error) => {
 							releaseTrialMessage();
+							const chatError = normalizeChatError(error);
 							console.error("toUIMessageStream error:", error);
-							return (error as any).message;
+							return chatError.message;
 						},
 					}),
 					consumeSseStream: consumeStream,
