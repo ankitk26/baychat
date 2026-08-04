@@ -42,7 +42,7 @@ export default function PromptActions({
 					<StopIcon />
 				</Button>
 			) : (
-				<Button size="icon" type="submit">
+				<Button size="icon" type="submit" variant="outline">
 					<PaperPlaneRightIcon />
 				</Button>
 			)}

@@ -2,6 +2,7 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { formatTokens } from "~/lib/format-tokens";
+import ModelProviderIcon from "./model-provider-icon";
 import { Skeleton } from "./ui/skeleton";
 
 export default function TokenUsageByModel() {
@@ -55,8 +56,10 @@ export default function TokenUsageByModel() {
 								<div className="flex min-w-0 items-center gap-3">
 									<span
 										aria-hidden
-										className="h-3 w-3 rounded-full bg-primary"
-									/>
+										className="flex size-4 shrink-0 items-center justify-center text-foreground"
+									>
+										<ModelProviderIcon provider={usageItem.provider} />
+									</span>
 									<span className="truncate text-sm font-medium">
 										{usageItem.model}
 									</span>

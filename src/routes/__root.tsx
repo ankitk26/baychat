@@ -15,9 +15,7 @@ import { TooltipProvider } from "~/components/app-tooltip";
 import { Toaster } from "~/components/ui/sonner";
 import { authClient } from "~/lib/auth-client";
 import { getToken } from "~/lib/auth-server";
-import { cn } from "~/lib/utils";
 import { ChatProvider } from "~/providers/chat-provider";
-import { getAppFont } from "~/server-fns/app-font";
 import appCss from "~/styles.css?url";
 
 // Get auth information for SSR using available cookies
@@ -40,12 +38,9 @@ export const Route = createRootRouteWithContext<{
 			ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
 		}
 
-		const appFont = await getAppFont();
-
 		return {
 			isAuthenticated: !!token,
 			token,
-			appFont,
 		};
 	},
 	head: () => ({
@@ -146,14 +141,12 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
-	const { appFont } = Route.useRouteContext();
-
 	return (
 		<html lang="en">
 			<head>
 				<HeadContent />
 			</head>
-			<body className={cn("overflow-hidden", appFont)}>
+			<body className="overflow-hidden">
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="system"

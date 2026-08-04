@@ -180,6 +180,10 @@ export const createMessage = mutation({
 				args.messageBody.metadata ?? "",
 			);
 			const modelUsedName = parsedMetadata.modelName as string;
+			const modelId = parsedMetadata.modelId as string;
+			const modelIdPrefix = modelId.split("/")[0];
+			const modelProvider =
+				modelIdPrefix === "bytedance-seed" ? "byteDance" : modelIdPrefix;
 			const totalTokens = parsedMetadata.totalTokens as number;
 
 			// Only process if tokens is a valid number
@@ -198,11 +202,13 @@ export const createMessage = mutation({
 				if (modelTokenDoc) {
 					await ctx.db.patch(modelTokenDoc._id, {
 						tokens: modelTokenDoc.tokens + totalTokens,
+						provider: modelProvider,
 					});
 				} else {
 					await ctx.db.insert("userTokenUsage", {
 						userId,
 						model: modelUsedName,
+						provider: modelProvider,
 						tokens: totalTokens,
 					});
 				}
@@ -304,7 +310,7 @@ export const tokensByModel = query({
 				(stat) => typeof stat.tokens === "number" && !Number.isNaN(stat.tokens),
 			)
 			.sort((a, b) => b.tokens - a.tokens)
-			.map(({ model, tokens }) => ({ model, tokens }));
+			.map(({ model, provider, tokens }) => ({ model, provider, tokens }));
 
 		return sortedStats;
 	},
