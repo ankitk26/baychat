@@ -1,5 +1,5 @@
 import { PlusIcon } from "@phosphor-icons/react";
-import { useHotkey } from "@tanstack/react-hotkeys";
+import { formatForDisplay, useHotkey } from "@tanstack/react-hotkeys";
 import { useNavigate } from "@tanstack/react-router";
 import { useSharedChatContext } from "~/providers/chat-provider";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
@@ -44,7 +44,7 @@ export default function AppSidebarNewChatButton() {
 									</SidebarMenuButton>
 								}
 							/>
-							<TooltipContent>Ctrl+Shift+O</TooltipContent>
+							<TooltipContent>{formatForDisplay("Mod+Shift+O")}</TooltipContent>
 						</Tooltip>
 					</SidebarMenuItem>
 				</SidebarMenu>

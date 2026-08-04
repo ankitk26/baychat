@@ -24,23 +24,12 @@ export default function AppSidebarGalleryButton() {
 			<SidebarGroupContent>
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<Tooltip>
-							<TooltipTrigger
-								render={
-									<Link
-										to="/gallery"
-										className="flex w-full"
-										onClick={handleClick}
-									>
-										<SidebarMenuButton className="flex w-full min-w-8 cursor-pointer items-center justify-center border border-sidebar-border bg-sidebar text-center hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-											<ImagesIcon className="size-4" />
-											<span>View Gallery</span>
-										</SidebarMenuButton>
-									</Link>
-								}
-							/>
-							<TooltipContent>View Gallery</TooltipContent>
-						</Tooltip>
+						<Link to="/gallery" className="flex w-full" onClick={handleClick}>
+							<SidebarMenuButton className="flex w-full min-w-8 cursor-pointer items-center justify-center border border-sidebar-border bg-sidebar text-center hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+								<ImagesIcon className="size-4" />
+								<span>View Gallery</span>
+							</SidebarMenuButton>
+						</Link>
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarGroupContent>
