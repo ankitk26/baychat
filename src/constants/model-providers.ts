@@ -41,6 +41,12 @@ const geminiModels = {
 			isFree: false,
 		},
 		{
+			name: "Gemini 3.7 Flash",
+			openRouterModelId: "google/gemini-3.7-flash",
+			modelId: "gemini-3.7-flash",
+			isFree: false,
+		},
+		{
 			name: "Nano Banana",
 			openRouterModelId: "google/gemini-2.5-flash-image",
 			modelId: "gemini-2.5-flash-image",
@@ -254,6 +260,12 @@ const xAiModels = {
 			modelId: "grok-4.5",
 			isFree: false,
 		},
+		{
+			name: "Grok 4.6",
+			openRouterModelId: "x-ai/grok-4.6",
+			modelId: "grok-4.6",
+			isFree: false,
+		},
 	] as const,
 } as const;
 
@@ -320,6 +332,12 @@ const zaiModels = {
 			name: "GLM 5.2",
 			openRouterModelId: "z-ai/glm-5.2",
 			modelId: "z-ai/glm-5.2",
+			isFree: false,
+		},
+		{
+			name: "GLM 5.3",
+			openRouterModelId: "z-ai/glm-5.3",
+			modelId: "z-ai/glm-5.3",
 			isFree: false,
 		},
 	] as const,
