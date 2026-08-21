@@ -172,7 +172,7 @@
 
 @layer base {
 	* {
-		@apply border-border tracking-wide outline-ring/50 selection:bg-primary/20 selection:text-chart-3;
+		@apply border-border tracking-wide outline-ring/50 selection:bg-primary/20 selection:text-primary;
 		@apply border-border outline-ring/50;
 	}
 	body {
