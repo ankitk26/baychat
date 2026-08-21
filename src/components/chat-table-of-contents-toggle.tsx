@@ -1,4 +1,4 @@
-import { ListIcon } from "@phosphor-icons/react";
+import { ListIcon, XIcon } from "@phosphor-icons/react";
 import { useLocation } from "@tanstack/react-router";
 import {
 	Tooltip,
@@ -18,7 +18,7 @@ export default function ChatTableOfContentsToggle() {
 	const isOpen = useTableOfContentsStore((state) => state.isOpen);
 	const isMobile = useIsMobile();
 
-	if (!isChatRoute || isOpen) {
+	if (!isChatRoute) {
 		return null;
 	}
 
@@ -28,15 +28,21 @@ export default function ChatTableOfContentsToggle() {
 				render={
 					<Button
 						className="pointer-events-auto flex h-10 w-10 shrink-0 rounded-md transition-opacity duration-200 md:ml-auto md:h-8 md:w-8"
-						onClick={tableOfContentsStoreActions.open}
+						onClick={tableOfContentsStoreActions.toggle}
 						size="icon"
 						variant={isMobile ? "ghost" : "secondary"}
 					/>
 				}
 			>
-				<ListIcon className="size-4" />
+				{isOpen ? (
+					<XIcon className="size-4" />
+				) : (
+					<ListIcon className="size-4" />
+				)}
 			</TooltipTrigger>
-			<TooltipContent>Table of contents</TooltipContent>
+			<TooltipContent>
+				{isOpen ? "Close contents" : "Table of contents"}
+			</TooltipContent>
 		</Tooltip>
 	);
 }

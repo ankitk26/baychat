@@ -35,13 +35,15 @@ export default memo(function ChatTableOfContentsSidebar({ messages }: Props) {
 		<>
 			<div className="flex h-14 shrink-0 items-center justify-between border-b px-4">
 				<h2 className="text-sm font-semibold">Contents</h2>
-				<Button
-					onClick={tableOfContentsStoreActions.close}
-					size="icon"
-					variant="ghost"
-				>
-					<XIcon className="size-4" />
-				</Button>
+				{isMobile && (
+					<Button
+						onClick={tableOfContentsStoreActions.close}
+						size="icon"
+						variant="ghost"
+					>
+						<XIcon className="size-4" />
+					</Button>
+				)}
 			</div>
 			<ScrollArea className="min-h-0 flex-1">
 				<div className="py-2 pb-8">
@@ -55,7 +57,7 @@ export default memo(function ChatTableOfContentsSidebar({ messages }: Props) {
 						<div key={section.turnId} className="px-2 py-0.5">
 							<button
 								onClick={() => handleNavigate(section.turnId)}
-								className="w-full rounded px-2 py-1.5 text-left text-xs font-medium hover:bg-accent"
+								className="w-full rounded px-2 py-1.5 text-left text-xs font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
 								type="button"
 							>
 								{section.userPreview}
@@ -68,7 +70,7 @@ export default memo(function ChatTableOfContentsSidebar({ messages }: Props) {
 											key={idx}
 											onClick={() => handleNavigate(heading.headingId)}
 											className={cn(
-												"w-full truncate rounded px-2 py-1 text-left text-xs text-muted-foreground hover:bg-accent hover:text-foreground",
+												"w-full truncate rounded px-2 py-1 text-left text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
 												heading.depth <= 2 && "font-medium text-foreground/80",
 											)}
 											type="button"
