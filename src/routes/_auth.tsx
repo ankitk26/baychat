@@ -77,7 +77,7 @@ function FloatingSidebarTrigger() {
 function RouteComponent() {
 	return (
 		<SidebarProvider>
-			<AppSidebar variant="inset" />
+			<AppSidebar />
 			<SidebarInset className="h-svh overflow-hidden">
 				<FloatingSidebarTrigger />
 				<Outlet />

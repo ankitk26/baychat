@@ -28,7 +28,7 @@ function RouteComponent() {
 	if (auth) {
 		return (
 			<SidebarProvider>
-				<AppSidebar variant="inset" />
+				<AppSidebar />
 				<SidebarInset>
 					<ReadOnlyChatMessages />
 				</SidebarInset>

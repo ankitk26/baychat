@@ -37,7 +37,7 @@ export default function AppSidebarNewChatButton() {
 								render={
 									<SidebarMenuButton
 										onClick={handleNewChat}
-										className="flex w-full min-w-8 cursor-pointer items-center justify-center bg-primary text-center font-semibold text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
+										className="flex w-full min-w-8 cursor-pointer items-center justify-center bg-primary text-center text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
 									>
 										<PlusIcon className="size-4" />
 										<span>New Chat</span>
