@@ -86,7 +86,13 @@ export default function UserPromptInput(props: Props) {
 			return;
 		}
 
-		const title = await getChatTitle({ data: { userMessage: input } });
+		const title = await getChatTitle({
+			data: {
+				userMessage: input,
+				apiKeys: persistedApiKeys,
+				useOpenRouter: persistedUseOpenRouter,
+			},
+		});
 		await updateChatTitleMutation.mutateAsync({
 			chat: { chatId: dbGeneratedChatId, title: title as string },
 		});
@@ -172,7 +178,9 @@ export default function UserPromptInput(props: Props) {
 				const dbGeneratedChatId = await createChatMutation.mutateAsync({
 					uuid: props.chatId,
 				});
-				handleChatTitleUpdate(dbGeneratedChatId);
+				handleChatTitleUpdate(dbGeneratedChatId).catch((error) => {
+					console.error("Failed to generate chat title:", error);
+				});
 			}
 
 			createMessageMutation.mutate({
