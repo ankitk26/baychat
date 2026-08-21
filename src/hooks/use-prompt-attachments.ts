@@ -47,14 +47,14 @@ const TEXT_FILE_EXTENSIONS = new Set([
 
 const MAX_ATTACHMENT_SIZE_BYTES = 10 * 1024 * 1024;
 
-const MIME_TYPE_TO_EXTENSION: Record<string, string> = {
-	"image/gif": "gif",
-	"image/heic": "heic",
-	"image/heif": "heif",
-	"image/jpeg": "jpg",
-	"image/png": "png",
-	"image/webp": "webp",
-};
+const MIME_TYPE_TO_EXTENSION = new Map<string, string>([
+	["image/gif", "gif"],
+	["image/heic", "heic"],
+	["image/heif", "heif"],
+	["image/jpeg", "jpg"],
+	["image/png", "png"],
+	["image/webp", "webp"],
+]);
 
 export type PendingAttachment = {
 	file: File;
@@ -112,7 +112,7 @@ const getClipboardImageFilename = (file: File) => {
 		return file.name;
 	}
 
-	const extension = MIME_TYPE_TO_EXTENSION[file.type] ?? "png";
+	const extension = MIME_TYPE_TO_EXTENSION.get(file.type) ?? "png";
 	return `clipboard-image-${Date.now()}.${extension}`;
 };
 

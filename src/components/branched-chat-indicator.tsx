@@ -8,11 +8,16 @@ type Props = {
 	chat: SidebarChatType;
 };
 
+type NavigationEvent = {
+	preventDefault: () => void;
+	stopPropagation: () => void;
+};
+
 export default function BranchedChatIndicator(props: Props) {
 	const { clearChat } = useSharedChatContext();
 	const navigate = useNavigate();
 
-	const handleNavigateToParent = (e: React.MouseEvent) => {
+	const handleNavigateToParent = (e: NavigationEvent) => {
 		e.preventDefault();
 		e.stopPropagation();
 		clearChat();
@@ -51,7 +56,7 @@ export default function BranchedChatIndicator(props: Props) {
 						onKeyDown={(e) => {
 							if (e.key === "Enter" || e.key === " ") {
 								e.preventDefault();
-								handleNavigateToParent(e as unknown as React.MouseEvent);
+								handleNavigateToParent(e);
 							}
 						}}
 					>

@@ -15,21 +15,21 @@ type Props = {
 	provider: string;
 };
 
-const iconMap: { [key: string]: () => JSX.Element } = {
-	google: GeminiIcon,
-	openai: OpenAIIcon,
-	anthropic: AnthropicIcon,
-	xai: XAIIcon,
-	deepseek: DeepSeekIcon,
-	moonshot: MoonShotIcon,
-	zai: ZaiIcon,
-	minimax: MiniMaxIcon,
-	openrouter: OpenRouterIcon,
-	xiaomi: XiaomiIcon,
-	byteDance: ByteDanceIcon,
-};
+const iconMap = new Map<string, () => JSX.Element>([
+	["google", GeminiIcon],
+	["openai", OpenAIIcon],
+	["anthropic", AnthropicIcon],
+	["xai", XAIIcon],
+	["deepseek", DeepSeekIcon],
+	["moonshot", MoonShotIcon],
+	["zai", ZaiIcon],
+	["minimax", MiniMaxIcon],
+	["openrouter", OpenRouterIcon],
+	["xiaomi", XiaomiIcon],
+	["byteDance", ByteDanceIcon],
+]);
 
 export default function ModelProviderIcon({ provider }: Props) {
-	const Icon = iconMap[provider] || DeepSeekIcon;
+	const Icon = iconMap.get(provider) ?? DeepSeekIcon;
 	return <Icon />;
 }

@@ -1,5 +1,6 @@
 import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
+import { isBrowser } from "~/lib/environment";
 import { STORAGE_KEYS } from "~/lib/storage-keys";
 
 type AppearanceStoreState = {
@@ -10,7 +11,7 @@ type AppearanceStoreState = {
 const STORAGE_KEY = STORAGE_KEYS.appearance;
 
 const getInitialState = (): AppearanceStoreState => {
-	if (typeof window === "undefined") {
+	if (!isBrowser()) {
 		return { showTokenUsage: false, wrapCodeBlocks: false };
 	}
 	try {
@@ -28,7 +29,7 @@ const appearanceStore = new Store<AppearanceStoreState>(getInitialState());
 
 // Subscribe to changes and persist to localStorage
 appearanceStore.subscribe(() => {
-	if (typeof window !== "undefined") {
+	if (isBrowser()) {
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(appearanceStore.state));
 	}
 });

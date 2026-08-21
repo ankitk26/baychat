@@ -1,6 +1,7 @@
 import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
 import { defaultSelectedModel } from "~/constants/model-providers";
+import { isBrowser } from "~/lib/environment";
 import { getModelByOpenRouterId } from "~/lib/get-model-by-id";
 import { STORAGE_KEYS } from "~/lib/storage-keys";
 import type { Model } from "~/types";
@@ -14,7 +15,7 @@ type ModelStoreState = {
 const STORAGE_KEY = STORAGE_KEYS.selectedModelId;
 
 function getInitialSelectedModel(): Model {
-	if (typeof window === "undefined") {
+	if (!isBrowser()) {
 		return defaultSelectedModel;
 	}
 	try {
@@ -36,7 +37,7 @@ const modelStore = new Store<ModelStoreState>({
 });
 
 modelStore.subscribe(() => {
-	if (typeof window !== "undefined") {
+	if (isBrowser()) {
 		localStorage.setItem(
 			STORAGE_KEY,
 			JSON.stringify(modelStore.state.selectedModel.openRouterModelId),

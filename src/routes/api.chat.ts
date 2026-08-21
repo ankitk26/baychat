@@ -15,10 +15,12 @@ import {
 } from "ai";
 import type { FileUIPart, UIMessagePart, UIDataTypes, UITools } from "ai";
 import { api } from "convex/_generated/api";
+import { z } from "zod";
 import { systemMessage } from "~/constants/system-message";
 import { fetchAuthMutation } from "~/lib/auth-server";
 import { chatErrorResponse, normalizeChatError } from "~/lib/chat-errors";
 import { generateRandomUUID } from "~/lib/generate-random-uuid";
+import { getBaychatTextContent } from "~/lib/part-metadata";
 import { getAuthUser } from "~/server-fns/get-auth";
 import type { ApiKeys, CustomUIMessage, Model } from "~/types";
 
@@ -157,11 +159,7 @@ const processReasoningParts = (
 	parts: UIMessagePart<UIDataTypes, UITools>[],
 ) => {
 	return parts.map((part) => {
-		if (
-			part.type === "reasoning" &&
-			"text" in part &&
-			typeof part.text === "string"
-		) {
+		if (part.type === "reasoning" && "text" in part) {
 			const text = part.text;
 			if (text.length > 1000) {
 				return {
@@ -222,8 +220,8 @@ const processMessageParts = async (
 };
 
 const getTextAttachmentPromptPart = (part: FileUIPart) => {
-	const textContent = part.providerMetadata?.baychat?.textContent;
-	if (typeof textContent !== "string" || textContent.trim() === "") {
+	const textContent = getBaychatTextContent(part.providerMetadata?.baychat);
+	if (textContent.trim() === "") {
 		return null;
 	}
 
@@ -249,8 +247,7 @@ const transformMessagesForModel = (
 				continue;
 			}
 
-			const mediaType =
-				typeof part.mediaType === "string" ? part.mediaType : "";
+			const mediaType = z.string().catch("").parse(part.mediaType);
 			// Treat malformed file parts as non-media instead of crashing.
 			if (mediaType.startsWith("image/") || mediaType === "application/pdf") {
 				transformedParts.push(part);

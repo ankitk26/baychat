@@ -1,6 +1,12 @@
 import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
+import { z } from "zod";
+import { isBrowser } from "~/lib/environment";
 import { STORAGE_KEYS } from "~/lib/storage-keys";
+
+const customizationStateSchema = z.object({
+	customSystemPrompt: z.string(),
+});
 
 type CustomizationStoreState = {
 	customSystemPrompt: string;
@@ -9,19 +15,15 @@ type CustomizationStoreState = {
 const STORAGE_KEY = STORAGE_KEYS.customization;
 
 const getInitialState = (): CustomizationStoreState => {
-	if (typeof window === "undefined") {
+	if (!isBrowser()) {
 		return { customSystemPrompt: "" };
 	}
 	try {
 		const stored = localStorage.getItem(STORAGE_KEY);
 		if (stored) {
-			const parsed = JSON.parse(stored);
-			if (
-				parsed &&
-				typeof parsed === "object" &&
-				typeof parsed.customSystemPrompt === "string"
-			) {
-				return parsed as CustomizationStoreState;
+			const result = customizationStateSchema.safeParse(JSON.parse(stored));
+			if (result.success) {
+				return result.data;
 			}
 		}
 	} catch {
@@ -35,7 +37,7 @@ const customizationStore = new Store<CustomizationStoreState>(
 );
 
 customizationStore.subscribe(() => {
-	if (typeof window !== "undefined") {
+	if (isBrowser()) {
 		try {
 			localStorage.setItem(
 				STORAGE_KEY,

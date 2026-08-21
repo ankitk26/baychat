@@ -1,6 +1,10 @@
 import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
+import { z } from "zod";
+import { isBrowser } from "~/lib/environment";
 import { STORAGE_KEYS } from "~/lib/storage-keys";
+
+const layoutStateSchema = z.object({ isExpanded: z.boolean() });
 
 type LayoutStoreState = {
 	isExpanded: boolean;
@@ -9,19 +13,15 @@ type LayoutStoreState = {
 const STORAGE_KEY = STORAGE_KEYS.layout;
 
 const getInitialState = (): LayoutStoreState => {
-	if (typeof window === "undefined") {
+	if (!isBrowser()) {
 		return { isExpanded: false };
 	}
 	try {
 		const stored = localStorage.getItem(STORAGE_KEY);
 		if (stored) {
-			const parsed = JSON.parse(stored);
-			if (
-				parsed &&
-				typeof parsed === "object" &&
-				typeof parsed.isExpanded === "boolean"
-			) {
-				return parsed as LayoutStoreState;
+			const result = layoutStateSchema.safeParse(JSON.parse(stored));
+			if (result.success) {
+				return result.data;
 			}
 		}
 	} catch {
@@ -33,7 +33,7 @@ const getInitialState = (): LayoutStoreState => {
 const layoutStore = new Store<LayoutStoreState>(getInitialState());
 
 layoutStore.subscribe(() => {
-	if (typeof window !== "undefined") {
+	if (isBrowser()) {
 		try {
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(layoutStore.state));
 		} catch {

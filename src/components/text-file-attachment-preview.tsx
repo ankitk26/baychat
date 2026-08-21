@@ -1,5 +1,6 @@
 import { FileTextIcon, XIcon } from "@phosphor-icons/react";
 import type { FileUIPart } from "ai";
+import { getBaychatTextContent } from "~/lib/part-metadata";
 import CodeHighlight from "./code-highlight";
 import { Button } from "./ui/button";
 import {
@@ -12,44 +13,45 @@ import {
 
 type AttachmentPart = FileUIPart & { size?: number };
 
-const LANGUAGE_BY_EXTENSION: Record<string, string> = {
-	c: "c",
-	cc: "cpp",
-	cpp: "cpp",
-	css: "css",
-	env: "bash",
-	go: "go",
-	h: "c",
-	hpp: "cpp",
-	html: "html",
-	ini: "ini",
-	java: "java",
-	js: "js",
-	json: "json",
-	jsx: "jsx",
-	kt: "kotlin",
-	md: "markdown",
-	php: "php",
-	py: "python",
-	rb: "ruby",
-	rs: "rust",
-	scss: "scss",
-	sh: "bash",
-	sql: "sql",
-	swift: "swift",
-	toml: "toml",
-	ts: "ts",
-	tsx: "tsx",
-	txt: "txt",
-	xml: "xml",
-	yaml: "yaml",
-	yml: "yaml",
-};
+const LANGUAGE_BY_EXTENSION = new Map<string, string>([
+	["c", "c"],
+	["cc", "cpp"],
+	["cpp", "cpp"],
+	["css", "css"],
+	["env", "bash"],
+	["go", "go"],
+	["h", "c"],
+	["hpp", "cpp"],
+	["html", "html"],
+	["ini", "ini"],
+	["java", "java"],
+	["js", "js"],
+	["json", "json"],
+	["jsx", "jsx"],
+	["kt", "kotlin"],
+	["md", "markdown"],
+	["php", "php"],
+	["py", "python"],
+	["rb", "ruby"],
+	["rs", "rust"],
+	["scss", "scss"],
+	["sh", "bash"],
+	["sql", "sql"],
+	["swift", "swift"],
+	["toml", "toml"],
+	["ts", "ts"],
+	["tsx", "tsx"],
+	["txt", "txt"],
+	["xml", "xml"],
+	["yaml", "yaml"],
+	["yml", "yaml"],
+]);
 
 const getCodeLanguage = (attachment: AttachmentPart) => {
 	const extension = attachment.filename?.toLowerCase().split(".").at(-1) ?? "";
-	if (extension in LANGUAGE_BY_EXTENSION) {
-		return LANGUAGE_BY_EXTENSION[extension];
+	const mappedLanguage = LANGUAGE_BY_EXTENSION.get(extension);
+	if (mappedLanguage) {
+		return mappedLanguage;
 	}
 
 	if (attachment.mediaType.includes("json")) {
@@ -79,10 +81,8 @@ const getCodeLanguage = (attachment: AttachmentPart) => {
 	return "txt";
 };
 
-const getTextContent = (attachment: AttachmentPart) => {
-	const textContent = attachment.providerMetadata?.baychat?.textContent;
-	return typeof textContent === "string" ? textContent : "";
-};
+const getTextContent = (attachment: AttachmentPart) =>
+	getBaychatTextContent(attachment.providerMetadata?.baychat);
 
 export default function TextFileAttachmentPreview({
 	attachment,

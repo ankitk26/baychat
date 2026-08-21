@@ -1,4 +1,5 @@
 import { Link, type ErrorComponentProps } from "@tanstack/react-router";
+import { isBrowser } from "~/lib/environment";
 import { useOptionalSharedChatContext } from "~/providers/chat-provider";
 import { Button } from "./ui/button";
 
@@ -8,7 +9,7 @@ export default function TanstackErrorComponent({
 }: ErrorComponentProps) {
 	const chatContext = useOptionalSharedChatContext();
 
-	if (typeof window === "undefined") {
+	if (!isBrowser()) {
 		console.error("TanStack Router error boundary reached", {
 			error,
 			componentStack: info?.componentStack,

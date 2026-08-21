@@ -1,5 +1,6 @@
 import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
+import { isBrowser } from "~/lib/environment";
 import { STORAGE_KEYS } from "~/lib/storage-keys";
 import { type ApiKeys, defaultApiKeys } from "~/types";
 
@@ -11,7 +12,7 @@ type ApiKeysStoreState = {
 const STORAGE_KEY = STORAGE_KEYS.apiKeys;
 
 const getInitialState = (): ApiKeysStoreState => {
-	if (typeof window === "undefined") {
+	if (!isBrowser()) {
 		return {
 			persistedApiKeys: defaultApiKeys,
 			persistedUseOpenRouter: false,
@@ -35,7 +36,7 @@ const apiKeysStore = new Store<ApiKeysStoreState>(getInitialState());
 
 // Subscribe to changes and persist to localStorage
 apiKeysStore.subscribe(() => {
-	if (typeof window !== "undefined") {
+	if (isBrowser()) {
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(apiKeysStore.state));
 	}
 });

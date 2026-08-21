@@ -1,4 +1,6 @@
 import { v } from "convex/values";
+import { z } from "zod";
+import { getConvexStorageId } from "~/lib/part-metadata";
 import { MessageMetadata } from "~/types";
 import { internal } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
@@ -10,32 +12,31 @@ import {
 } from "./_generated/server";
 import { getAuthUserIdOrThrow } from "./model/users";
 
-const hydrateStoredFileParts = async (ctx: QueryCtx, parts: string) => {
-	let parsedParts: unknown;
+const parseJsonArray = (value: string) => {
 	try {
-		parsedParts = JSON.parse(parts);
+		const parsed = JSON.parse(value);
+		return Array.isArray(parsed) ? parsed : null;
 	} catch {
 		// Keep malformed legacy data readable instead of failing the whole query.
-		return parts;
+		return null;
 	}
+};
 
-	if (!Array.isArray(parsedParts)) {
+const hydrateStoredFileParts = async (ctx: QueryCtx, parts: string) => {
+	const parsedParts = parseJsonArray(parts);
+
+	if (!parsedParts) {
 		return parts;
 	}
 
 	const hydratedParts = await Promise.all(
 		parsedParts.map(async (part) => {
-			if (
-				!part ||
-				typeof part !== "object" ||
-				part.type !== "file" ||
-				typeof part.url !== "string"
-			) {
+			if (part?.type !== "file") {
 				return part;
 			}
 
-			const storageId = part.providerMetadata?.convex?.storageId;
-			if (typeof storageId !== "string") {
+			const storageId = getConvexStorageId(part.providerMetadata?.convex);
+			if (!storageId) {
 				return part;
 			}
 
@@ -134,17 +135,12 @@ export const createMessage = mutation({
 	},
 	handler: async (ctx, args) => {
 		const userId = await getAuthUserIdOrThrow(ctx);
-		let parsedParts: unknown;
-		try {
-			parsedParts = JSON.parse(args.messageBody.parts);
-		} catch {
-			parsedParts = null;
-		}
+		const parsedParts = parseJsonArray(args.messageBody.parts);
 
-		if (Array.isArray(parsedParts)) {
+		if (parsedParts) {
 			for (const part of parsedParts) {
-				const storageId = part?.providerMetadata?.convex?.storageId;
-				if (typeof storageId !== "string") {
+				const storageId = getConvexStorageId(part?.providerMetadata?.convex);
+				if (!storageId) {
 					continue;
 				}
 
@@ -184,14 +180,10 @@ export const createMessage = mutation({
 			const modelIdPrefix = modelId.split("/")[0];
 			const modelProvider =
 				modelIdPrefix === "bytedance-seed" ? "byteDance" : modelIdPrefix;
-			const totalTokens = parsedMetadata.totalTokens as number;
+			const totalTokens = z.number().catch(0).parse(parsedMetadata.totalTokens);
 
-			// Only process if tokens is a valid number
-			if (
-				typeof totalTokens === "number" &&
-				!Number.isNaN(totalTokens) &&
-				totalTokens > 0
-			) {
+			// Only process if tokens is a valid positive number
+			if (Number.isFinite(totalTokens) && totalTokens > 0) {
 				const modelTokenDoc = await ctx.db
 					.query("userTokenUsage")
 					.withIndex("by_user_and_model", (q) =>
@@ -306,9 +298,7 @@ export const tokensByModel = query({
 			.collect();
 
 		const sortedStats = stats
-			.filter(
-				(stat) => typeof stat.tokens === "number" && !Number.isNaN(stat.tokens),
-			)
+			.filter((stat) => Number.isFinite(stat.tokens))
 			.sort((a, b) => b.tokens - a.tokens)
 			.map(({ model, provider, tokens }) => ({ model, provider, tokens }));
 

@@ -6,13 +6,7 @@ type Props = {
 	openRouterModelId: string;
 };
 
-const modalityConfig: Record<
-	InputModality,
-	{
-		Icon: typeof Image;
-		label: string;
-	}
-> = {
+const modalityConfig = {
 	text: {
 		Icon: TextT,
 		label: "Text",
@@ -25,7 +19,13 @@ const modalityConfig: Record<
 		Icon: FilePdf,
 		label: "PDF",
 	},
-};
+} satisfies Record<
+	InputModality,
+	{
+		Icon: typeof Image;
+		label: string;
+	}
+>;
 
 const displayOrder: InputModality[] = ["text", "image", "pdf"];
 

@@ -2,6 +2,7 @@ import { ArrowSquareOutIcon, FilePdfIcon, XIcon } from "@phosphor-icons/react";
 import type { FileUIPart } from "ai";
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
+import { getConvexStorageId } from "~/lib/part-metadata";
 import { getFileUrl } from "~/server-fns/get-file-url";
 import { Button } from "./ui/button";
 import {
@@ -83,16 +84,16 @@ export default function PdfAttachmentPreview({
 		}
 
 		try {
-			const storageId = attachment.providerMetadata?.convex?.storageId;
+			const storageId = getConvexStorageId(attachment.providerMetadata?.convex);
 			let pdfUrl = attachment.url;
 
 			if (pdfUrl.startsWith("data:")) {
 				const response = await fetch(pdfUrl);
 				const pdfBlob = await response.blob();
 				pdfUrl = URL.createObjectURL(pdfBlob);
-			} else if (!isSafeBrowserUrl(pdfUrl) && typeof storageId === "string") {
+			} else if (!isSafeBrowserUrl(pdfUrl) && storageId) {
 				const freshUrl = await getFileUrl({ data: { storageId } });
-				if (typeof freshUrl === "string" && freshUrl.trim() !== "") {
+				if (freshUrl && freshUrl.trim() !== "") {
 					pdfUrl = freshUrl;
 				}
 			}

@@ -14,13 +14,12 @@ function assignViewportRef(
 ) {
 	if (!viewportRef) return;
 
-	if (typeof viewportRef === "function") {
-		viewportRef(viewport);
+	if ("current" in viewportRef) {
+		viewportRef.current = viewport;
 		return;
 	}
 
-	(viewportRef as React.MutableRefObject<HTMLDivElement | null>).current =
-		viewport;
+	viewportRef(viewport);
 }
 
 function ScrollArea({

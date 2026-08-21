@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export type ChatErrorCode =
 	| "trial_exhausted"
 	| "missing_api_key"
@@ -19,13 +21,33 @@ export class ChatError extends Error {
 	}
 }
 
-const getErrorText = (error: unknown) => {
+// Caught values arrive untyped from throw sites; these helpers normalize
+// whatever a provider or transport threw into the chat error domain.
+const getErrorText = <T>(error: T): string => {
 	if (error instanceof Error) return error.message;
-	if (typeof error === "string") return error;
-	return "";
+	return z.string().catch("").parse(error);
 };
 
-export const normalizeChatError = (error: unknown): ChatError => {
+const thrownStatusSchema = z.looseObject({
+	status: z.coerce.number().optional(),
+});
+
+const thrownStatusCodeSchema = z.looseObject({
+	statusCode: z.coerce.number().optional(),
+});
+
+const getStatus = <T>(error: T): number | undefined => {
+	const parsedStatus = thrownStatusSchema.safeParse(error);
+	const status = parsedStatus.success ? parsedStatus.data.status : undefined;
+	if (status !== undefined) return status;
+
+	const parsedStatusCode = thrownStatusCodeSchema.safeParse(error);
+	return parsedStatusCode.success
+		? parsedStatusCode.data.statusCode
+		: undefined;
+};
+
+export const normalizeChatError = <T>(error: T): ChatError => {
 	if (error instanceof ChatError) return error;
 
 	const message = getErrorText(error);
@@ -49,12 +71,7 @@ export const normalizeChatError = (error: unknown): ChatError => {
 		return new ChatError("missing_api_key", message, 400);
 	}
 
-	const status =
-		typeof error === "object" && error !== null && "status" in error
-			? Number(error.status)
-			: typeof error === "object" && error !== null && "statusCode" in error
-				? Number(error.statusCode)
-				: undefined;
+	const status = getStatus(error);
 
 	if (
 		status === 401 ||
@@ -108,7 +125,7 @@ export const normalizeChatError = (error: unknown): ChatError => {
 	);
 };
 
-export const chatErrorResponse = (error: unknown) => {
+export const chatErrorResponse = <T>(error: T): Response => {
 	const chatError = normalizeChatError(error);
 	return new Response(chatError.message, {
 		status: chatError.status,
