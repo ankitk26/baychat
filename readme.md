@@ -44,8 +44,8 @@ It supports multiple AI providers, real-time messaging, and chat organization.
 
 - TanStack Start (full-stack React framework)
 - TanStack Query (server state management)
-- ShadCN (UI components)
-- Zustand (client state management)
+- ShadCN on Base UI (UI components, base-nova style)
+- TanStack Store (client state management)
 
 **Backend**
 
@@ -120,15 +120,25 @@ It supports multiple AI providers, real-time messaging, and chat organization.
    GOOGLE_CLIENT_ID=your_google_client_id
    GOOGLE_CLIENT_SECRET=your_google_client_secret
 
-   # Optional: API keys for AI providers
+   # Server-only keys for AI providers
    ANTHROPIC_API_KEY=your_anthropic_api_key
+   # Used for the monthly trial allowance
    OPENROUTER_TRIAL_API_KEY=your_openrouter_api_key
+   # Used to generate chat titles for users without their own API keys
+   OPENROUTER_CHAT_TITLE_GENERATION_KEY=your_openrouter_chat_title_key
    ```
 
-5. Run the development server:
+5. Run the development server (this starts both the app and Convex):
 
    ```bash
-   pnpm run dev
+   pnpm run dev:all
+   ```
+
+   Or, run them separately in two terminals:
+
+   ```bash
+   pnpm run dev          # starts the Vite app
+   npx convex dev        # starts the Convex backend
    ```
 
 6. Open your browser and navigate to `http://localhost:3000`
