@@ -432,7 +432,7 @@ const stealthModels = {
 			name: "Ox Alpha",
 			openRouterModelId: "stealth/ox-alpha",
 			modelId: "stealth/ox-alpha",
-			isFree: false,
+			isFree: true,
 		},
 	] as const,
 } as const;
@@ -459,4 +459,5 @@ export const trialModelIds = [
 	"google/gemini-2.5-flash-image",
 	"openai/gpt-5.4-nano",
 	"moonshotai/kimi-k2.5",
+	"stealth/ox-alpha",
 ] as const satisfies readonly AvailableOpenRouterModelId[];
