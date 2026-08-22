@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { trialModelIds } from "../src/constants/model-providers";
+import { trialModelIds, freeModelIds } from "../src/constants/model-providers";
 import type { Doc, Id } from "./_generated/dataModel";
 import { mutation, query, type QueryCtx } from "./_generated/server";
 import { getAuthUserIdOrThrow } from "./model/users";
@@ -53,6 +53,12 @@ export const reserveMessage = mutation({
 		const userId = await getAuthUserIdOrThrow(ctx);
 		if (!(trialModelIds as readonly string[]).includes(args.modelId)) {
 			throw new Error(`Model ${args.modelId} is not available in the trial`);
+		}
+
+		// Truly free models don't consume the trial message quota, so trial
+		// users can use them regardless of how many paid messages remain.
+		if ((freeModelIds as readonly string[]).includes(args.modelId)) {
+			return { remaining: Number.POSITIVE_INFINITY, periodStartedAt: undefined };
 		}
 
 		const now = Date.now();

@@ -9,7 +9,7 @@ export default function SourcesList(props: Props) {
 		<div className="space-y-2">
 			{props.sourceParts.map((sourcePart, index) => (
 				<a
-					className="group/source block rounded-lg border border-border bg-card p-3 transition-colors hover:border-foreground/15 hover:bg-accent"
+					className="group/source block rounded-lg border border-border bg-card p-3 transition-colors hover:border-foreground/15 hover:bg-muted"
 					href={sourcePart.url}
 					key={sourcePart.sourceId}
 					rel="noopener noreferrer"

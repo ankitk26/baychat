@@ -461,3 +461,10 @@ export const trialModelIds = [
 	"moonshotai/kimi-k2.5",
 	"stealth/ox-alpha",
 ] as const satisfies readonly AvailableOpenRouterModelId[];
+
+// Truly free models that a trial user can use without consuming the
+// trial message quota.
+export const freeModelIds = allModelProviders
+	.flatMap((group) => group.models)
+	.filter((model) => model.isFree)
+	.map((model) => model.openRouterModelId) as readonly string[];
