@@ -424,6 +424,19 @@ const byteDanceModels = {
 	] as const,
 } as const;
 
+const stealthModels = {
+	provider: "Stealth",
+	key: "stealth",
+	models: [
+		{
+			name: "Ox Alpha",
+			openRouterModelId: "stealth/ox-alpha",
+			modelId: "stealth/ox-alpha",
+			isFree: false,
+		},
+	] as const,
+} as const;
+
 export const allModelProviders = [
 	geminiModels,
 	deepseekModels,
@@ -435,6 +448,7 @@ export const allModelProviders = [
 	minimaxModels,
 	xiaomiModels,
 	byteDanceModels,
+	stealthModels,
 ] as const;
 
 type AvailableOpenRouterModelId =
