@@ -57,7 +57,7 @@ function RouteComponent() {
 				{/* Actions */}
 				<div className="space-y-2.5">
 					<Button
-						className="group w-full gap-2 bg-primary font-medium text-primary-foreground transition-all duration-200 hover:brightness-105 active:scale-[0.99]"
+						className="w-full gap-2 duration-200"
 						size="lg"
 						disabled={loadingProvider !== null}
 						onClick={() => handleLogin("github")}
@@ -72,7 +72,7 @@ function RouteComponent() {
 					</Button>
 
 					<Button
-						className="group w-full gap-2 border-border/60 font-medium text-foreground transition-all duration-200 hover:bg-accent/50 active:scale-[0.99]"
+						className="w-full gap-2 duration-200"
 						size="lg"
 						variant="outline"
 						disabled={loadingProvider !== null}

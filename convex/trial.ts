@@ -58,7 +58,10 @@ export const reserveMessage = mutation({
 		// Truly free models don't consume the trial message quota, so trial
 		// users can use them regardless of how many paid messages remain.
 		if ((freeModelIds as readonly string[]).includes(args.modelId)) {
-			return { remaining: Number.POSITIVE_INFINITY, periodStartedAt: undefined };
+			return {
+				remaining: Number.POSITIVE_INFINITY,
+				periodStartedAt: undefined,
+			};
 		}
 
 		const now = Date.now();
