@@ -340,6 +340,12 @@ const zaiModels = {
 			modelId: "z-ai/glm-5.3",
 			isFree: false,
 		},
+		{
+			name: "GLM 5.3 Flash",
+			openRouterModelId: "z-ai/glm-5.3-flash",
+			modelId: "z-ai/glm-5.3-flash",
+			isFree: false,
+		},
 	] as const,
 } as const;
 
