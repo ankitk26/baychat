@@ -1,5 +1,5 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { CaretDownIcon, KeyIcon } from "@phosphor-icons/react";
+import { CaretDownIcon } from "@phosphor-icons/react";
 import { useHotkey } from "@tanstack/react-hotkeys";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
@@ -7,13 +7,12 @@ import { useCallback, useState } from "react";
 import { getAccessibleModels } from "~/lib/get-accessible-models";
 import { modelStoreActions, useModelStore } from "~/stores/model-store";
 import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
-import ModelInputIndicators from "./model-input-indicators";
 import ModelProviderIcon from "./model-provider-icon";
+import ProviderModelList from "./provider-model-list";
 import { Button } from "./ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuItem,
 	DropdownMenuPortal,
 	DropdownMenuSub,
 	DropdownMenuSubContent,
@@ -70,25 +69,13 @@ export default function ModelSelector() {
 						</DropdownMenuSubTrigger>
 						<DropdownMenuPortal>
 							<DropdownMenuSubContent className="ml-2 w-60 rounded-lg">
-								{provider.models.map((model) => (
-									<DropdownMenuItem
-										className="py-2.5 text-xs whitespace-nowrap"
-										disabled={!model.isAvailable}
-										key={model.modelId}
-										onClick={() => {
-											modelStoreActions.setSelectedModel(model);
-										}}
-									>
-										<ModelProviderIcon provider={provider.key} />
-										{model.name}
-										<span className="ml-auto flex items-center gap-0.5">
-											<ModelInputIndicators
-												openRouterModelId={model.openRouterModelId}
-											/>
-											{!model.isAvailable && <KeyIcon className="size-3" />}
-										</span>
-									</DropdownMenuItem>
-								))}
+								<ProviderModelList
+									providerKey={provider.key}
+									models={provider.models}
+									onSelect={(model) => {
+										modelStoreActions.setSelectedModel(model);
+									}}
+								/>
 							</DropdownMenuSubContent>
 						</DropdownMenuPortal>
 					</DropdownMenuSub>

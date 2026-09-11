@@ -1,6 +1,6 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { useConvexMutation } from "@convex-dev/react-query";
-import { GlobeIcon, KeyIcon, ArrowClockwiseIcon } from "@phosphor-icons/react";
+import { GlobeIcon, ArrowClockwiseIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
@@ -12,8 +12,8 @@ import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage, Model } from "~/types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import { DropdownMenuSeparatorWithText } from "./dropdown-menu-separator-with-text";
-import ModelInputIndicators from "./model-input-indicators";
 import ModelProviderIcon from "./model-provider-icon";
+import ProviderModelList from "./provider-model-list";
 import { Button } from "./ui/button";
 import {
 	DropdownMenu,
@@ -169,25 +169,11 @@ export default function RetryModelDropdown(props: Props) {
 						</DropdownMenuSubTrigger>
 						<DropdownMenuPortal>
 							<DropdownMenuSubContent className="mx-2 w-60">
-								{provider.models.map((model) => (
-									<DropdownMenuItem
-										className="py-2.5 text-xs whitespace-nowrap"
-										disabled={!model.isAvailable}
-										key={model.modelId}
-										onClick={async () => {
-											await handleRetry(model);
-										}}
-									>
-										<ModelProviderIcon provider={provider.key} />
-										{model.name}
-										<span className="ml-auto flex items-center gap-0.5">
-											<ModelInputIndicators
-												openRouterModelId={model.openRouterModelId}
-											/>
-											{!model.isAvailable && <KeyIcon className="size-3" />}
-										</span>
-									</DropdownMenuItem>
-								))}
+								<ProviderModelList
+									providerKey={provider.key}
+									models={provider.models}
+									onSelect={handleRetry}
+								/>
 							</DropdownMenuSubContent>
 						</DropdownMenuPortal>
 					</DropdownMenuSub>

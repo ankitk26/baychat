@@ -9,11 +9,11 @@ export type Model = {
 	openRouterModelId: string;
 	modelId: string;
 	isFree: boolean;
+	releasedAt: string;
 };
 
 // Model + isAvailable
 export type ModelWithAvailability = Model & { isAvailable: boolean };
-
 // Type for models list
 export type ProviderGroup = {
 	provider: string;
