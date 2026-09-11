@@ -73,7 +73,7 @@ export default function PinnedModelsSection({
 					</DropdownMenuPortal>
 				</DropdownMenuSub>
 				<DropdownMenuSeparatorWithText>
-					all models
+					All models
 				</DropdownMenuSeparatorWithText>
 			</>
 		);
@@ -82,7 +82,7 @@ export default function PinnedModelsSection({
 	return (
 		<>
 			{modelRows}
-			<DropdownMenuSeparatorWithText>all models</DropdownMenuSeparatorWithText>
+			<DropdownMenuSeparatorWithText>All models</DropdownMenuSeparatorWithText>
 		</>
 	);
 }
