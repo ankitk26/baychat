@@ -1,8 +1,7 @@
-import { KeyIcon, MinusIcon, PlusIcon } from "@phosphor-icons/react";
+import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import type { ModelWithAvailability } from "~/types";
-import ModelInputIndicators from "./model-input-indicators";
-import ModelProviderIcon from "./model-provider-icon";
+import ModelMenuItem from "./model-menu-item";
 import { DropdownMenuItem } from "./ui/dropdown-menu";
 
 const LATEST_MODEL_COUNT = 5;
@@ -12,16 +11,11 @@ const LATEST_MODEL_COUNT = 5;
 const MIN_HIDDEN_MODELS_FOR_EXPANDER = 4;
 
 type Props = {
-	providerKey: string;
 	models: ModelWithAvailability[];
 	onSelect: (model: ModelWithAvailability) => void | Promise<void>;
 };
 
-export default function ProviderModelList({
-	providerKey,
-	models,
-	onSelect,
-}: Props) {
+export default function ProviderModelList({ models, onSelect }: Props) {
 	const [showAll, setShowAll] = useState(false);
 
 	// Sort by release date, descending (latest first).
@@ -38,21 +32,7 @@ export default function ProviderModelList({
 	return (
 		<>
 			{visibleModels.map((model) => (
-				<DropdownMenuItem
-					className="py-2.5 text-xs whitespace-nowrap"
-					disabled={!model.isAvailable}
-					key={model.modelId}
-					onClick={() => {
-						onSelect(model);
-					}}
-				>
-					<ModelProviderIcon provider={providerKey} />
-					{model.name}
-					<span className="ml-auto flex items-center gap-0.5">
-						<ModelInputIndicators openRouterModelId={model.openRouterModelId} />
-						{!model.isAvailable && <KeyIcon className="size-3" />}
-					</span>
-				</DropdownMenuItem>
+				<ModelMenuItem key={model.modelId} model={model} onSelect={onSelect} />
 			))}
 			{isExpandable && (
 				<DropdownMenuItem

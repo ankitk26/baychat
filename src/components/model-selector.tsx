@@ -8,6 +8,7 @@ import { getAccessibleModels } from "~/lib/get-accessible-models";
 import { modelStoreActions, useModelStore } from "~/stores/model-store";
 import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
 import ModelProviderIcon from "./model-provider-icon";
+import PinnedModelsSection from "./pinned-models-section";
 import ProviderModelList from "./provider-model-list";
 import { Button } from "./ui/button";
 import {
@@ -61,6 +62,12 @@ export default function ModelSelector() {
 				<CaretDownIcon />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-60">
+				<PinnedModelsSection
+					accessibleModels={accessibleModels}
+					onSelect={(model) => {
+						modelStoreActions.setSelectedModel(model);
+					}}
+				/>
 				{accessibleModels.map((provider) => (
 					<DropdownMenuSub key={provider.key}>
 						<DropdownMenuSubTrigger className="flex items-center gap-3 py-2.5 text-xs">
@@ -70,7 +77,6 @@ export default function ModelSelector() {
 						<DropdownMenuPortal>
 							<DropdownMenuSubContent className="ml-2 w-60 rounded-lg">
 								<ProviderModelList
-									providerKey={provider.key}
 									models={provider.models}
 									onSelect={(model) => {
 										modelStoreActions.setSelectedModel(model);

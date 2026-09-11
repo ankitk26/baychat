@@ -170,7 +170,6 @@ export default function RetryModelDropdown(props: Props) {
 						<DropdownMenuPortal>
 							<DropdownMenuSubContent className="mx-2 w-60">
 								<ProviderModelList
-									providerKey={provider.key}
 									models={provider.models}
 									onSelect={handleRetry}
 								/>

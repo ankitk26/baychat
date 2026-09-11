@@ -8,6 +8,7 @@ import type { DataModel } from "./_generated/dataModel";
 import {
 	internalMutation as rawInternalMutation,
 	mutation as rawMutation,
+	query as rawQuery,
 } from "./_generated/server";
 
 const triggers = new Triggers<DataModel>();
@@ -34,6 +35,7 @@ triggers.register("chats", async (ctx, change) => {
 });
 
 export const mutation = customMutation(rawMutation, customCtx(triggers.wrapDB));
+export const query = rawQuery;
 export const internalMutation = customMutation(
 	rawInternalMutation,
 	customCtx(triggers.wrapDB),

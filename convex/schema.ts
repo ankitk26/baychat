@@ -93,4 +93,11 @@ export default defineSchema({
 	})
 		.index("by_user", ["userId"])
 		.index("by_storage_id", ["storageId"]),
+
+	pinnedModels: defineTable({
+		userId: v.id("users"),
+		modelId: v.string(),
+	})
+		.index("by_user", ["userId"])
+		.index("by_user_and_model", ["userId", "modelId"]),
 });
