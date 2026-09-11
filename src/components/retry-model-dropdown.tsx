@@ -168,7 +168,7 @@ export default function RetryModelDropdown(props: Props) {
 							{provider.provider}
 						</DropdownMenuSubTrigger>
 						<DropdownMenuPortal>
-							<DropdownMenuSubContent className="mx-2 w-60">
+							<DropdownMenuSubContent className="mx-2 w-max">
 								<ProviderModelList
 									models={provider.models}
 									onSelect={handleRetry}

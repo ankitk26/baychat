@@ -67,7 +67,7 @@ export default function PinnedModelsSection({
 						Pinned models
 					</DropdownMenuSubTrigger>
 					<DropdownMenuPortal>
-						<DropdownMenuSubContent className="ml-2 w-60 rounded-lg">
+						<DropdownMenuSubContent className="ml-2 w-max rounded-lg">
 							{modelRows}
 						</DropdownMenuSubContent>
 					</DropdownMenuPortal>

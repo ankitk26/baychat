@@ -3,6 +3,7 @@ import AnthropicIcon from "./anthropic-icon";
 import ByteDanceIcon from "./byte-dance-icon";
 import DeepSeekIcon from "./deepseek-icon";
 import GeminiIcon from "./gemini-icon";
+import MetaIcon from "./meta-icon";
 import MiniMaxIcon from "./minimax-icon";
 import MoonShotIcon from "./moonshot-icon";
 import OpenAIIcon from "./open-ai-icon";
@@ -27,6 +28,7 @@ const iconMap = new Map<string, () => JSX.Element>([
 	["openrouter", OpenRouterIcon],
 	["xiaomi", XiaomiIcon],
 	["byteDance", ByteDanceIcon],
+	["meta", MetaIcon],
 ]);
 
 export default function ModelProviderIcon({ provider }: Props) {

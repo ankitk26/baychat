@@ -61,7 +61,7 @@ export default function ModelSelector() {
 				)}
 				<CaretDownIcon />
 			</DropdownMenuTrigger>
-			<DropdownMenuContent className="w-60">
+			<DropdownMenuContent className="w-max min-w-60">
 				<PinnedModelsSection
 					accessibleModels={accessibleModels}
 					onSelect={(model) => {
@@ -75,7 +75,7 @@ export default function ModelSelector() {
 							{provider.provider}
 						</DropdownMenuSubTrigger>
 						<DropdownMenuPortal>
-							<DropdownMenuSubContent className="ml-2 w-60 rounded-lg">
+							<DropdownMenuSubContent className="ml-2 w-max rounded-lg">
 								<ProviderModelList
 									models={provider.models}
 									onSelect={(model) => {

@@ -462,6 +462,34 @@ const xiaomiModels = {
 	] as const,
 } as const;
 
+const metaModels = {
+	provider: "Meta",
+	key: "meta",
+	models: [
+		{
+			name: "Muse Spark 1.3",
+			openRouterModelId: "meta/muse-spark-1.3",
+			modelId: "meta/muse-spark-1.3",
+			isFree: false,
+			releasedAt: "2026-09-02",
+		},
+		{
+			name: "Muse Spark 1.3 Contributor",
+			openRouterModelId: "meta/muse-spark-1.3-contributor",
+			modelId: "meta/muse-spark-1.3-contributor",
+			isFree: false,
+			releasedAt: "2026-09-02",
+		},
+		{
+			name: "Muse Spark 1.2",
+			openRouterModelId: "meta/muse-spark-1.2",
+			modelId: "meta/muse-spark-1.2",
+			isFree: false,
+			releasedAt: "2026-08-05",
+		},
+	] as const,
+} as const;
+
 export const allModelProviders = [
 	geminiModels,
 	deepseekModels,
@@ -472,6 +500,7 @@ export const allModelProviders = [
 	zaiModels,
 	minimaxModels,
 	xiaomiModels,
+	metaModels,
 ] as const;
 
 type AvailableOpenRouterModelId =

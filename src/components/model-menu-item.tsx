@@ -18,6 +18,7 @@ const PROVIDER_KEY_BY_MODEL_PREFIX = {
 	"z-ai": "zai",
 	minimax: "minimax",
 	xiaomi: "xiaomi",
+	meta: "meta",
 } as const;
 
 type Props = {
@@ -44,7 +45,7 @@ export default function ModelMenuItem({ model, onSelect, showPin }: Props) {
 		>
 			<ModelProviderIcon provider={providerKey} />
 			{model.name}
-			<span className="ml-auto flex items-center gap-0.5 pr-8">
+			<span className="ml-auto flex shrink-0 items-center gap-0.5 pr-8">
 				<ModelInputIndicators openRouterModelId={model.openRouterModelId} />
 				{!model.isAvailable && <KeyIcon className="size-3" />}
 			</span>
