@@ -69,10 +69,14 @@ export const getMessages = query({
 			.collect();
 
 		return Promise.all(
-			messages.map(async ({ userId: _, ...rest }) => ({
-				...rest,
-				parts: await hydrateStoredFileParts(ctx, rest.parts),
-			})),
+			messages.map(async (message) => {
+				const { userId: _userId, ...rest } = message;
+				void _userId; // intentionally dropped from the response
+				return {
+					...rest,
+					parts: await hydrateStoredFileParts(ctx, rest.parts),
+				};
+			}),
 		);
 	},
 });
@@ -113,10 +117,14 @@ export const getSharedChatMessages = query({
 		return {
 			sharedChat,
 			messages: await Promise.all(
-				messages.map(async ({ userId: _, ...rest }) => ({
-					...rest,
-					parts: await hydrateStoredFileParts(ctx, rest.parts),
-				})),
+				messages.map(async (message) => {
+					const { userId: _userId, ...rest } = message;
+					void _userId; // intentionally dropped from the response
+					return {
+						...rest,
+						parts: await hydrateStoredFileParts(ctx, rest.parts),
+					};
+				}),
 			),
 			parentChatTitle: parentChat?.title,
 		};
