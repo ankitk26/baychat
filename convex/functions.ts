@@ -31,6 +31,14 @@ triggers.register("chats", async (ctx, change) => {
 				cursor: null,
 			},
 		);
+		await ctx.scheduler.runAfter(
+			0,
+			internal.savedMessages.deleteSavedByChatInternal,
+			{
+				chatId: chat.uuid,
+				cursor: null,
+			},
+		);
 	}
 });
 

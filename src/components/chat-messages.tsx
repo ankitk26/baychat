@@ -49,6 +49,7 @@ export default memo(function ChatMessages({
 						/>
 					) : (
 						<AssistantMessage
+							chatId={chatId}
 							isGeneratingImage={isGeneratingImage}
 							message={message}
 							regenerate={regenerate}

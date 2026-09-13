@@ -18,6 +18,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import BranchOffButton from "./branch-off-button";
 import FileAttachmentsPreview from "./file-attachments-preview";
 import RetryModelDropdown from "./retry-model-dropdown";
+import SaveMessageButton from "./save-message-button";
 import { Button } from "./ui/button";
 import UserMessageEditor from "./user-message-editor";
 
@@ -175,6 +176,7 @@ export default memo(function UserMessage({
 					</TooltipTrigger>
 					<TooltipContent>Copy to clipboard</TooltipContent>
 				</Tooltip>
+				<SaveMessageButton chatId={chatId} messageId={message.id} />
 			</div>
 		</div>
 	);

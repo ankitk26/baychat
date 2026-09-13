@@ -20,6 +20,7 @@ import type * as migrations from "../migrations.js";
 import type * as model_chats from "../model/chats.js";
 import type * as model_users from "../model/users.js";
 import type * as pinnedModels from "../pinnedModels.js";
+import type * as savedMessages from "../savedMessages.js";
 import type * as trial from "../trial.js";
 
 import type {
@@ -41,6 +42,7 @@ declare const fullApi: ApiFromModules<{
   "model/chats": typeof model_chats;
   "model/users": typeof model_users;
   pinnedModels: typeof pinnedModels;
+  savedMessages: typeof savedMessages;
   trial: typeof trial;
 }>;
 

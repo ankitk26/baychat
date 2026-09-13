@@ -94,6 +94,26 @@ export default defineSchema({
 		.index("by_user", ["userId"])
 		.index("by_storage_id", ["storageId"]),
 
+	savedMessages: defineTable({
+		userId: v.id("users"),
+		chatId: v.string(),
+		chatTitle: v.string(),
+		messageId: v.string(),
+		role: v.union(v.literal("user"), v.literal("assistant")),
+		parts: v.string(),
+		metadata: v.optional(v.string()),
+		// Creation time of the original chat message so saved user + assistant
+		// messages can be replayed in the order they appeared in the chat.
+		orderKey: v.number(),
+		savedAt: v.number(),
+		// When true the save survives its source chat being deleted.
+		retained: v.optional(v.boolean()),
+	})
+		.index("by_user", ["userId"])
+		.index("by_user_and_chat", ["userId", "chatId"])
+		.index("by_user_and_message", ["userId", "messageId"])
+		.index("by_chat", ["chatId"]),
+
 	pinnedModels: defineTable({
 		userId: v.id("users"),
 		modelId: v.string(),

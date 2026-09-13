@@ -1,5 +1,6 @@
 import { CopyIcon } from "@phosphor-icons/react";
 import type { Doc } from "convex/_generated/dataModel";
+import type { ReactNode } from "react";
 import { toast } from "sonner";
 import { getMessageContentFromParts } from "~/lib/get-message-content-from-parts";
 import type { CustomUIMessage } from "~/types";
@@ -10,10 +11,19 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import { Button } from "./ui/button";
 
 type Props = {
-	message: Omit<Doc<"messages">, "userId">;
+	// SAFETY: only the message fields rendered below are required; saved
+	// message snapshots with matching fields are also accepted here.
+	message: Pick<
+		Doc<"messages">,
+		"sourceMessageId" | "chatId" | "parts" | "metadata" | "role"
+	>;
+	extraActions?: ReactNode;
 };
 
-export default function ReadOnlyAssistantMessage({ message }: Props) {
+export default function ReadOnlyAssistantMessage({
+	message,
+	extraActions,
+}: Props) {
 	const messageMetadata = JSON.parse(
 		message.metadata ?? "{}",
 	) as CustomUIMessage["metadata"];
@@ -53,6 +63,8 @@ export default function ReadOnlyAssistantMessage({ message }: Props) {
 						</TooltipTrigger>
 						<TooltipContent>Copy to clipboard</TooltipContent>
 					</Tooltip>
+
+					{extraActions}
 
 					<span className="text-xs text-muted-foreground">
 						{messageMetadata?.modelName}

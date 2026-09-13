@@ -8,8 +8,10 @@ import ContactSection from "~/components/contact-section";
 import CustomizationSettings from "~/components/customization-settings";
 import { Button } from "~/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { useContentWidth } from "~/hooks/use-content-width";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { authClient } from "~/lib/auth-client";
+import { cn } from "~/lib/utils";
 
 export const Route = createFileRoute("/_auth/settings")({
 	component: SettingsPage,
@@ -18,11 +20,17 @@ export const Route = createFileRoute("/_auth/settings")({
 function SettingsPage() {
 	const isMobile = useIsMobile();
 	const navigate = useNavigate();
+	const contentWidth = useContentWidth("max-w-5xl", "max-w-7xl");
 
 	return (
 		<section className="h-svh max-h-svh py-4 pb-8 lg:py-6 lg:pb-12">
 			<ScrollArea className="h-full w-full">
-				<div className="mx-auto w-full max-w-5xl space-y-4 px-4 pb-20 lg:space-y-6 lg:px-6 lg:pb-12">
+				<div
+					className={cn(
+						"mx-auto w-full space-y-4 px-4 pb-20 transition-[max-width] duration-300 ease-in-out lg:space-y-6 lg:px-6 lg:pb-12",
+						contentWidth,
+					)}
+				>
 					{/* Header - responsive layout */}
 					<div className="flex items-center justify-between gap-4">
 						<h1 className="text-2xl font-bold lg:text-3xl">Settings</h1>

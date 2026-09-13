@@ -48,7 +48,9 @@ function FloatingSidebarTrigger() {
 							render={
 								<Button
 									aria-label={
-										isExpanded ? "Collapse chat width" : "Expand chat width"
+										isExpanded
+											? "Collapse content width"
+											: "Expand content width"
 									}
 									className="transition-opacity duration-200"
 									onClick={layoutStoreActions.toggleExpanded}
@@ -64,7 +66,7 @@ function FloatingSidebarTrigger() {
 							)}
 						</TooltipTrigger>
 						<TooltipContent>
-							{isExpanded ? "Collapse chat width" : "Expand chat width"}
+							{isExpanded ? "Collapse content width" : "Expand content width"}
 						</TooltipContent>
 					</Tooltip>
 				)}

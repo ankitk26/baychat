@@ -1,5 +1,6 @@
 import { CopyIcon } from "@phosphor-icons/react";
 import type { Doc } from "convex/_generated/dataModel";
+import type { ReactNode } from "react";
 import { toast } from "sonner";
 import { getFilePartsFromMessage } from "~/lib/get-file-parts-from-message";
 import { getMessageContentFromParts } from "~/lib/get-message-content-from-parts";
@@ -9,10 +10,16 @@ import FileAttachmentsPreview from "./file-attachments-preview";
 import { Button } from "./ui/button";
 
 type Props = {
-	message: Omit<Doc<"messages">, "userId">;
+	// SAFETY: only the message fields rendered below are required; saved
+	// message snapshots with matching fields are also accepted here.
+	message: Pick<
+		Doc<"messages">,
+		"sourceMessageId" | "chatId" | "parts" | "metadata" | "role"
+	>;
+	extraActions?: ReactNode;
 };
 
-export default function ReadOnlyUserMessage({ message }: Props) {
+export default function ReadOnlyUserMessage({ message, extraActions }: Props) {
 	const parsedParts = JSON.parse(message.parts) as CustomUIMessage["parts"];
 	const messageAttachments = getFilePartsFromMessage(parsedParts);
 	const messageContent = getMessageContentFromParts(parsedParts);
@@ -46,6 +53,7 @@ export default function ReadOnlyUserMessage({ message }: Props) {
 					</TooltipTrigger>
 					<TooltipContent>Copy to clipboard</TooltipContent>
 				</Tooltip>
+				{extraActions}
 			</div>
 		</div>
 	);

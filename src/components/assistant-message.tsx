@@ -16,11 +16,13 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import BranchOffButton from "./branch-off-button";
 import ImageGenerationSkeleton from "./image-generation-skeleton";
 import RetryModelDropdown from "./retry-model-dropdown";
+import SaveMessageButton from "./save-message-button";
 import ThinkingIndicator from "./thinking-indicator";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Button } from "./ui/button";
 
 type Props = {
+	chatId: string;
 	isGeneratingImage?: boolean;
 	message: CustomUIMessage;
 	regenerate?: UseChatHelpers<CustomUIMessage>["regenerate"];
@@ -30,6 +32,7 @@ type Props = {
 
 export default React.memo(function AssistantMessage(props: Props) {
 	const {
+		chatId,
 		isGeneratingImage = false,
 		message,
 		regenerate,
@@ -111,6 +114,8 @@ export default React.memo(function AssistantMessage(props: Props) {
 						</TooltipTrigger>
 						<TooltipContent>Copy to clipboard</TooltipContent>
 					</Tooltip>
+
+					<SaveMessageButton chatId={chatId} messageId={message.id} />
 
 					<BranchOffButton message={message} />
 

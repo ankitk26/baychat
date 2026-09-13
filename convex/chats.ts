@@ -241,6 +241,7 @@ export const unarchiveAll = mutation({
 export const deleteChat = mutation({
 	args: {
 		chatId: v.id("chats"),
+		keepSavedMessages: v.optional(v.boolean()),
 	},
 	handler: async (ctx, args) => {
 		const userId = await getAuthUserIdOrThrow(ctx);
@@ -252,6 +253,20 @@ export const deleteChat = mutation({
 
 		if (chat.userId !== userId) {
 			throw new Error("Unauthorized request");
+		}
+
+		if (args.keepSavedMessages) {
+			// Flag the saves so the deletion cascade leaves them in place.
+			const savedMessages = await ctx.db
+				.query("savedMessages")
+				.withIndex("by_user_and_chat", (q) =>
+					q.eq("userId", userId).eq("chatId", chat.uuid),
+				)
+				.collect();
+
+			for (const savedMessage of savedMessages) {
+				await ctx.db.patch(savedMessage._id, { retained: true });
+			}
 		}
 
 		await ctx.db.delete(args.chatId);

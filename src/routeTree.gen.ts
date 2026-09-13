@@ -13,10 +13,13 @@ import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthIndexRouteImport } from './routes/_auth.index'
 import { Route as AuthGalleryRouteImport } from './routes/_auth.gallery'
+import { Route as AuthSavedMessagesRouteImport } from './routes/_auth.saved-messages'
 import { Route as AuthSettingsRouteImport } from './routes/_auth.settings'
 import { Route as ApiChatRouteImport } from './routes/api.chat'
 import { Route as ShareChatIdRouteImport } from './routes/share.$chatId'
 import { Route as AuthChatChatIdRouteImport } from './routes/_auth.chat.$chatId'
+import { Route as AuthSavedMessagesIndexRouteImport } from './routes/_auth.saved-messages.index'
+import { Route as AuthSavedMessagesChatIdRouteImport } from './routes/_auth.saved-messages.$chatId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
 
 const AuthRoute = AuthRouteImport.update({
@@ -36,6 +39,11 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
 const AuthGalleryRoute = AuthGalleryRouteImport.update({
   id: '/gallery',
   path: '/gallery',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthSavedMessagesRoute = AuthSavedMessagesRouteImport.update({
+  id: '/saved-messages',
+  path: '/saved-messages',
   getParentRoute: () => AuthRoute,
 } as any)
 const AuthSettingsRoute = AuthSettingsRouteImport.update({
@@ -58,6 +66,16 @@ const AuthChatChatIdRoute = AuthChatChatIdRouteImport.update({
   path: '/chat/$chatId',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthSavedMessagesIndexRoute = AuthSavedMessagesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthSavedMessagesRoute,
+} as any)
+const AuthSavedMessagesChatIdRoute = AuthSavedMessagesChatIdRouteImport.update({
+  id: '/$chatId',
+  path: '/$chatId',
+  getParentRoute: () => AuthSavedMessagesRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -68,11 +86,14 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
   '/login': typeof LoginRoute
   '/gallery': typeof AuthGalleryRoute
+  '/saved-messages': typeof AuthSavedMessagesRouteWithChildren
   '/settings': typeof AuthSettingsRoute
   '/api/chat': typeof ApiChatRoute
   '/share/$chatId': typeof ShareChatIdRoute
   '/chat/$chatId': typeof AuthChatChatIdRoute
+  '/saved-messages/$chatId': typeof AuthSavedMessagesChatIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/saved-messages/': typeof AuthSavedMessagesIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -82,19 +103,24 @@ export interface FileRoutesByTo {
   '/share/$chatId': typeof ShareChatIdRoute
   '/': typeof AuthIndexRoute
   '/chat/$chatId': typeof AuthChatChatIdRoute
+  '/saved-messages/$chatId': typeof AuthSavedMessagesChatIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/saved-messages': typeof AuthSavedMessagesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/_auth/gallery': typeof AuthGalleryRoute
+  '/_auth/saved-messages': typeof AuthSavedMessagesRouteWithChildren
   '/_auth/settings': typeof AuthSettingsRoute
   '/api/chat': typeof ApiChatRoute
   '/share/$chatId': typeof ShareChatIdRoute
   '/_auth/': typeof AuthIndexRoute
   '/_auth/chat/$chatId': typeof AuthChatChatIdRoute
+  '/_auth/saved-messages/$chatId': typeof AuthSavedMessagesChatIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_auth/saved-messages/': typeof AuthSavedMessagesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -102,11 +128,14 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/gallery'
+    | '/saved-messages'
     | '/settings'
     | '/api/chat'
     | '/share/$chatId'
     | '/chat/$chatId'
+    | '/saved-messages/$chatId'
     | '/api/auth/$'
+    | '/saved-messages/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -116,18 +145,23 @@ export interface FileRouteTypes {
     | '/share/$chatId'
     | '/'
     | '/chat/$chatId'
+    | '/saved-messages/$chatId'
     | '/api/auth/$'
+    | '/saved-messages'
   id:
     | '__root__'
     | '/_auth'
     | '/login'
     | '/_auth/gallery'
+    | '/_auth/saved-messages'
     | '/_auth/settings'
     | '/api/chat'
     | '/share/$chatId'
     | '/_auth/'
     | '/_auth/chat/$chatId'
+    | '/_auth/saved-messages/$chatId'
     | '/api/auth/$'
+    | '/_auth/saved-messages/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -168,6 +202,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthGalleryRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/saved-messages': {
+      id: '/_auth/saved-messages'
+      path: '/saved-messages'
+      fullPath: '/saved-messages'
+      preLoaderRoute: typeof AuthSavedMessagesRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/settings': {
       id: '/_auth/settings'
       path: '/settings'
@@ -196,6 +237,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthChatChatIdRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/saved-messages/': {
+      id: '/_auth/saved-messages/'
+      path: '/'
+      fullPath: '/saved-messages/'
+      preLoaderRoute: typeof AuthSavedMessagesIndexRouteImport
+      parentRoute: typeof AuthSavedMessagesRoute
+    }
+    '/_auth/saved-messages/$chatId': {
+      id: '/_auth/saved-messages/$chatId'
+      path: '/$chatId'
+      fullPath: '/saved-messages/$chatId'
+      preLoaderRoute: typeof AuthSavedMessagesChatIdRouteImport
+      parentRoute: typeof AuthSavedMessagesRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -206,8 +261,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthSavedMessagesRouteChildren {
+  AuthSavedMessagesChatIdRoute: typeof AuthSavedMessagesChatIdRoute
+  AuthSavedMessagesIndexRoute: typeof AuthSavedMessagesIndexRoute
+}
+
+const AuthSavedMessagesRouteChildren: AuthSavedMessagesRouteChildren = {
+  AuthSavedMessagesChatIdRoute: AuthSavedMessagesChatIdRoute,
+  AuthSavedMessagesIndexRoute: AuthSavedMessagesIndexRoute,
+}
+
+const AuthSavedMessagesRouteWithChildren =
+  AuthSavedMessagesRoute._addFileChildren(AuthSavedMessagesRouteChildren)
+
 interface AuthRouteChildren {
   AuthGalleryRoute: typeof AuthGalleryRoute
+  AuthSavedMessagesRoute: typeof AuthSavedMessagesRouteWithChildren
   AuthSettingsRoute: typeof AuthSettingsRoute
   AuthIndexRoute: typeof AuthIndexRoute
   AuthChatChatIdRoute: typeof AuthChatChatIdRoute
@@ -215,6 +284,7 @@ interface AuthRouteChildren {
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthGalleryRoute: AuthGalleryRoute,
+  AuthSavedMessagesRoute: AuthSavedMessagesRouteWithChildren,
   AuthSettingsRoute: AuthSettingsRoute,
   AuthIndexRoute: AuthIndexRoute,
   AuthChatChatIdRoute: AuthChatChatIdRoute,

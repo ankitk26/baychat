@@ -6,6 +6,8 @@ import { api } from "convex/_generated/api";
 import { ScrollArea } from "~/components/app-scroll-area";
 import GeneratedImageViewer from "~/components/generated-image-viewer";
 import { Skeleton } from "~/components/ui/skeleton";
+import { useContentWidth } from "~/hooks/use-content-width";
+import { cn } from "~/lib/utils";
 
 export const Route = createFileRoute("/_auth/gallery")({
 	component: RouteComponent,
@@ -19,11 +21,17 @@ function RouteComponent() {
 	const { data: imageGenerations, isLoading } = useQuery(
 		convexQuery(api.imageGenerations.getAll),
 	);
+	const contentWidth = useContentWidth("max-w-7xl", "max-w-none");
 
 	return (
 		<section className="h-svh max-h-svh py-4 pb-8 lg:py-6 lg:pb-12">
 			<ScrollArea className="h-full w-full">
-				<div className="mx-auto w-full max-w-7xl space-y-4 px-8 pb-20 lg:space-y-6 lg:px-12 lg:pb-12">
+				<div
+					className={cn(
+						"mx-auto w-full space-y-4 px-8 pb-20 transition-[max-width] duration-300 ease-in-out lg:space-y-6 lg:px-12 lg:pb-12",
+						contentWidth,
+					)}
+				>
 					{/* Gallery Grid */}
 					{isLoading ? (
 						<div className="columns-2 gap-3 sm:columns-3 lg:columns-4 lg:gap-4">
