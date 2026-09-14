@@ -20,7 +20,7 @@ export default function AppSidebarHeader() {
 	};
 
 	return (
-		<SidebarMenu className="py-1">
+		<SidebarMenu className="py-1 pr-2 pl-2">
 			<SidebarMenuItem className="flex items-center gap-1">
 				<SidebarTrigger className="h-8 w-8" />
 				<Link
