@@ -499,7 +499,7 @@ const typeSafeModels = {
 			openRouterModelId: "typesafe/jev-router",
 			releasedAt: "2026-09-25",
 			modelId: "typesafe/jev-router",
-			isFree: false,
+			isFree: true,
 		},
 	] as const,
 } as const;
@@ -526,6 +526,7 @@ export const trialModelIds = [
 	"google/gemini-2.5-flash-image",
 	"openai/gpt-5.4-nano",
 	"moonshotai/kimi-k2.5",
+	"typesafe/jev-router",
 ] as const satisfies readonly AvailableOpenRouterModelId[];
 
 // Truly free models that a trial user can use without consuming the
