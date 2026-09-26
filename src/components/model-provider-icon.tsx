@@ -8,6 +8,7 @@ import MiniMaxIcon from "./minimax-icon";
 import MoonShotIcon from "./moonshot-icon";
 import OpenAIIcon from "./open-ai-icon";
 import OpenRouterIcon from "./open-router-icon";
+import TypeSafeIcon from "./typesafe-icon";
 import XAIIcon from "./xai-icon";
 import XiaomiIcon from "./xiaomi-icon";
 import ZaiIcon from "./zai-icon";
@@ -29,6 +30,7 @@ const iconMap = new Map<string, () => JSX.Element>([
 	["xiaomi", XiaomiIcon],
 	["byteDance", ByteDanceIcon],
 	["meta", MetaIcon],
+	["typesafe", TypeSafeIcon],
 ]);
 
 export default function ModelProviderIcon({ provider }: Props) {

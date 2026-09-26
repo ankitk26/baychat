@@ -490,6 +490,20 @@ const metaModels = {
 	] as const,
 } as const;
 
+const typeSafeModels = {
+	provider: "TypeSafe",
+	key: "typesafe",
+	models: [
+		{
+			name: "Jev Router",
+			openRouterModelId: "typesafe/jev-router",
+			releasedAt: "2026-09-25",
+			modelId: "typesafe/jev-router",
+			isFree: false,
+		},
+	] as const,
+} as const;
+
 export const allModelProviders = [
 	geminiModels,
 	deepseekModels,
@@ -501,6 +515,7 @@ export const allModelProviders = [
 	minimaxModels,
 	xiaomiModels,
 	metaModels,
+	typeSafeModels,
 ] as const;
 
 type AvailableOpenRouterModelId =
