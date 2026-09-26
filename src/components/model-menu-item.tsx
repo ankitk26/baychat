@@ -19,6 +19,7 @@ const PROVIDER_KEY_BY_MODEL_PREFIX = {
 	minimax: "minimax",
 	xiaomi: "xiaomi",
 	meta: "meta",
+	typesafe: "typesafe",
 } as const;
 
 type Props = {
