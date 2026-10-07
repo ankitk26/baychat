@@ -415,7 +415,7 @@ export const Route = createFileRoute("/api/chat")({
 						onError: (error) => {
 							releaseTrialMessage();
 							const chatError = normalizeChatError(error);
-							console.error("toUIMessageStream error:", error);
+							console.error("toUIMessageStream error:", chatError.code);
 							return chatError.message;
 						},
 					}),

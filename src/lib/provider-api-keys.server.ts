@@ -1,12 +1,4 @@
-import { defaultApiKeys, type ApiKeys, type Provider } from "~/types";
-
-const providers: Provider[] = [
-	"gemini",
-	"openai",
-	"anthropic",
-	"openrouter",
-	"xai",
-];
+import type { Provider } from "~/types";
 
 export const getProviderApiKey = async (
 	authId: string,
@@ -36,14 +28,4 @@ export const getProviderApiKey = async (
 
 	const result: { apiKey: string | null } = await response.json();
 	return result.apiKey;
-};
-
-export const getProviderApiKeys = async (authId: string): Promise<ApiKeys> => {
-	const entries = await Promise.all(
-		providers.map(
-			async (provider) =>
-				[provider, (await getProviderApiKey(authId, provider)) ?? ""] as const,
-		),
-	);
-	return { ...defaultApiKeys, ...Object.fromEntries(entries) };
 };

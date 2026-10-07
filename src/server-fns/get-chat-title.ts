@@ -6,9 +6,9 @@ import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { createServerFn } from "@tanstack/react-start";
 import { generateText } from "ai";
 import { z } from "zod";
-import { getProviderApiKeys } from "~/lib/provider-api-keys.server";
+import { getProviderApiKey } from "~/lib/provider-api-keys.server";
 import { getAuthUser } from "~/server-fns/get-auth";
-import type { ApiKeys } from "~/types";
+import type { Provider } from "~/types";
 
 const TITLE_SYSTEM_PROMPT =
 	"You generate short chat titles. " +
@@ -23,54 +23,46 @@ const buildTitlePrompt = (userMessage: string) =>
 	"\n'''\n\n" +
 	"Return only the title.";
 
-const hasKey = (key: string) => key.trim() !== "";
-
-const isTrialRequest = (apiKeys: ApiKeys) =>
-	!hasKey(apiKeys.gemini) &&
-	!hasKey(apiKeys.anthropic) &&
-	!hasKey(apiKeys.xai) &&
-	!hasKey(apiKeys.openai) &&
-	!hasKey(apiKeys.openrouter);
-
-// OpenRouter (when enabled) > gemini > anthropic > xai > openai
-const resolveTitleModel = (apiKeys: ApiKeys, useOpenRouter: boolean) => {
-	if (useOpenRouter && hasKey(apiKeys.openrouter)) {
-		return createOpenRouter({ apiKey: apiKeys.openrouter }).chat(
-			"google/gemini-2.5-flash",
-		);
+const titleModelForKey = (provider: Provider, apiKey: string) => {
+	switch (provider) {
+		case "openrouter":
+			return createOpenRouter({ apiKey }).chat("google/gemini-2.5-flash");
+		case "gemini":
+			return createGoogleGenerativeAI({ apiKey })("gemini-2.5-flash");
+		case "anthropic":
+			return createAnthropic({ apiKey })("claude-3-5-haiku-latest");
+		case "xai":
+			return createXai({ apiKey })("grok-4");
+		case "openai":
+			return createOpenAI({ apiKey })("gpt-5.4-nano");
 	}
-	if (isTrialRequest(apiKeys)) {
-		const titleGenerationKey = process.env.OPENROUTER_CHAT_TITLE_GENERATION_KEY;
-		if (!titleGenerationKey) {
-			throw new Error("Chat title generation is not configured.");
+};
+
+const resolveTitleModel = async (authId: string, useOpenRouter: boolean) => {
+	if (useOpenRouter) {
+		const openRouterKey = await getProviderApiKey(authId, "openrouter");
+		if (openRouterKey?.trim()) {
+			return titleModelForKey("openrouter", openRouterKey);
 		}
-		return createOpenRouter({ apiKey: titleGenerationKey }).chat(
-			"google/gemini-2.5-flash",
-		);
 	}
 
-	if (hasKey(apiKeys.gemini)) {
-		return createGoogleGenerativeAI({ apiKey: apiKeys.gemini })(
-			"gemini-2.5-flash",
-		);
+	for (const provider of ["gemini", "anthropic", "xai", "openai"] as const) {
+		const apiKey = await getProviderApiKey(authId, provider);
+		if (apiKey?.trim()) return titleModelForKey(provider, apiKey);
 	}
 
-	if (hasKey(apiKeys.anthropic)) {
-		return createAnthropic({ apiKey: apiKeys.anthropic })(
-			"claude-3-5-haiku-latest",
-		);
+	if (!useOpenRouter) {
+		const openRouterKey = await getProviderApiKey(authId, "openrouter");
+		if (openRouterKey?.trim()) {
+			return titleModelForKey("openrouter", openRouterKey);
+		}
 	}
 
-	if (hasKey(apiKeys.xai)) {
-		return createXai({ apiKey: apiKeys.xai })("grok-4");
+	const titleGenerationKey = process.env.OPENROUTER_CHAT_TITLE_GENERATION_KEY;
+	if (!titleGenerationKey) {
+		throw new Error("Chat title generation is not configured.");
 	}
-
-	if (hasKey(apiKeys.openai)) {
-		return createOpenAI({ apiKey: apiKeys.openai })("gpt-5.4-nano");
-	}
-
-	// Only an OpenRouter key is available (toggle off)
-	return createOpenRouter({ apiKey: apiKeys.openrouter }).chat(
+	return createOpenRouter({ apiKey: titleGenerationKey }).chat(
 		"google/gemini-2.5-flash",
 	);
 };
@@ -87,13 +79,15 @@ export const getChatTitle = createServerFn({ method: "POST" })
 		if (!authUser || !authUser._id) {
 			throw new Error("Authentication is required to generate a title.");
 		}
-		const apiKeys = await getProviderApiKeys(authUser._id);
-		const model = resolveTitleModel(apiKeys, data.useOpenRouter);
-		const { text: generatedTitle } = await generateText({
-			model,
-			system: TITLE_SYSTEM_PROMPT,
-			prompt: buildTitlePrompt(data.userMessage),
-		});
-
-		return generatedTitle;
+		const model = await resolveTitleModel(authUser._id, data.useOpenRouter);
+		try {
+			const { text: generatedTitle } = await generateText({
+				model,
+				system: TITLE_SYSTEM_PROMPT,
+				prompt: buildTitlePrompt(data.userMessage),
+			});
+			return generatedTitle;
+		} catch {
+			throw new Error("Could not generate a chat title.");
+		}
 	});
