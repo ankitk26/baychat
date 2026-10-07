@@ -4,10 +4,10 @@ import { useHotkey } from "@tanstack/react-hotkeys";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { useCallback, useState } from "react";
+import { useOpenRouterPreference } from "~/hooks/use-openrouter-preference";
 import { useProviderApiKeyStatus } from "~/hooks/use-provider-api-key-status";
 import { getAccessibleModels } from "~/lib/get-accessible-models";
 import { modelStoreActions, useModelStore } from "~/stores/model-store";
-import { useApiKeyPreferencesStore } from "~/stores/persisted-api-keys-store";
 import ModelProviderIcon from "./model-provider-icon";
 import PinnedModelsSection from "./pinned-models-section";
 import ProviderModelList from "./provider-model-list";
@@ -27,9 +27,7 @@ export default function ModelSelector() {
 	const selectedModel = useModelStore((store) => store.selectedModel);
 
 	const { status: apiKeyStatus } = useProviderApiKeyStatus();
-	const persistedUseOpenRouter = useApiKeyPreferencesStore(
-		(store) => store.persistedUseOpenRouter,
-	);
+	const { value: persistedUseOpenRouter } = useOpenRouterPreference();
 	const accessibleModels = getAccessibleModels(
 		apiKeyStatus,
 		persistedUseOpenRouter,

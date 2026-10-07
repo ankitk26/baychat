@@ -6,6 +6,7 @@ export default defineSchema({
 		email: v.string(),
 		updatedAtTime: v.number(),
 		authId: v.string(),
+		useOpenRouter: v.optional(v.boolean()),
 	}).index("by_auth", ["authId"]),
 
 	folders: defineTable({

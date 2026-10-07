@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { memo, useState } from "react";
 import { toast } from "sonner";
+import { useOpenRouterPreference } from "~/hooks/use-openrouter-preference";
 import { buildUserMessageParts } from "~/lib/build-user-message-parts";
 import { generateRandomUUID } from "~/lib/generate-random-uuid";
 import { getFilePartsFromMessage } from "~/lib/get-file-parts-from-message";
@@ -12,7 +13,6 @@ import { getMessageContentFromParts } from "~/lib/get-message-content-from-parts
 import { cn } from "~/lib/utils";
 import { useCustomizationStore } from "~/stores/customization-store";
 import { useModelStore } from "~/stores/model-store";
-import { useApiKeyPreferencesStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage } from "~/types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import BranchOffButton from "./branch-off-button";
@@ -46,9 +46,7 @@ export default memo(function UserMessage({
 
 	const selectedModel = useModelStore((store) => store.selectedModel);
 	const isWebSearchEnabled = useModelStore((store) => store.isWebSearchEnabled);
-	const persistedUseOpenRouter = useApiKeyPreferencesStore(
-		(store) => store.persistedUseOpenRouter,
-	);
+	const { value: persistedUseOpenRouter } = useOpenRouterPreference();
 	const customSystemPrompt = useCustomizationStore(
 		(store) => store.customSystemPrompt,
 	);

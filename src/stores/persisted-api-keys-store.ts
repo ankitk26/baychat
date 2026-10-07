@@ -16,7 +16,7 @@ const getInitialState = (): ApiKeyPreferencesState => {
 		const storedPreferences = localStorage.getItem(STORAGE_KEY);
 		if (storedPreferences) return JSON.parse(storedPreferences);
 
-		// Read the old value only to retain the user's non-secret preference.
+		// Read the old setting only as a fallback until it syncs to the profile.
 		const legacySettings = localStorage.getItem(STORAGE_KEYS.apiKeys);
 		if (legacySettings) {
 			const parsed = JSON.parse(legacySettings);
@@ -35,15 +35,6 @@ const apiKeyPreferencesStore = new Store<ApiKeyPreferencesState>(
 	getInitialState(),
 );
 
-apiKeyPreferencesStore.subscribe(() => {
-	if (isBrowser()) {
-		localStorage.setItem(
-			STORAGE_KEY,
-			JSON.stringify(apiKeyPreferencesStore.state),
-		);
-	}
-});
-
 export const useApiKeyPreferencesStore = <T>(
 	selector: (state: ApiKeyPreferencesState) => T,
 ): T => useSelector(apiKeyPreferencesStore, selector);
@@ -51,5 +42,27 @@ export const useApiKeyPreferencesStore = <T>(
 export const apiKeyPreferencesStoreActions = {
 	setPersistedUseOpenRouter: (value: boolean) => {
 		apiKeyPreferencesStore.setState(() => ({ persistedUseOpenRouter: value }));
+	},
+	preserveLocalPreference: (value: boolean) => {
+		if (isBrowser()) {
+			localStorage.setItem(
+				STORAGE_KEY,
+				JSON.stringify({ persistedUseOpenRouter: value }),
+			);
+		}
+	},
+	clearLocalPreference: () => {
+		if (!isBrowser()) return;
+		localStorage.removeItem(STORAGE_KEY);
+
+		const legacySettings = localStorage.getItem(STORAGE_KEYS.apiKeys);
+		if (!legacySettings) return;
+		try {
+			const parsed = JSON.parse(legacySettings);
+			delete parsed.persistedUseOpenRouter;
+			localStorage.setItem(STORAGE_KEYS.apiKeys, JSON.stringify(parsed));
+		} catch {
+			// Leave malformed legacy settings to the key migration handler.
+		}
 	},
 };

@@ -25,6 +25,7 @@ import type * as providerApiKeys from "../providerApiKeys.js";
 import type * as savedMessages from "../savedMessages.js";
 import type * as tokens from "../tokens.js";
 import type * as trial from "../trial.js";
+import type * as userSettings from "../userSettings.js";
 
 import type {
   ApiFromModules,
@@ -50,6 +51,7 @@ declare const fullApi: ApiFromModules<{
   savedMessages: typeof savedMessages;
   tokens: typeof tokens;
   trial: typeof trial;
+  userSettings: typeof userSettings;
 }>;
 
 /**

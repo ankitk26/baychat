@@ -9,6 +9,7 @@ import type { ClipboardEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useIsDesktop } from "~/hooks/use-desktop";
+import { useOpenRouterPreference } from "~/hooks/use-openrouter-preference";
 import { usePromptAttachments } from "~/hooks/use-prompt-attachments";
 import { buildUserMessageParts } from "~/lib/build-user-message-parts";
 import { generateRandomUUID } from "~/lib/generate-random-uuid";
@@ -21,7 +22,6 @@ import {
 	useModelModalities,
 } from "~/stores/model-modalities-store";
 import { useModelStore } from "~/stores/model-store";
-import { useApiKeyPreferencesStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage } from "~/types";
 import PromptActions from "./prompt-actions";
 import PromptAttachmentsInput from "./prompt-attachments-input";
@@ -49,9 +49,7 @@ export default function UserPromptInput(props: Props) {
 	const isDesktop = useIsDesktop();
 	const selectedModel = useModelStore((store) => store.selectedModel);
 	const isWebSearchEnabled = useModelStore((store) => store.isWebSearchEnabled);
-	const persistedUseOpenRouter = useApiKeyPreferencesStore(
-		(store) => store.persistedUseOpenRouter,
-	);
+	const { value: persistedUseOpenRouter } = useOpenRouterPreference();
 	const customSystemPrompt = useCustomizationStore(
 		(store) => store.customSystemPrompt,
 	);

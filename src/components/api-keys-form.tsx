@@ -5,13 +5,11 @@ import { api } from "convex/_generated/api";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useOpenRouterPreference } from "~/hooks/use-openrouter-preference";
 import { useProviderApiKeyStatus } from "~/hooks/use-provider-api-key-status";
 import { isBrowser } from "~/lib/environment";
 import { STORAGE_KEYS } from "~/lib/storage-keys";
-import {
-	apiKeyPreferencesStoreActions,
-	useApiKeyPreferencesStore,
-} from "~/stores/persisted-api-keys-store";
+import { apiKeyPreferencesStoreActions } from "~/stores/persisted-api-keys-store";
 import { type ApiKeys, defaultApiKeys, type Provider } from "~/types";
 import ApiKeyInput from "./api-key-input";
 import ApiKeyOpenRouter from "./api-key-open-router";
@@ -74,14 +72,20 @@ export default function ApiKeysForm() {
 	const [initialUseOpenRouter, setInitialUseOpenRouter] = useState(false);
 	const [editingProvider, setEditingProvider] = useState<Provider | null>(null);
 	const legacyMigrationStarted = useRef(false);
+	const preferenceMigrationStarted = useRef(false);
 	const {
 		status,
 		maskedHints,
 		isLoading: isLoadingStatus,
 	} = useProviderApiKeyStatus();
-	const persistedUseOpenRouter = useApiKeyPreferencesStore(
-		(state) => state.persistedUseOpenRouter,
-	);
+	const {
+		value: persistedUseOpenRouter,
+		hasProfilePreference,
+		isLoading: isLoadingPreference,
+	} = useOpenRouterPreference();
+	const saveOpenRouterPreference = useMutation({
+		mutationFn: useConvexMutation(api.userSettings.setUseOpenRouter),
+	});
 	const saveApiKey = useMutation({
 		mutationFn: useConvexMutation(api.providerApiKeys.save),
 	});
@@ -93,6 +97,35 @@ export default function ApiKeysForm() {
 		setUseOpenRouter(persistedUseOpenRouter);
 		setInitialUseOpenRouter(persistedUseOpenRouter);
 	}, [persistedUseOpenRouter]);
+
+	useEffect(() => {
+		if (
+			isLoadingPreference ||
+			hasProfilePreference ||
+			preferenceMigrationStarted.current
+		)
+			return;
+
+		preferenceMigrationStarted.current = true;
+		apiKeyPreferencesStoreActions.setPersistedUseOpenRouter(
+			persistedUseOpenRouter,
+		);
+		apiKeyPreferencesStoreActions.preserveLocalPreference(
+			persistedUseOpenRouter,
+		);
+		void saveOpenRouterPreference
+			.mutateAsync({ value: persistedUseOpenRouter })
+			.catch(() => {
+				toast.error(
+					"Could not sync the OpenRouter preference to your account.",
+				);
+			});
+	}, [
+		hasProfilePreference,
+		isLoadingPreference,
+		persistedUseOpenRouter,
+		saveOpenRouterPreference.mutateAsync,
+	]);
 
 	useEffect(() => {
 		if (!isBrowser() || isLoadingStatus || legacyMigrationStarted.current)
@@ -145,14 +178,15 @@ export default function ApiKeysForm() {
 			({ provider }) => apiKeys[provider].trim() !== "",
 		);
 		try {
-			await Promise.all(
-				keysToSave.map(({ provider }) =>
+			await Promise.all([
+				...keysToSave.map(({ provider }) =>
 					saveApiKey.mutateAsync({
 						provider,
 						value: apiKeys[provider].trim(),
 					}),
 				),
-			);
+				saveOpenRouterPreference.mutateAsync({ value: useOpenRouter }),
+			]);
 			apiKeyPreferencesStoreActions.setPersistedUseOpenRouter(useOpenRouter);
 			setApiKeys(defaultApiKeys);
 			setEditingProvider(null);
@@ -222,7 +256,11 @@ export default function ApiKeysForm() {
 				<div className="flex justify-start pt-4">
 					<Button
 						className="flex w-full items-center gap-2 lg:w-fit"
-						disabled={!hasChanges || saveApiKey.isPending}
+						disabled={
+							!hasChanges ||
+							saveApiKey.isPending ||
+							saveOpenRouterPreference.isPending
+						}
 						onClick={handleSave}
 					>
 						<FloppyDiskIcon className="size-4" />
