@@ -50,9 +50,6 @@ function RouteComponent() {
 						Sign in
 					</p>
 					<h1 className="text-2xl font-medium tracking-tight">Welcome back.</h1>
-					<p className="text-sm text-muted-foreground">
-						Continue where you left off.
-					</p>
 				</div>
 				{/* Actions */}
 				<div className="space-y-2.5">
