@@ -1,9 +1,16 @@
+import { useConvexMutation } from "@convex-dev/react-query";
 import { FloppyDiskIcon } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { api } from "convex/_generated/api";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { z } from "zod";
+import { useProviderApiKeyStatus } from "~/hooks/use-provider-api-key-status";
+import { isBrowser } from "~/lib/environment";
+import { STORAGE_KEYS } from "~/lib/storage-keys";
 import {
-	persistedApiKeysStoreActions,
-	usePersistedApiKeysStore,
+	apiKeyPreferencesStoreActions,
+	useApiKeyPreferencesStore,
 } from "~/stores/persisted-api-keys-store";
 import { type ApiKeys, defaultApiKeys, type Provider } from "~/types";
 import ApiKeyInput from "./api-key-input";
@@ -11,7 +18,12 @@ import ApiKeyOpenRouter from "./api-key-open-router";
 import { Button } from "./ui/button";
 import { TabsContent } from "./ui/tabs";
 
-const keysForm = [
+const keysForm: {
+	provider: Provider;
+	label: string;
+	placeholder: string;
+	keyLink: string;
+}[] = [
 	{
 		provider: "openrouter",
 		label: "OpenRouter",
@@ -44,57 +56,136 @@ const keysForm = [
 	},
 ];
 
-type FormState = {
-	apiKeys: ApiKeys;
-	useOpenRouter: boolean;
-} | null;
+const legacySettingsSchema = z.object({
+	persistedApiKeys: z
+		.object({
+			gemini: z.string().optional(),
+			openai: z.string().optional(),
+			anthropic: z.string().optional(),
+			openrouter: z.string().optional(),
+			xai: z.string().optional(),
+		})
+		.optional(),
+});
 
 export default function ApiKeysForm() {
 	const [apiKeys, setApiKeys] = useState<ApiKeys>(defaultApiKeys);
 	const [useOpenRouter, setUseOpenRouter] = useState(false);
-	const [initialState, setInitialState] = useState<FormState>(null);
-
-	const persistedApiKeys = usePersistedApiKeysStore(
-		(state) => state.persistedApiKeys,
-	);
-	const persistedUseOpenRouter = usePersistedApiKeysStore(
+	const [initialUseOpenRouter, setInitialUseOpenRouter] = useState(false);
+	const [editingProvider, setEditingProvider] = useState<Provider | null>(null);
+	const legacyMigrationStarted = useRef(false);
+	const {
+		status,
+		maskedHints,
+		isLoading: isLoadingStatus,
+	} = useProviderApiKeyStatus();
+	const persistedUseOpenRouter = useApiKeyPreferencesStore(
 		(state) => state.persistedUseOpenRouter,
 	);
+	const saveApiKey = useMutation({
+		mutationFn: useConvexMutation(api.providerApiKeys.save),
+	});
+	const removeApiKey = useMutation({
+		mutationFn: useConvexMutation(api.providerApiKeys.remove),
+	});
 
-	// update key value for all provider keys
+	useEffect(() => {
+		setUseOpenRouter(persistedUseOpenRouter);
+		setInitialUseOpenRouter(persistedUseOpenRouter);
+	}, [persistedUseOpenRouter]);
+
+	useEffect(() => {
+		if (!isBrowser() || isLoadingStatus || legacyMigrationStarted.current)
+			return;
+		const legacyStorage = localStorage.getItem(STORAGE_KEYS.apiKeys);
+		if (!legacyStorage) return;
+
+		legacyMigrationStarted.current = true;
+		let parsed: ReturnType<typeof legacySettingsSchema.safeParse>;
+		try {
+			parsed = legacySettingsSchema.safeParse(JSON.parse(legacyStorage));
+		} catch {
+			localStorage.removeItem(STORAGE_KEYS.apiKeys);
+			return;
+		}
+		if (!parsed.success) {
+			localStorage.removeItem(STORAGE_KEYS.apiKeys);
+			return;
+		}
+
+		const legacyKeys = parsed.data.persistedApiKeys ?? {};
+		const keysToMigrate = keysForm.flatMap(({ provider }) => {
+			const value = legacyKeys[provider]?.trim();
+			return value && !status[provider] ? [{ provider, value }] : [];
+		});
+
+		Promise.all(
+			keysToMigrate.map(({ provider, value }) =>
+				saveApiKey.mutateAsync({ provider, value }),
+			),
+		)
+			.then(() => {
+				localStorage.removeItem(STORAGE_KEYS.apiKeys);
+				if (keysToMigrate.length > 0) {
+					toast.success("Saved API keys from this browser to your account.");
+				}
+			})
+			.catch(() => {
+				legacyMigrationStarted.current = false;
+				toast.error("Could not import API keys saved in this browser.");
+			});
+	}, [isLoadingStatus, saveApiKey.mutateAsync, status]);
+
 	const handleApiKeyChange = (provider: Provider, value: string) => {
 		setApiKeys((prev) => ({ ...prev, [provider]: value }));
 	};
 
-	// save keys and useOpenRouter setting in local storage
-	const handleSave = () => {
-		persistedApiKeysStoreActions.setPersistedApiKeys(apiKeys);
-		persistedApiKeysStoreActions.setPersistedUseOpenRouter(useOpenRouter);
-		toast.success("API keys saved!");
-		setInitialState({ apiKeys: { ...apiKeys }, useOpenRouter });
+	const handleSave = async () => {
+		const keysToSave = keysForm.filter(
+			({ provider }) => apiKeys[provider].trim() !== "",
+		);
+		try {
+			await Promise.all(
+				keysToSave.map(({ provider }) =>
+					saveApiKey.mutateAsync({
+						provider,
+						value: apiKeys[provider].trim(),
+					}),
+				),
+			);
+			apiKeyPreferencesStoreActions.setPersistedUseOpenRouter(useOpenRouter);
+			setApiKeys(defaultApiKeys);
+			setEditingProvider(null);
+			setInitialUseOpenRouter(useOpenRouter);
+			toast.success("API key settings saved!");
+		} catch {
+			toast.error("Could not save API keys. Please try again.");
+		}
 	};
 
-	// check if form has changed after its original state
-	const hasChanges =
-		initialState &&
-		(JSON.stringify(apiKeys) !== JSON.stringify(initialState.apiKeys) ||
-			useOpenRouter !== initialState.useOpenRouter);
+	const handleRemove = async (provider: Provider) => {
+		try {
+			await removeApiKey.mutateAsync({ provider });
+			setEditingProvider(null);
+			setApiKeys((previous) => ({ ...previous, [provider]: "" }));
+			toast.success("Saved API key removed.");
+			return true;
+		} catch {
+			toast.error("Could not remove the saved API key.");
+			return false;
+		}
+	};
 
-	// load all values from localStorage into local state
-	useEffect(() => {
-		setApiKeys(persistedApiKeys);
-		setUseOpenRouter(persistedUseOpenRouter);
-		setInitialState({
-			apiKeys: persistedApiKeys,
-			useOpenRouter: persistedUseOpenRouter,
-		});
-	}, []);
+	const hasDraftKeys = Object.values(apiKeys).some(
+		(value) => value.trim() !== "",
+	);
+	const hasChanges = hasDraftKeys || useOpenRouter !== initialUseOpenRouter;
 
 	return (
 		<TabsContent value="apiKeys">
 			<div className="space-y-6">
 				<ApiKeyOpenRouter
-					apiKeys={apiKeys}
+					hasOpenRouterKey={status.openrouter}
 					setUseOpenRouter={setUseOpenRouter}
 					useOpenRouter={useOpenRouter}
 				/>
@@ -105,12 +196,25 @@ export default function ApiKeysForm() {
 							formValues={{
 								label: `${keyItem.label} API Key`,
 								placeholder: keyItem.placeholder,
-								value: apiKeys[keyItem.provider as Provider],
+								value: apiKeys[keyItem.provider],
 								onChange: handleApiKeyChange,
 							}}
+							isConfigured={status[keyItem.provider]}
+							maskedHint={maskedHints[keyItem.provider]}
+							isEditing={editingProvider === keyItem.provider}
+							isRemoving={removeApiKey.isPending}
 							key={keyItem.provider}
 							keyLink={keyItem.keyLink}
-							provider={keyItem.provider as Provider}
+							onCancel={() => {
+								setEditingProvider(null);
+								setApiKeys((previous) => ({
+									...previous,
+									[keyItem.provider]: "",
+								}));
+							}}
+							onClear={handleRemove}
+							onReplace={() => setEditingProvider(keyItem.provider)}
+							provider={keyItem.provider}
 						/>
 					))}
 				</div>
@@ -118,7 +222,7 @@ export default function ApiKeysForm() {
 				<div className="flex justify-start pt-4">
 					<Button
 						className="flex w-full items-center gap-2 lg:w-fit"
-						disabled={!hasChanges}
+						disabled={!hasChanges || saveApiKey.isPending}
 						onClick={handleSave}
 					>
 						<FloppyDiskIcon className="size-4" />

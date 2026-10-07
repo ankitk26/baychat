@@ -21,7 +21,7 @@ function SettingsPage() {
 
 	return (
 		<PageShell
-			className="space-y-4 lg:space-y-6"
+			className="space-y-4 md:pt-8 lg:space-y-6"
 			collapsedWidthClass="max-w-5xl"
 			expandedWidthClass="max-w-7xl"
 		>

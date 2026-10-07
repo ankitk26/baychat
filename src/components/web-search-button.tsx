@@ -2,7 +2,7 @@ import { GlobeIcon } from "@phosphor-icons/react";
 import { formatForDisplay, useHotkey } from "@tanstack/react-hotkeys";
 import { cn } from "~/lib/utils";
 import { modelStoreActions, useModelStore } from "~/stores/model-store";
-import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
+import { useApiKeyPreferencesStore } from "~/stores/persisted-api-keys-store";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import { Button } from "./ui/button";
 
@@ -11,7 +11,7 @@ export default function WebSearchButton() {
 
 	const isWebSearchEnabled = useModelStore((store) => store.isWebSearchEnabled);
 	const selectedModel = useModelStore((store) => store.selectedModel);
-	const persistedUseOpenRouter = usePersistedApiKeysStore(
+	const persistedUseOpenRouter = useApiKeyPreferencesStore(
 		(store) => store.persistedUseOpenRouter,
 	);
 

@@ -67,6 +67,19 @@ export default defineSchema({
 		tokens: v.float64(),
 	}).index("by_user_and_model", ["userId", "model"]),
 
+	providerApiKeyHints: defineTable({
+		userId: v.id("users"),
+		provider: v.union(
+			v.literal("gemini"),
+			v.literal("openai"),
+			v.literal("anthropic"),
+			v.literal("openrouter"),
+			v.literal("xai"),
+		),
+		maskedHint: v.optional(v.string()),
+		updatedAt: v.number(),
+	}).index("by_user_and_provider", ["userId", "provider"]),
+
 	trialUsage: defineTable({
 		userId: v.id("users"),
 		// Kept for compatibility with the original monthly trial records.

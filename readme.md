@@ -109,6 +109,9 @@ It supports multiple AI providers, real-time messaging, and chat organization.
    # Site URL (Required)
    VITE_SITE_URL=http://localhost:3000
 
+   # Server-only app-to-Convex credential bridge (same value in both environments)
+   BAYCHAT_INTERNAL_API_SECRET=your_random_bridge_secret
+
    # BetterAuth (Required for authentication)
    BETTER_AUTH_SECRET=your_better_auth_secret
 
@@ -127,6 +130,21 @@ It supports multiple AI providers, real-time messaging, and chat organization.
    # Used to generate chat titles for users without their own API keys
    OPENROUTER_CHAT_TITLE_GENERATION_KEY=your_openrouter_chat_title_key
    ```
+
+   Generate 32-byte random secrets with Node.js:
+
+   ```bash
+   node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'))"
+   ```
+
+   Use one generated value for `BAYCHAT_INTERNAL_API_SECRET` in the app environment and Convex. Generate a separate value for `API_TOKENS_ENCRYPTION_KEY` and set it in Convex:
+
+   ```bash
+   pnpm exec convex env set API_TOKENS_ENCRYPTION_KEY "your_generated_encryption_secret"
+   pnpm exec convex env set BAYCHAT_INTERNAL_API_SECRET "your_generated_bridge_secret"
+   ```
+
+   Keep these secrets out of source control. Keep `API_TOKENS_ENCRYPTION_KEY` stable; changing it requires re-encrypting stored provider keys. Set the equivalent secrets on your production Convex deployment and app server as well.
 
 5. Run the development server (this starts both the app and Convex):
 

@@ -1,58 +1,55 @@
 import { useSelector } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
 import { isBrowser } from "~/lib/environment";
-import { STORAGE_KEYS } from "~/lib/storage-keys";
-import { type ApiKeys, defaultApiKeys } from "~/types";
+import { STORAGE_KEYS, STORAGE_PREFIX } from "~/lib/storage-keys";
 
-type ApiKeysStoreState = {
-	persistedApiKeys: ApiKeys;
+type ApiKeyPreferencesState = {
 	persistedUseOpenRouter: boolean;
 };
 
-const STORAGE_KEY = STORAGE_KEYS.apiKeys;
+const STORAGE_KEY = `${STORAGE_PREFIX}-api-key-preferences`;
 
-const getInitialState = (): ApiKeysStoreState => {
-	if (!isBrowser()) {
-		return {
-			persistedApiKeys: defaultApiKeys,
-			persistedUseOpenRouter: false,
-		};
-	}
+const getInitialState = (): ApiKeyPreferencesState => {
+	if (!isBrowser()) return { persistedUseOpenRouter: false };
+
 	try {
-		const stored = localStorage.getItem(STORAGE_KEY);
-		if (stored) {
-			return JSON.parse(stored);
+		const storedPreferences = localStorage.getItem(STORAGE_KEY);
+		if (storedPreferences) return JSON.parse(storedPreferences);
+
+		// Read the old value only to retain the user's non-secret preference.
+		const legacySettings = localStorage.getItem(STORAGE_KEYS.apiKeys);
+		if (legacySettings) {
+			const parsed = JSON.parse(legacySettings);
+			return {
+				persistedUseOpenRouter: parsed.persistedUseOpenRouter === true,
+			};
 		}
 	} catch {
-		// Ignore parse errors
+		// Ignore malformed local settings.
 	}
-	return {
-		persistedApiKeys: defaultApiKeys,
-		persistedUseOpenRouter: false,
-	};
+
+	return { persistedUseOpenRouter: false };
 };
 
-const apiKeysStore = new Store<ApiKeysStoreState>(getInitialState());
+const apiKeyPreferencesStore = new Store<ApiKeyPreferencesState>(
+	getInitialState(),
+);
 
-// Subscribe to changes and persist to localStorage
-apiKeysStore.subscribe(() => {
+apiKeyPreferencesStore.subscribe(() => {
 	if (isBrowser()) {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(apiKeysStore.state));
+		localStorage.setItem(
+			STORAGE_KEY,
+			JSON.stringify(apiKeyPreferencesStore.state),
+		);
 	}
 });
 
-export const usePersistedApiKeysStore = <T>(
-	selector: (state: ApiKeysStoreState) => T,
-): T => useSelector(apiKeysStore, selector);
+export const useApiKeyPreferencesStore = <T>(
+	selector: (state: ApiKeyPreferencesState) => T,
+): T => useSelector(apiKeyPreferencesStore, selector);
 
-export const persistedApiKeysStoreActions = {
-	setPersistedApiKeys: (keys: ApiKeys) => {
-		apiKeysStore.setState((prev) => ({ ...prev, persistedApiKeys: keys }));
-	},
+export const apiKeyPreferencesStoreActions = {
 	setPersistedUseOpenRouter: (value: boolean) => {
-		apiKeysStore.setState((prev) => ({
-			...prev,
-			persistedUseOpenRouter: value,
-		}));
+		apiKeyPreferencesStore.setState(() => ({ persistedUseOpenRouter: value }));
 	},
 };

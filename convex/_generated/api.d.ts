@@ -20,7 +20,10 @@ import type * as migrations from "../migrations.js";
 import type * as model_chats from "../model/chats.js";
 import type * as model_users from "../model/users.js";
 import type * as pinnedModels from "../pinnedModels.js";
+import type * as providerApiKeyUtils from "../providerApiKeyUtils.js";
+import type * as providerApiKeys from "../providerApiKeys.js";
 import type * as savedMessages from "../savedMessages.js";
+import type * as tokens from "../tokens.js";
 import type * as trial from "../trial.js";
 
 import type {
@@ -42,7 +45,10 @@ declare const fullApi: ApiFromModules<{
   "model/chats": typeof model_chats;
   "model/users": typeof model_users;
   pinnedModels: typeof pinnedModels;
+  providerApiKeyUtils: typeof providerApiKeyUtils;
+  providerApiKeys: typeof providerApiKeys;
   savedMessages: typeof savedMessages;
+  tokens: typeof tokens;
   trial: typeof trial;
 }>;
 
@@ -74,4 +80,5 @@ export declare const internal: FilterApi<
 
 export declare const components: {
   betterAuth: import("@convex-dev/better-auth/_generated/component.js").ComponentApi<"betterAuth">;
+  apiTokens: import("convex-api-tokens/_generated/component.js").ComponentApi<"apiTokens">;
 };

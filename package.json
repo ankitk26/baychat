@@ -38,6 +38,7 @@
 		"clsx": "^2.1.1",
 		"cn": "^0.3.3",
 		"convex": "^1.46.0",
+		"convex-api-tokens": "^0.3.2",
 		"convex-helpers": "^0.1.127",
 		"katex": "^0.16.47",
 		"marked": "^18.1.0",

@@ -8,12 +8,13 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
+import { useProviderApiKeyStatus } from "~/hooks/use-provider-api-key-status";
 import { generateRandomUUID } from "~/lib/generate-random-uuid";
 import { getAccessibleModels } from "~/lib/get-accessible-models";
 import { useSharedChatContext } from "~/providers/chat-provider";
 import { useCustomizationStore } from "~/stores/customization-store";
 import { modelStoreActions, useModelStore } from "~/stores/model-store";
-import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
+import { useApiKeyPreferencesStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage, Model } from "~/types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import { DropdownMenuSeparatorWithText } from "./dropdown-menu-separator-with-text";
@@ -44,17 +45,15 @@ export default function BranchOffButton({ message, sendMessage }: Props) {
 	const selectedModel = useModelStore((store) => store.selectedModel);
 	const isWebSearchEnabled = useModelStore((store) => store.isWebSearchEnabled);
 
-	const persistedApiKeys = usePersistedApiKeysStore(
-		(store) => store.persistedApiKeys,
-	);
-	const persistedUseOpenRouter = usePersistedApiKeysStore(
+	const { status: apiKeyStatus } = useProviderApiKeyStatus();
+	const persistedUseOpenRouter = useApiKeyPreferencesStore(
 		(store) => store.persistedUseOpenRouter,
 	);
 	const customSystemPrompt = useCustomizationStore(
 		(store) => store.customSystemPrompt,
 	);
 	const accessibleModels = getAccessibleModels(
-		persistedApiKeys,
+		apiKeyStatus,
 		persistedUseOpenRouter,
 	);
 
@@ -109,7 +108,6 @@ export default function BranchOffButton({ message, sendMessage }: Props) {
 					body: {
 						model,
 						isWebSearchEnabled,
-						apiKeys: persistedApiKeys,
 						useOpenRouter: persistedUseOpenRouter,
 						chatId: branchChatUuid,
 						customSystemPrompt,

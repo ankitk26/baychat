@@ -1,15 +1,14 @@
-import type { ApiKeys } from "~/types";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 
 type Props = {
-	apiKeys: ApiKeys;
+	hasOpenRouterKey: boolean;
 	useOpenRouter: boolean;
 	setUseOpenRouter: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function ApiKeyOpenRouter(props: Props) {
-	const isSwitchDisabled = props.apiKeys.openrouter.trim() === "";
+	const isSwitchDisabled = !props.hasOpenRouterKey;
 
 	return (
 		<div className="flex items-center justify-between rounded-lg border p-4">

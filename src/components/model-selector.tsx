@@ -4,9 +4,10 @@ import { useHotkey } from "@tanstack/react-hotkeys";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { useCallback, useState } from "react";
+import { useProviderApiKeyStatus } from "~/hooks/use-provider-api-key-status";
 import { getAccessibleModels } from "~/lib/get-accessible-models";
 import { modelStoreActions, useModelStore } from "~/stores/model-store";
-import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
+import { useApiKeyPreferencesStore } from "~/stores/persisted-api-keys-store";
 import ModelProviderIcon from "./model-provider-icon";
 import PinnedModelsSection from "./pinned-models-section";
 import ProviderModelList from "./provider-model-list";
@@ -25,24 +26,20 @@ export default function ModelSelector() {
 	const [open, setOpen] = useState(false);
 	const selectedModel = useModelStore((store) => store.selectedModel);
 
-	const persistedApiKeys = usePersistedApiKeysStore(
-		(store) => store.persistedApiKeys,
-	);
-	const persistedUseOpenRouter = usePersistedApiKeysStore(
+	const { status: apiKeyStatus } = useProviderApiKeyStatus();
+	const persistedUseOpenRouter = useApiKeyPreferencesStore(
 		(store) => store.persistedUseOpenRouter,
 	);
 	const accessibleModels = getAccessibleModels(
-		persistedApiKeys,
+		apiKeyStatus,
 		persistedUseOpenRouter,
 	);
 	const hasOwnKey = persistedUseOpenRouter
-		? persistedApiKeys.openrouter.trim() !== ""
-		: [
-				persistedApiKeys.gemini,
-				persistedApiKeys.openai,
-				persistedApiKeys.anthropic,
-				persistedApiKeys.xai,
-			].some((key) => key.trim() !== "");
+		? apiKeyStatus.openrouter
+		: apiKeyStatus.gemini ||
+			apiKeyStatus.openai ||
+			apiKeyStatus.anthropic ||
+			apiKeyStatus.xai;
 	const { data: trialUsage } = useQuery({
 		...convexQuery(api.trial.getUsage, {}),
 		enabled: !hasOwnKey,

@@ -6,6 +6,8 @@ import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { createServerFn } from "@tanstack/react-start";
 import { generateText } from "ai";
 import { z } from "zod";
+import { getProviderApiKeys } from "~/lib/provider-api-keys.server";
+import { getAuthUser } from "~/server-fns/get-auth";
 import type { ApiKeys } from "~/types";
 
 const TITLE_SYSTEM_PROMPT =
@@ -77,18 +79,16 @@ export const getChatTitle = createServerFn({ method: "POST" })
 	.validator(
 		z.object({
 			userMessage: z.string().trim().min(1),
-			apiKeys: z.object({
-				gemini: z.string(),
-				openai: z.string(),
-				anthropic: z.string(),
-				openrouter: z.string(),
-				xai: z.string(),
-			}),
 			useOpenRouter: z.boolean(),
 		}),
 	)
 	.handler(async ({ data }) => {
-		const model = resolveTitleModel(data.apiKeys, data.useOpenRouter);
+		const authUser = await getAuthUser();
+		if (!authUser || !authUser._id) {
+			throw new Error("Authentication is required to generate a title.");
+		}
+		const apiKeys = await getProviderApiKeys(authUser._id);
+		const model = resolveTitleModel(apiKeys, data.useOpenRouter);
 		const { text: generatedTitle } = await generateText({
 			model,
 			system: TITLE_SYSTEM_PROMPT,

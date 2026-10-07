@@ -12,7 +12,7 @@ import { getMessageContentFromParts } from "~/lib/get-message-content-from-parts
 import { cn } from "~/lib/utils";
 import { useCustomizationStore } from "~/stores/customization-store";
 import { useModelStore } from "~/stores/model-store";
-import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
+import { useApiKeyPreferencesStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage } from "~/types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./app-tooltip";
 import BranchOffButton from "./branch-off-button";
@@ -46,10 +46,7 @@ export default memo(function UserMessage({
 
 	const selectedModel = useModelStore((store) => store.selectedModel);
 	const isWebSearchEnabled = useModelStore((store) => store.isWebSearchEnabled);
-	const persistedApiKeys = usePersistedApiKeysStore(
-		(store) => store.persistedApiKeys,
-	);
-	const persistedUseOpenRouter = usePersistedApiKeysStore(
+	const persistedUseOpenRouter = useApiKeyPreferencesStore(
 		(store) => store.persistedUseOpenRouter,
 	);
 	const customSystemPrompt = useCustomizationStore(
@@ -98,7 +95,6 @@ export default memo(function UserMessage({
 				body: {
 					model: selectedModel,
 					isWebSearchEnabled,
-					apiKeys: persistedApiKeys,
 					useOpenRouter: persistedUseOpenRouter,
 					chatId,
 					customSystemPrompt,

@@ -21,7 +21,7 @@ import {
 	useModelModalities,
 } from "~/stores/model-modalities-store";
 import { useModelStore } from "~/stores/model-store";
-import { usePersistedApiKeysStore } from "~/stores/persisted-api-keys-store";
+import { useApiKeyPreferencesStore } from "~/stores/persisted-api-keys-store";
 import type { CustomUIMessage } from "~/types";
 import PromptActions from "./prompt-actions";
 import PromptAttachmentsInput from "./prompt-attachments-input";
@@ -49,10 +49,7 @@ export default function UserPromptInput(props: Props) {
 	const isDesktop = useIsDesktop();
 	const selectedModel = useModelStore((store) => store.selectedModel);
 	const isWebSearchEnabled = useModelStore((store) => store.isWebSearchEnabled);
-	const persistedApiKeys = usePersistedApiKeysStore(
-		(store) => store.persistedApiKeys,
-	);
-	const persistedUseOpenRouter = usePersistedApiKeysStore(
+	const persistedUseOpenRouter = useApiKeyPreferencesStore(
 		(store) => store.persistedUseOpenRouter,
 	);
 	const customSystemPrompt = useCustomizationStore(
@@ -89,7 +86,6 @@ export default function UserPromptInput(props: Props) {
 		const title = await getChatTitle({
 			data: {
 				userMessage: input,
-				apiKeys: persistedApiKeys,
 				useOpenRouter: persistedUseOpenRouter,
 			},
 		});
@@ -159,7 +155,6 @@ export default function UserPromptInput(props: Props) {
 					body: {
 						model: selectedModel,
 						isWebSearchEnabled,
-						apiKeys: persistedApiKeys,
 						useOpenRouter: persistedUseOpenRouter,
 						chatId: props.chatId,
 						customSystemPrompt,

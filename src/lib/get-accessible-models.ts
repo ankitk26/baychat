@@ -1,22 +1,21 @@
 import { allModelProviders, trialModelIds } from "~/constants/model-providers";
 import type {
-	ApiKeys,
+	ApiKeyStatus,
 	ModelWithAvailability,
 	ProviderGroupWithAvailability,
 } from "~/types";
 
 export function getAccessibleModels(
-	apiKeys: ApiKeys,
+	apiKeyStatus: ApiKeyStatus,
 	useOpenRouter: boolean,
 ): ProviderGroupWithAvailability[] {
 	const resultProviderGroups: ProviderGroupWithAvailability[] = [];
 
-	const hasAnyProviderKey = [
-		apiKeys.gemini,
-		apiKeys.openai,
-		apiKeys.anthropic,
-		apiKeys.xai,
-	].some((key) => key.trim() !== "");
+	const hasAnyProviderKey =
+		apiKeyStatus.gemini ||
+		apiKeyStatus.openai ||
+		apiKeyStatus.anthropic ||
+		apiKeyStatus.xai;
 	const trialModelIdSet = new Set<string>(trialModelIds);
 
 	for (const group of allModelProviders) {
@@ -28,24 +27,24 @@ export function getAccessibleModels(
 			// Primary check: If useOpenRouter toggle is ON, all models are available.
 			if (useOpenRouter) {
 				available =
-					apiKeys.openrouter.trim() !== "" ||
-					(!apiKeys.openrouter.trim() &&
+					apiKeyStatus.openrouter ||
+					(!apiKeyStatus.openrouter &&
 						trialModelIdSet.has(model.openRouterModelId));
 			} else {
 				// If useOpenRouter toggle is OFF, availability depends on individual provider keys or if the model is free.
 				let hasSpecificProviderKey = false;
 				switch (group.key) {
 					case "openai":
-						hasSpecificProviderKey = apiKeys.openai.trim() !== "";
+						hasSpecificProviderKey = apiKeyStatus.openai;
 						break;
 					case "anthropic":
-						hasSpecificProviderKey = apiKeys.anthropic.trim() !== "";
+						hasSpecificProviderKey = apiKeyStatus.anthropic;
 						break;
 					case "google":
-						hasSpecificProviderKey = apiKeys.gemini.trim() !== "";
+						hasSpecificProviderKey = apiKeyStatus.gemini;
 						break;
 					case "xai":
-						hasSpecificProviderKey = apiKeys.xai.trim() !== "";
+						hasSpecificProviderKey = apiKeyStatus.xai;
 						break;
 					default:
 						hasSpecificProviderKey = false;

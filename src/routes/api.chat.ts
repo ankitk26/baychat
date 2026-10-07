@@ -21,28 +21,26 @@ import { fetchAuthMutation } from "~/lib/auth-server";
 import { chatErrorResponse, normalizeChatError } from "~/lib/chat-errors";
 import { generateRandomUUID } from "~/lib/generate-random-uuid";
 import { getBaychatTextContent } from "~/lib/part-metadata";
+import { getProviderApiKey } from "~/lib/provider-api-keys.server";
 import { getAuthUser } from "~/server-fns/get-auth";
-import type { ApiKeys, CustomUIMessage, Model } from "~/types";
+import {
+	defaultApiKeys,
+	type ApiKeys,
+	type CustomUIMessage,
+	type Model,
+	type Provider,
+} from "~/types";
 
-const hasOwnKeyForRequest = (
-	apiKeys: ApiKeys,
+const getProviderForRequest = (
 	model: Model,
 	useOpenRouter: boolean,
-) => {
-	if (useOpenRouter) return apiKeys.openrouter.trim() !== "";
-	if (model.openRouterModelId.startsWith("google")) {
-		return apiKeys.gemini.trim() !== "";
-	}
-	if (model.openRouterModelId.startsWith("openai")) {
-		return apiKeys.openai.trim() !== "";
-	}
-	if (model.openRouterModelId.startsWith("anthropic")) {
-		return apiKeys.anthropic.trim() !== "";
-	}
-	if (model.openRouterModelId.startsWith("x-ai")) {
-		return apiKeys.xai.trim() !== "";
-	}
-	return false;
+): Provider | null => {
+	if (useOpenRouter) return "openrouter";
+	if (model.openRouterModelId.startsWith("google")) return "gemini";
+	if (model.openRouterModelId.startsWith("openai")) return "openai";
+	if (model.openRouterModelId.startsWith("anthropic")) return "anthropic";
+	if (model.openRouterModelId.startsWith("x-ai")) return "xai";
+	return null;
 };
 
 const resolveModelForRequest = (
@@ -270,7 +268,6 @@ type ChatRequestBody = {
 	messages: CustomUIMessage[];
 	model: Model;
 	isWebSearchEnabled: boolean;
-	apiKeys: ApiKeys;
 	useOpenRouter: boolean;
 	chatId?: string;
 	customSystemPrompt?: string;
@@ -290,17 +287,20 @@ export const Route = createFileRoute("/api/chat")({
 					messages,
 					model: requestModel,
 					isWebSearchEnabled,
-					apiKeys,
 					useOpenRouter,
 					chatId,
 					customSystemPrompt,
 				} = chatRequestBody;
-				const hasOwnKey = hasOwnKeyForRequest(
-					apiKeys,
-					requestModel,
-					useOpenRouter,
-				);
-				const isTrial = !hasOwnKey;
+				const authId = authData._id;
+				if (!authId) throw new Error("Invalid authenticated user.");
+
+				const provider = getProviderForRequest(requestModel, useOpenRouter);
+				const providerKey = provider
+					? await getProviderApiKey(authId, provider)
+					: null;
+				const apiKeys: ApiKeys = { ...defaultApiKeys };
+				if (provider && providerKey) apiKeys[provider] = providerKey;
+				const isTrial = !providerKey?.trim();
 
 				if (isTrial && !process.env.OPENROUTER_TRIAL_API_KEY) {
 					throw new Error("Trial messaging is not configured.");

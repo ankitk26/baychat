@@ -22,7 +22,7 @@ function RouteComponent() {
 
 	return (
 		<PageShell
-			className="space-y-4 lg:space-y-6 lg:px-12"
+			className="space-y-4 md:pt-8 lg:space-y-6 lg:px-12"
 			collapsedWidthClass="max-w-7xl"
 			expandedWidthClass="max-w-none"
 		>

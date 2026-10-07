@@ -47,6 +47,7 @@ export const defaultApiKeys: ApiKeys = {
 };
 
 export type Provider = keyof ApiKeys;
+export type ApiKeyStatus = Record<Provider, boolean>;
 
 export type SidebarChatType = FunctionReturnType<
 	typeof api.chats.getPinnedChats
