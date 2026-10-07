@@ -6,7 +6,7 @@ import { fetchAuthQuery } from "~/lib/auth-server";
 import { getAuthUser } from "./get-auth";
 
 export const getFileUrl = createServerFn({ method: "GET" })
-	.inputValidator(
+	.validator(
 		z.object({
 			storageId: z.string(),
 		}),

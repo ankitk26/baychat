@@ -74,7 +74,7 @@ const resolveTitleModel = (apiKeys: ApiKeys, useOpenRouter: boolean) => {
 };
 
 export const getChatTitle = createServerFn({ method: "POST" })
-	.inputValidator(
+	.validator(
 		z.object({
 			userMessage: z.string().trim().min(1),
 			apiKeys: z.object({

@@ -5,7 +5,7 @@ import { fetchAuthMutation } from "~/lib/auth-server";
 import { getAuthUser } from "./get-auth";
 
 export const createMessageServerFn = createServerFn({ method: "POST" })
-	.inputValidator(
+	.validator(
 		z.object({
 			chatId: z.string(),
 			parts: z.string(),

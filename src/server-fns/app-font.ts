@@ -13,7 +13,7 @@ export const getAppFont = createServerFn().handler((): AppFont => {
 });
 
 export const setAppFont = createServerFn()
-	.inputValidator((data: AppFont) => data)
+	.validator((data: AppFont) => data)
 	.handler(({ data }) => {
 		setCookie(fontStorageKey, data);
 	});
